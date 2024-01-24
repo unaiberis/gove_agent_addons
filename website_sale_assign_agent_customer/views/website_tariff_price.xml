@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="custom_tariff_price" name="Custom Tariff Price">
+        <!-- Your existing template content goes here -->
+
+        <!-- XPath expression to add content after div.product_price -->
+            <!-- Your additional content goes here -->
+            <div>
+                <!-- Your custom content goes here -->
+                This is the additional content after div.product_price.
+            </div>
+    </template>
+
+    <template id="products_item" inherit_id="website_sale.products_item">
+        <xpath expr="//div[hasclass('o_wsale_product_information')]" position="after">
+            <t t-call="website_sale_assign_agent_customer.custom_tariff_price" />
+        </xpath>
+    </template>
+</odoo>

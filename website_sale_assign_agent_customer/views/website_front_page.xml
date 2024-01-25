@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-    <record id="website_homepage_automatic" model="ir.ui.view">
+    <!-- <record id="website_homepage_automatic" model="ir.ui.view">
         <field name="name">website.homepage</field>
         <field name="model">website.homepage</field>
         <field name="inherit_id" ref="website.homepage" />
@@ -11,12 +11,6 @@
                 </section>
             </xpath>
         </field>
-    </record>
-
-    <!-- <record model="ir.ui.view" id="1346">
-        <field name="arch" type="xml" update="true">
-            <p>KAIXO PROBATZEN ARI NAIZ</p>
-        </field>
     </record> -->
 
     <record id="website_homepage_custom" model="ir.ui.view">
@@ -26,10 +20,8 @@
         <field name="key">website.homepage.cstom</field>
         <field name="website_id" eval="1" />
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_structure')]" position="replace">
-                <section class="s_three_columns bg-200 pt32 pb32 o_colored_level">
-                    <p>KAIXO PROBATZEN ARI NAIZ</p>
-                </section>
+            <xpath expr="//section/div[hasclass('container')]" position="replace">
+                <p>KAIXO PROBATZEN ARI NAIZ berriz</p>
             </xpath>
         </field>
     </record>

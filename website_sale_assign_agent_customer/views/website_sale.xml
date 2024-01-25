@@ -67,8 +67,19 @@
     </record> -->
     
     <template id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
-        <xpath expr="//div[contains(@class, 'product_price')]//span[1]" position="after">
-            <p>100 €</p>
+  
+  
+        <xpath expr="//div[contains(@class, 'product_price')]" position="replace">
+            <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                <t t-if="combination_info['price']" >                
+                    <p>PCT</p>
+                    <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                </t>
+                <t t-if="combination_info['PVP']" >
+                    <P>PVP</P>
+                    <span t-esc="combination_info['PVP']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                </t>
+            </div>
         </xpath>
     </template>
     

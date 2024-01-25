@@ -60,11 +60,19 @@ class WebsiteSale(WebsiteSale):
 
         partner.property_product_pricelist = pricelist_number
 
+        public_pricelist = request.env['product.pricelist'].search([('id', '=', 1)])
 
-        request.session.update ({'website_sale_current_pl': pricelist_number})
+        # Extract pricelist ID and store it in the session
+        public_pricelist_id = public_pricelist.id
+        request.session.update({'website_sale_current_pl': pricelist_number, 'public_pricelist_id': public_pricelist_id})
 
         res = super().shop(**post)
-
+        
+        # Update the context with additional variables
+        res.qcontext.update({
+            'public_pricelist_id': public_pricelist_id,
+            # Add other variables if needed
+        })
 
         return res
 

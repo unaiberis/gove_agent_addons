@@ -34,6 +34,8 @@
     ],
     "data": [
         "views/website_sale.xml",
+        "views/website_front_page.xml",
+        "security/ir.model.access.csv"
     ],
     "installable": True,
 }

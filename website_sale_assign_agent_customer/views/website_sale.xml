@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="agent_customer_card">
         <div class="card mt-3 mb-3 o_wsaac_agent_customers">
@@ -19,21 +19,21 @@
     <template id="cart" inherit_id="website_sale.cart">
         <xpath expr="//div[hasclass('clearfix')]" position="after">
             <t
-        t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and website_sale_order and website_sale_order.website_order_line"
-      >
+                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and website_sale_order and website_sale_order.website_order_line"
+            >
                 <div class="o_wsaac_agent_customers mb-3">
                     <h3 class="mb16">Assign Customer to Order</h3>
                     <select name="agent_customer" class="form-control js_wscef_field">
                         <option value="">Select a customer...</option>
                         <t
-              t-foreach="request.env.user.sudo().partner_id.agent_customers"
-              t-as="customer"
-            >
+                            t-foreach="request.env.user.sudo().partner_id.agent_customers"
+                            t-as="customer"
+                        >
                             <option
-                t-att-value="customer.id"
-                t-field="customer.name"
-                t-att-selected="website_sale_order.agent_customer and website_sale_order.agent_customer.id == customer.id"
-              />
+                                t-att-value="customer.id"
+                                t-field="customer.name"
+                                t-att-selected="website_sale_order.agent_customer and website_sale_order.agent_customer.id == customer.id"
+                            />
                         </t>
                     </select>
                 </div>
@@ -65,22 +65,27 @@
             </xpath>
         </field>
     </record> -->
-    
+
     <template id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
-  
-  
+
+
         <xpath expr="//div[contains(@class, 'product_price')]" position="replace">
-            <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                <t t-if="combination_info['price']" >                
-                    <p>PCT</p>
-                    <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+            <div class="product_price" itemprop="offers" itemscope="itemscope"
+                itemtype="http://schema.org/Offer">
+                <t t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
+                    <div style="border: 1px solid black; padding: 3px; margin-bottom: 3px;">
+                        <span>PCT</span>
+                        <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                    </div>
                 </t>
-                <t t-if="combination_info['PVP']" >
-                    <P>PVP</P>
-                    <span t-esc="combination_info['PVP']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                </t>
+                <t t-if="combination_info['PVP']">
+                    <div style="border: 1px solid black; padding: 3px;">
+                        <span>PVP</span>
+                        <span t-esc="combination_info['PVP']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                    </div>
+                </t>                
             </div>
         </xpath>
     </template>
-    
+
 </odoo>

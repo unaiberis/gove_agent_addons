@@ -32,7 +32,27 @@ class ProductTemplate(models.Model):
 class UpdateResPartner(models.Model):
     _name = "update.res.partner"
 
+
     def update_partner_properties(self):
+        # Define the domain to filter res partners
+        domain = [
+            ["create_uid", "=", 2],
+            ["aeat_anonymous_cash_customer", "=", False]
+        ]
+        # Retrieve res partners based on the domain
+        partners = self.env['res.partner'].search(domain)
+
+        # Update the 'aeat_anonymous_cash_customer' attribute for each partner
+        for partner in partners:
+            partner.aeat_anonymous_cash_customer = True
+
+        # Commit the changes to the database
+        self.env.cr.commit()
+
+        # Now, update the ir_property records as mentioned in the previous script
+        self.update_partner_ir_properties()
+
+    def update_partner_ir_properties(self):
         # Define the domain to filter res partners
         domain = [["create_uid", "=", 2]]
 

@@ -20,8 +20,7 @@ class WebsiteSale(WebsiteSale):
         if agent_customer_value:
             order.agent_customer = int(agent_customer_value)
         else:
-            # Raise a UserError with a custom message
-            raise UserError("Por favor, elija a un cliente antes de continuar.")
+            res['error'] = True                   
         return res
 
     @http.route()

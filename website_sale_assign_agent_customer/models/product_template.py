@@ -33,30 +33,47 @@ class ProductTemplate(models.Model):
 class UpdateResPartner(models.Model):
     _name = "update.res.partner"
 
-    def update_partner_fields(self):
+    def update_partner_properties(self):
         # Define the domain to filter res partners
         domain = [["create_uid", "=", 2]]
 
         # Retrieve res partners based on the domain
         partners = self.env['res.partner'].search(domain)
 
-        # Define the field values to update for each partner
-        field_values = {
-            'sale_incoterm_id': 'stock.incoterms,6',
-            'property_payment_term_id': 'account.payment.term,9',
-            'property_product_pricelist': 'product.pricelist,7',
-            'sale_type': 'sale.order.type,2',
-            'property_account_position_id': 'account.fiscal.position,1',
-            'aeat_anonymous_cash_customer': 'True',
-        }
-
-        # Update the fields for each partner
+        # Update the 'aeat_anonymous_cash_customer' attribute for each partner
         for partner in partners:
-            for field_name, value in field_values.items():
-                # Check if the field exists in the model
-                if field_name in partner:
-                    # Update the field with the reference value
-                    partner[field_name] = value
+            partner.aeat_anonymous_cash_customer = True
+
+        # Commit the changes to the database
+        self.env.cr.commit()
+
+        # Now, update the ir_property records as mentioned in the previous script
+        self.update_partner_ir_properties()
+
+    def update_partner_ir_properties(self):
+        # ... (same as the previous script)
+
+        for partner in partners:
+            for prop_values in property_values:
+                # Create or update records in ir_property table
+                prop_name = prop_values["name"]
+                fields_id = prop_values["fields_id"]
+                value_reference = prop_values["value_reference"]
+
+                prop_record = self.env['ir.property'].search([
+                    ('name', '=', prop_name),
+                    ('res_id', '=', f"res.partner,{partner.id}"),
+                    ('fields_id', '=', fields_id),
+                ])
+
+                if not prop_record:
+                    self.env['ir.property'].create({
+                        'name': prop_name,
+                        'res_id': f"res.partner,{partner.id}",
+                        'company_id': 1,  # Update with the actual company ID
+                        'fields_id': fields_id,
+                        'value_reference': value_reference,
+                    })
 
         # Commit the changes to the database
         self.env.cr.commit()

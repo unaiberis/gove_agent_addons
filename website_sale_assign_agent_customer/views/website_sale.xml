@@ -5,62 +5,240 @@
             <div class="card-body">
                 <div>
                     <b>Assigned Customer:</b>
-                    <span t-field="order.agent_customer.name" />
+                    <t t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().name" />
                 </div>
             </div>
             <div class="card-body">
                 <div>
                     <b>Modo de pago utilizado por el cliente:</b>
-                    <span t-field="order.agent_customer.customer_payment_mode_id" />
+                    <t t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
                 </div>
             </div>
         </div>
+        <t t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo()">
+            <p>Please select a customer</p>
+        </t>
     </template>
-    <template id="cart" inherit_id="website_sale.cart">
+
+
+    <template id="choose_customer_from_agent">
+        <!-- <t
+            t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and
+        selected_customer"> -->
+        <form method="post" action="/shop/update_customer" class="container mt-3">
+            <!-- Include the CSRF token as a hidden input -->
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h3 class="mb-3">Assign Customer to Order</h3>
+                    <select name="agent_customer" class="form-control">
+                        <option value="">Select a customer...</option>
+                        <t t-foreach="request.env.user.sudo().partner_id.agent_customers"
+                            t-as="customer">
+                            <option t-att-value="customer.id" t-field="customer.name" />
+                        </t>
+                    </select>
+                    <button type="submit" class="btn btn-primary mt-3">Update Customer</button>
+                </div>
+
+                <t t-if="selected_customer">
+                    <div class="col-md-6">
+                        <div class="bg-light p-3">
+                            <h1 class="text-uppercase font-weight-bold text-center">
+                                <t t-esc="selected_customer.name" />
+                            </h1>
+                            <p class="text-center text-muted">Selected customer</p>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="col-md-6">
+                        <div class="bg-light p-3">
+                            <p class="text-center">No customer selected yet.</p>
+                            <p class="text-center">Please choose a customer to be able to continue
+                                purchasing with an agent user</p>
+
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </form>
+    </template>
+    <!-- <template
+        id="cart" inherit_id="website_sale.cart">
         <xpath expr="//div[hasclass('clearfix')]" position="after">
             <t
-                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and website_sale_order and website_sale_order.website_order_line"
-            >
-            <t t-if="res and res.get('error')">
-                <!-- Manejar el error aquí -->
-                <div>
-                    <p>¡Error! El cliente no ha sido seleccionado.</p>
-                </div>
-            </t>
-            
+                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and
+    website_sale_order and website_sale_order.website_order_line">
+                <t t-if="res and res.get('error')">
+                    <div>
+                        <p>¡Error! El cliente no ha sido seleccionado.</p>
+                    </div>
+                </t>
+
                 <div class="o_wsaac_agent_customers mb-3">
                     <h3 class="mb16">Assign Customer to Order</h3>
                     <select name="agent_customer" class="form-control js_wscef_field">
                         <option value="">Select a customer...</option>
-                        <t
-                            t-foreach="request.env.user.sudo().partner_id.agent_customers"
-                            t-as="customer"
-                        >
-                            <option
-                                t-att-value="customer.id"
-                                t-field="customer.name"
-                                t-att-selected="website_sale_order.agent_customer and website_sale_order.agent_customer.id == customer.id"
-                            />
+                        <t t-foreach="request.env.user.sudo().partner_id.agent_customers"
+                            t-as="customer">
+                            <option t-att-value="customer.id" t-field="customer.name"
+                                t-att-selected="website_sale_order.agent_customer and website_sale_order.agent_customer.id ==
+    customer.id" />
                         </t>
                     </select>
                 </div>
             </t>
         </xpath>
+    </template> -->
+
+    <template
+        id="cart" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('clearfix')]" position="after">
+            <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
+
+            <t t-if="selected_customer">
+                <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
+            </t>
+        </xpath>
     </template>
-    <template id="payment" inherit_id="website_sale.payment">
+
+
+    <template
+        id="payment" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
-            <t t-if="website_sale_order.agent_customer">
+            <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
+            <t
+                t-if="request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent != 0">
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
             </t>
         </xpath>
     </template>
-    <template id="confirmation" inherit_id="website_sale.confirmation">
+
+    <template
+        id="confirmation" inherit_id="website_sale.confirmation">
         <xpath expr="//div[hasclass('oe_cart')]" position="after">
-            <t t-if="order.agent_customer">
+            <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
+
+            <t t-if="selected_customer">
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
             </t>
         </xpath>
     </template>
+
+    <template id="products" inherit_id="website_sale.products">
+        <xpath expr="//t[@t-call='website.layout']" position="replace">
+            <t
+                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
+
+                <t t-call="website.layout">
+                    <t t-set="additional_title">Shop</t>
+                    <div id="wrap" class="js_sale">
+                        <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_1" />
+                        <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
+                        <div class="container oe_website_sale">
+                            <div
+                                class="products_pager form-inline flex-md-nowrap justify-content-between justify-content-md-center">
+                                <t t-call="website_sale.search">
+                                    <t t-set="_classes" t-valuef="w-100 w-md-auto mt-2" />
+                                </t>
+                                <t t-call="website_sale.pricelist_list">
+                                    <t t-set="_classes" t-valuef="mt-2 ml-md-2" />
+                                </t>
+                                <t t-call="website.pager">
+                                    <t t-set="_classes" t-valuef="mt-2 ml-md-2" />
+                                </t>
+                            </div>
+                            <div class="row o_wsale_products_main_row">
+                                <div t-if="enable_left_column" id="products_grid_before"
+                                    class="col-lg-3" />
+                                <div id="products_grid"
+                                    t-attf-class="col #{'o_wsale_layout_list' if layout_mode == 'list' else ''}">
+                                    <t t-if="category">
+                                        <t t-set='editor_msg'>Drag building blocks here to customize
+                                            the header for "<t t-esc='category.name' />" category.</t>
+                                        <div class="mb16" id="category_header"
+                                            t-att-data-editor-message="editor_msg"
+                                            t-field="category.website_description" />
+                                    </t>
+                                    <div t-if="bins" class="o_wsale_products_grid_table_wrapper">
+                                        <table class="table table-borderless m-0"
+                                            t-att-data-ppg="ppg" t-att-data-ppr="ppr">
+                                            <colgroup t-ignore="true">
+                                                <!-- Force the number of columns (useful when only
+                                                one row of (x < ppr) products) -->
+                                                <col t-foreach="ppr" t-as="p" />
+                                            </colgroup>
+                                            <tbody>
+                                                <tr t-foreach="bins" t-as="tr_product">
+                                                    <t t-foreach="tr_product" t-as="td_product">
+                                                        <t t-if="td_product">
+                                                            <t t-set="product"
+                                                                t-value="td_product['product']" />
+                                                            <!-- We use t-attf-class here to allow
+                                                            easier customization -->
+                                                            <td
+                                                                t-att-colspan="td_product['x'] != 1 and td_product['x']"
+                                                                t-att-rowspan="td_product['y'] != 1 and td_product['y']"
+                                                                t-attf-class="oe_product"
+                                                                t-att-data-ribbon-id="td_product['ribbon'].id">
+                                                                <div
+                                                                    t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
+                                                                    <t
+                                                                        t-call="website_sale.products_item">
+                                                                        <t t-set="product_image_big"
+                                                                            t-value="td_product['x'] + td_product['y'] &gt; 2" />
+                                                                    </t>
+                                                                </div>
+                                                            </td>
+                                                        </t>
+                                                        <td t-else="" />
+                                                    </t>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <t t-else="">
+                                        <div class="text-center text-muted">
+                                            <t t-if="not search">
+                                                <h3 class="mt8">No product defined</h3>
+                                                <p t-if="category">No product defined in category "<strong
+                                                        t-esc="category.display_name" />".</p>
+                                            </t>
+                                            <t t-else="">
+                                                <h3 class="mt8">No results</h3>
+                                                <p>No results for "<strong t-esc='search' />"<t
+                                                        t-if="category"> in category "<strong
+                                                            t-esc="category.display_name" />"</t>.</p>
+                                            </t>
+                                            <p t-ignore="true"
+                                                groups="sales_team.group_sale_manager">Click <i>
+                                                'New'</i> in the top-right corner to create your
+                                                first product.</p>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="products_pager form-inline justify-content-center py-3">
+                                <t t-call="website.pager" />
+                            </div>
+                        </div>
+                        <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_2" />
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-call="website.layout">
+                    <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
+                </t>
+            </t>
+
+        </xpath>
+    </template>
+
+
     <!-- <record id="products_item" model="ir.ui.view">
         <field name="name">Prueba</field>
         <field name="inherit_id" ref="website_sale.products"/>
@@ -73,9 +251,8 @@
         </field>
     </record> -->
 
-    <template id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
-
-
+    <template
+        id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
         <xpath expr="//div[contains(@class, 'product_price')]" position="replace">
             <div class="product_price" itemprop="offers" itemscope="itemscope"
                 itemtype="http://schema.org/Offer">
@@ -97,5 +274,6 @@
             </div>
         </xpath>
     </template>
+
 
 </odoo>

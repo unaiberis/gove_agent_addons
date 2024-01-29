@@ -25,8 +25,8 @@
 
 
     <template id="choose_customer_from_agent">
-        <!-- <t
-            t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and
+        <!-- <t t-if="not request.website.is_public_user() and
+        request.env.user.sudo().partner_id.agent and
         selected_customer"> -->
         <form method="post" action="/shop/update_customer" class="container mt-3">
             <!-- Include the CSRF token as a hidden input -->
@@ -74,7 +74,8 @@
                     <div class="col-md-6">
                         <div class="bg-light p-3">
                             <p class="text-center">No customer selected yet.</p>
-                            <p class="text-center">Please choose a customer to be able to continue
+                            <p class="text-center">Please choose a customer to be able to
+                                continue
                                 purchasing with an agent user</p>
 
                         </div>
@@ -125,24 +126,46 @@
         <xpath expr="//div[contains(@class, 'product_price')]" position="replace">
             <div class="product_price" itemprop="offers" itemscope="itemscope"
                 itemtype="http://schema.org/Offer">
-                <t
-                    t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
-                    <div style="border: 1px solid black; padding: 3px; margin-bottom: 3px;">
-                        <span>PCT</span>
-                        <span t-esc="combination_info['price']"
-                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                    </div>
-                </t>
+                <div style="width: 100%; text-align: left;">
+                    <t t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
+                        <div style="font-size: x-small;">
+                            <span>PCT</span>
+                            <span t-esc="combination_info['price']"
+                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                        </div>
+                    </t>
+                </div>
+                
                 <t t-if="combination_info['PVP']">
-                    <div style="border: 1px solid black; padding: 3px;">
-                        <span>PVP</span>
-                        <span t-esc="combination_info['PVP']"
-                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                    <div style="width: 100%; text-align: left;">
+                        <div style="font-size: x-small;">
+                            <span>PVP</span>
+                            <span t-esc="combination_info['PVP']"
+                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                        </div>
                     </div>
                 </t>
+                
+                <span
+                    style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
+                    <t t-set="is_available"
+                        t-value="request.env['product.template'].sudo().search([('id', '=', product.id)]).virtual_available > 0" />
+
+                    <span t-if="is_available" style="color: green;">
+                        <span>Stock</span>
+                    </span>
+
+                    <span t-else="" style="color: red;">
+                        <span>No stock</span>
+                    </span>
+                </span>
+
+
             </div>
         </xpath>
     </template>
+
+
     <!-- PRODUCTS XPATH -->
 
     <template id="products_inserted">
@@ -150,7 +173,6 @@
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_1" />
-                <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
                 <div class="container oe_website_sale">
                     <div
                         class="products_pager form-inline flex-md-nowrap justify-content-between justify-content-md-center">
@@ -318,9 +340,9 @@
             </div>
         </xpath>
     </template>
-    <template id="products_categories_berrixe"
+    <template id="products_categories"
         inherit_id="website_sale_assign_agent_customer.products_inserted"
-        >
+    >
         <xpath expr="//div[@id='products_grid_before']" position="before">
             <t t-set="enable_left_column" t-value="True" />
         </xpath>
@@ -421,6 +443,15 @@
         </xpath>
     </template>
 
+    <template id="products_inserted_berrixe"
+        inherit_id="website_sale_assign_agent_customer.products_inserted">
+        <xpath expr="//div[@id='oe_structure_website_sale_products_1']" position="before">
+            <t
+                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
+                <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
+            </t>
+        </xpath>
+    </template>
 
     <template id="products" inherit_id="website_sale.products">
         <xpath expr="//t[@t-call='website.layout']" position="replace">
@@ -428,14 +459,15 @@
                 t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
                 <t t-call="website_sale_assign_agent_customer.products_inserted" />
             </t>
-            <t t-else="">
+            <t
+                t-elif="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent">
                 <t t-call="website.layout">
                     <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
                 </t>
             </t>
-
+            <t t-else="">
+                <t t-call="website_sale_assign_agent_customer.products_inserted" />
+            </t>
         </xpath>
     </template>
-
-
 </odoo>

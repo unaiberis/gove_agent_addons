@@ -34,18 +34,23 @@
             <!-- Include the CSRF token as a hidden input -->
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
 
+
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <h3 class="mb-3">Assign Customer to Order</h3>
-                    <select name="agent_customer" class="form-control">
-                        <option value="">Select a customer...</option>
-                        <t t-foreach="request.env.user.sudo().partner_id.agent_customers"
-                            t-as="customer">
-                            <option t-att-value="customer.id" t-field="customer.name" />
-                        </t>
-                    </select>
-                    <button type="submit" class="btn btn-primary mt-3">Update Customer</button>
-                </div>
+                <t
+                    t-if="not request.website.sale_get_order() or request.website.sale_get_order() and request.website.sale_get_order().cart_quantity == 0">
+
+                    <div class="col-md-6 mb-3">
+                        <h3 class="mb-3">Assign Customer to Order</h3>
+                        <select name="agent_customer" class="form-control">
+                            <option value="">Select a customer...</option>
+                            <t t-foreach="request.env.user.sudo().partner_id.agent_customers"
+                                t-as="customer">
+                                <option t-att-value="customer.id" t-field="customer.name" />
+                            </t>
+                        </select>
+                        <button type="submit" class="btn btn-primary mt-3">Update Customer</button>
+                    </div>
+                </t>
 
                 <t t-if="selected_customer and selected_customer.exists()">
                     <div class="col-md-6" t-if="selected_customer">
@@ -58,7 +63,8 @@
                             customer</p>
                         <t
                             t-if="request.website.sale_get_order() and request.website.sale_get_order().cart_quantity != 0">
-                            <p>You have to empty the cart to be able to change the customer</p>
+                            <p class="text-center text-muted">You have to empty the cart to be able
+                                to change the customer</p>
                         </t>
                     </div>
 

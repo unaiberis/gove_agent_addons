@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="agent_customer_card">
-        <div class="card mt-3 mb-3 o_wsaac_agent_customers">
-            <div class="card-body">
-                <div>
-                    <b>Assigned Customer:</b>
-                    <t
-                        t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().name" />
+        <t t-if="request.env.user.sudo().partner_id.agent">
+            <div class="card mt-3 mb-3 o_wsaac_agent_customers">
+                <div class="card-body">
+                    <div>
+                        <b>Assigned Customer:</b>
+                        <t
+                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().name" />
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <b>Modo de pago utilizado por el cliente:</b>
+                        <t
+                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div>
-                    <b>Modo de pago utilizado por el cliente:</b>
-                    <t
-                        t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
-                </div>
-            </div>
-        </div>
-        <t
-            t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo()">
-            <p>Please select a customer</p>
+            <t
+                t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo()">
+                <p>Please select a customer</p>
+            </t>
         </t>
     </template>
 
@@ -45,7 +47,7 @@
                     <button type="submit" class="btn btn-primary mt-3">Update Customer</button>
                 </div>
 
-                <t t-if="selected_customer">
+                <t t-if="selected_customer and selected_customer.exists()">
                     <div class="col-md-6" t-if="selected_customer">
                         <h1 class="text-uppercase font-weight-bold text-center"
                             style="padding: 15px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -54,6 +56,10 @@
                         </h1>
                         <p class="text-center text-muted">Selected
                             customer</p>
+                        <t
+                            t-if="request.website.sale_get_order() and request.website.sale_get_order().cart_quantity != 0">
+                            <p>You have to empty the cart to be able to change the customer</p>
+                        </t>
                     </div>
 
                     <style>
@@ -71,16 +77,16 @@
                 </t>
 
                 <t t-else="">
-                    <div class="col-md-6">
-                        <div class="bg-light p-3">
+                    <div class="col-md-6" style="margin: auto; text-align: center;">
+                        <div class="bg-light p-3"
+                            style="border: 1px solid #ccc; border-radius: 5px;">
                             <p class="text-center">No customer selected yet.</p>
-                            <p class="text-center">Please choose a customer to be able to
-                                continue
+                            <p class="text-center">Please choose a customer to be able to continue
                                 purchasing with an agent user</p>
-
                         </div>
                     </div>
                 </t>
+
             </div>
         </form>
     </template>
@@ -120,14 +126,45 @@
         </xpath>
     </template>
 
+    <template inherit_id="website_sale.payment" id="payment_remove_facturation_of_the_agent">
+        <xpath
+            expr="//div[hasclass('card')]" position="replace">
+            <t t-if="not request.env.user.sudo().partner_id.agent">
+                <div class="card">
+                    <div class="card-body" id="shipping_and_billing">
+                        <a class='float-right no-decoration' href='/shop/checkout'><i
+                                class="fa fa-edit" /> Edit</a>
+                        <t t-set="same_shipping"
+                            t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
+                        <div>
+                            <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>
+                                : </b>
+                            <span t-esc='order.partner_id'
+                                t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
+                                class="address-inline" />
+                        </div>
+                        <div t-if="not same_shipping and not only_services"
+                            groups="sale.group_delivery_invoice_address">
+                            <b>Shipping: </b>
+                            <span t-esc='order.partner_shipping_id'
+                                t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
+                                class="address-inline" />
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+        </xpath>
+    </template>
 
     <template
         id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
-        <xpath expr="//div[contains(@class, 'product_price')]" position="replace">
+        <xpath expr="//div[hasclass('product_price')]" position="replace">
             <div class="product_price" itemprop="offers" itemscope="itemscope"
                 itemtype="http://schema.org/Offer">
                 <div style="width: 100%; text-align: left;">
-                    <t t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
+                    <t
+                        t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
                         <div style="font-size: x-small;">
                             <span>PCT</span>
                             <span t-esc="combination_info['price']"
@@ -135,7 +172,7 @@
                         </div>
                     </t>
                 </div>
-                
+
                 <t t-if="combination_info['PVP']">
                     <div style="width: 100%; text-align: left;">
                         <div style="font-size: x-small;">
@@ -145,7 +182,7 @@
                         </div>
                     </div>
                 </t>
-                
+
                 <span
                     style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
                     <t t-set="is_available"
@@ -159,8 +196,19 @@
                         <span>No stock</span>
                     </span>
                 </span>
+                <t t-if="website_sale_order">
+                    <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                        <t t-set="prod_templ_id" t-value="line.product_id.product_tmpl_id" />
+                        <t t-set="bin_prod_templ_id"
+                            t-value="request.env['product.template'].sudo().search([('id', '=', product.id)])" />
 
-
+                        <t t-if="prod_templ_id == bin_prod_templ_id">
+                            <div style="float: right; font-size: smaller;"> In cart: <span
+                                    t-esc="line.product_uom_qty" />
+                            </div>
+                        </t>
+                    </t>
+                </t>
             </div>
         </xpath>
     </template>

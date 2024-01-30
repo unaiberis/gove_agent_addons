@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_mail_followers_all,mail.followers.all,mail.model_mail_followers,,1,1,1,1
-access_update_res_partner,update_res_partner,model_update_res_partner,,1,1,1,1
-access_agent_partner,access_agent_partner,model_agent_partner,,1,1,1,1 
+access_mail_followers_all,mail.followers.all,mail.model_mail_followers,,1,1,1,1	access_mail_followers_all,mail.followers.all,mail.model_mail_followers,,1,1,1,1
+access_update_res_partner,update_res_partner,model_update_res_partner,,1,1,1,1	access_update_res_partner,update_res_partner,model_update_res_partner,,1,1,1,1
+access_agent_partner,access_agent_partner,model_agent_partner,,1,1,1,1 	access_agent_partner,access_agent_partner,model_agent_partner,,1,1,1,1 
+access_website_ir_ui_view_publisher,access_website_ir_ui_view_publisher,website.model_ir_ui_view,,1,0,0,0

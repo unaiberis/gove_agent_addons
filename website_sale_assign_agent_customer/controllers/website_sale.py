@@ -94,18 +94,26 @@ class WebsiteSale(WebsiteSale):
 
         request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
         agent_customer_id = False
-        if post.get('agent_customer_id'):
+
+        agent_customers = request.env.user.sudo().partner_id.agent_customers
+
+        # There are items in the cart dont let changing agent customers because that't an error. It has to empty the cart
+        # to be able to change the customer
+        if post.get('agent_customer_id') and (
+            (request.website.sale_get_order() and request.website.sale_get_order().cart_quantity == 0) or
+            (not request.website.sale_get_order())
+        ):
+
             agent_customer_id = int(post.get('agent_customer_id'))
-
-
 
 
             customer_id_chosen_by_agent_record = request.env['agent.partner'].sudo().search([], limit=1)
 
-            if customer_id_chosen_by_agent_record:
-                customer_id_chosen_by_agent_record.write({'customer_id_chosen_by_agent': agent_customer_id})
-            else:
-                request.env['agent.partner'].sudo().create({'customer_id_chosen_by_agent': agent_customer_id})
+            if agent_customer_id and agent_customers and agent_customer_id in agent_customers.ids or agent_customer_id == 0:
+                if customer_id_chosen_by_agent_record:
+                    customer_id_chosen_by_agent_record.write({'customer_id_chosen_by_agent': agent_customer_id})
+                else:
+                    request.env['agent.partner'].sudo().create({'customer_id_chosen_by_agent': agent_customer_id})
 
 
             self._agent_customer_id = agent_customer_id
@@ -123,7 +131,7 @@ class WebsiteSale(WebsiteSale):
         #     if customer_id_chosen_by_agent_record:
         #         customer_id_chosen_by_agent_record.write({'customer_id_chosen_by_agent': 0})
 
-        agent_customers = request.env.user.sudo().partner_id.agent_customers
+
         # Get the pricelist and partner based on the agent_customer_id
         if self._agent_customer_id and self._agent_customer_id in agent_customers.ids:
             partner = request.env['res.partner'].browse(self._agent_customer_id)
@@ -211,7 +219,10 @@ class WebsiteSale(WebsiteSale):
         selected_customer = request.env['res.partner'].sudo().browse(selected_customer_id)
         # Update the values dictionary with the selected customer's name
         values['selected_customer'] = selected_customer
-
+        
+        website_sale_order = request.website.sale_get_order()
+        if website_sale_order:
+            values['website_sale_order'] = website_sale_order
 
         return request.render("website_sale.products", values)
     

@@ -132,6 +132,26 @@
         </xpath>
     </template>
 
+    <template id="virtual_quantity_available" inherit_id="website_sale.cart_lines">
+        <xpath expr="//td[hasclass('td-qty')]//div[hasclass('css_quantity')]" position="after">
+            <div class="contenido-inferior">
+                <t t-esc="line.virtual_available_at_date" />
+            </div>
+
+            <style>
+                /* Estilo para el contenido debajo del div superior */
+                .contenido-inferior {
+                width: 100%;
+                box-sizing: border-box;
+                /* Agrega cualquier estilo adicional que necesites para el div inferior */
+                background-color: #f0f0f0; /* Ejemplo de color de fondo */
+                padding: 10px; /* Ejemplo de relleno */
+                }
+            </style>
+        </xpath>
+
+    </template>
+
     <template inherit_id="website_sale.payment" id="payment_remove_facturation_of_the_agent">
         <xpath
             expr="//div[hasclass('card')]" position="replace">

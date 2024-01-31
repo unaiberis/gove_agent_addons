@@ -17,13 +17,13 @@ class WebsiteSale(WebsiteSale):
         if (
             request.env["agent.partner"]
             .sudo()
-            .search([], limit=1)
+            .search([('agent_id','=',request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         ):
             order.agent_customer = int(
                 request.env["agent.partner"]
                 .sudo()
-                .search([], limit=1)
+                .search([('agent_id','=',request.env.user.sudo().partner_id.id)], limit=1)
                 .customer_id_chosen_by_agent
             )
         else:
@@ -37,7 +37,7 @@ class WebsiteSale(WebsiteSale):
         order.agent_customer = int(
             request.env["agent.partner"]
             .sudo()
-            .search([], limit=1)
+            .search([('agent_id','=',request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
         if not order or not request.env.user.partner_id.agent:
@@ -128,9 +128,10 @@ class WebsiteSale(WebsiteSale):
                         {"customer_id_chosen_by_agent": agent_customer_id}
                     )
                 else:
-                    request.env["agent.partner"].sudo().create(
-                        {"customer_id_chosen_by_agent": agent_customer_id}
-                    )
+                    request.env["agent.partner"].sudo().create({
+                        "customer_id_chosen_by_agent": agent_customer_id,
+                        "agent_id": request.env.user.sudo().partner_id.id,
+                    })
 
             self._agent_customer_id = agent_customer_id
 
@@ -247,9 +248,10 @@ class WebsiteSale(WebsiteSale):
         selected_customer_id = (
             request.env["agent.partner"]
             .sudo()
-            .search([], limit=1)
+            .search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
+
         selected_customer = (
             request.env["res.partner"].sudo().browse(selected_customer_id)
         )
@@ -283,12 +285,13 @@ class WebsiteSale(WebsiteSale):
         agent_customers = request.env.user.sudo().partner_id.agent_customers
         # Get the pricelist and partner based on the agent_customer_id
 
-        self._agent_customer_id = (
+        selected_customer_id = (
             request.env["agent.partner"]
             .sudo()
-            .search([], limit=1)
+            .search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
+
         if self._agent_customer_id and self._agent_customer_id in agent_customers.ids:
             partner = request.env["res.partner"].browse(self._agent_customer_id)
             property_name = "property_product_pricelist"
@@ -350,7 +353,7 @@ class WebsiteSale(WebsiteSale):
         selected_customer_id = (
             request.env["agent.partner"]
             .sudo()
-            .search([], limit=1)
+            .search([('agent_id','=',request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
 

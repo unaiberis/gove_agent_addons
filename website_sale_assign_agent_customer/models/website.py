@@ -145,6 +145,5 @@ class Website(models.Model):
                 sale_order.write(values)
                 for line in sale_order.order_line:
                     if line.exists():
-#                         sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
-                        print("Pruebie ettie")
+                        sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
             return sale_order

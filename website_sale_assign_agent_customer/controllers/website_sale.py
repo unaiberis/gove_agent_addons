@@ -104,49 +104,41 @@ class WebsiteSale(WebsiteSale):
 
         # There are items in the cart dont let changing agent customers because that't an error. It has to empty the cart
         # to be able to change the customer
-        if post.get("agent_customer_id") and (
-            (
-                request.website.sale_get_order()
-                and request.website.sale_get_order().cart_quantity == 0
-            )
-            or (not request.website.sale_get_order())
-        ):
+        
+        
+        if post.get("agent_customer_id"):
             agent_customer_id = int(post.get("agent_customer_id"))
 
-            customer_id_chosen_by_agent_record = (
-                request.env["agent.partner"].sudo().search([], limit=1)
-            )
-
-            if (
-                agent_customer_id
-                and agent_customers
-                and agent_customer_id in agent_customers.ids
-                or agent_customer_id == 0
-            ):
-                if customer_id_chosen_by_agent_record:
-                    customer_id_chosen_by_agent_record.write(
-                        {"customer_id_chosen_by_agent": agent_customer_id}
-                    )
-                else:
-                    request.env["agent.partner"].sudo().create({
-                        "customer_id_chosen_by_agent": agent_customer_id,
-                        "agent_id": request.env.user.sudo().partner_id.id,
-                    })
-
             self._agent_customer_id = agent_customer_id
+            
+            agent_partner = request.env["agent.partner"].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1)
 
-            partner = request.env.user.partner_id
-
-            if "customer_selected_by_agent" in partner:
-                # Assuming 'self._agent_customer_id' is the desired value
-                partner.write({"customer_selected_by_agent": self._agent_customer_id})
-
-        # else:
-        #     customer_id_chosen_by_agent_record = request.env['agent.partner'].sudo().search([], limit=1)
-
-        #     if customer_id_chosen_by_agent_record:
-        #         customer_id_chosen_by_agent_record.write({'customer_id_chosen_by_agent': 0})
-
+            if agent_partner:
+                agent_partner.write({
+                            'agent_id': request.env.user.sudo().partner_id.id,
+                            'customer_id_chosen_by_agent': self._agent_customer_id
+                        })
+            else:
+                request.env["agent.partner"].sudo().create({
+                        'agent_id': request.env.user.sudo().partner_id.id,
+                        'customer_id_chosen_by_agent': self._agent_customer_id,
+                    })
+        else: 
+            if request.env["agent.partner"].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1):
+                # If no customer id is introduced by url the find it in the db using user's partner id
+                self._agent_customer_id = (
+                    request.env["agent.partner"]
+                    .sudo()
+                    .search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1)
+                    .customer_id_chosen_by_agent
+                )
+            else:
+                request.env["agent.partner"].sudo().create({
+                        'agent_id': request.env.user.sudo().partner_id.id,
+                        'customer_id_chosen_by_agent': 0,
+                    })
+                
+                
         # Get the pricelist and partner based on the agent_customer_id
         if self._agent_customer_id and self._agent_customer_id in agent_customers.ids:
             partner = request.env["res.partner"].browse(self._agent_customer_id)

@@ -36,8 +36,6 @@
 
 
             <div class="row">
-                <t
-                    t-if="not request.website.sale_get_order() or request.website.sale_get_order() and request.website.sale_get_order().cart_quantity == 0">
 
                     <div class="col-md-6 mb-3">
                         <h3 class="mb-3">Assign Customer to Order</h3>
@@ -50,7 +48,6 @@
                         </select>
                         <button type="submit" class="btn btn-primary mt-3">Update Customer</button>
                     </div>
-                </t>
 
                 <t t-if="selected_customer and selected_customer.exists()">
                     <div class="col-md-6" t-if="selected_customer">
@@ -61,11 +58,11 @@
                         </h1>
                         <p class="text-center text-muted">Selected
                             customer</p>
-                        <t
+                        <!-- <t
                             t-if="request.website.sale_get_order() and request.website.sale_get_order().cart_quantity != 0">
                             <p class="text-center text-muted">You have to empty the cart to be able
                                 to change the customer</p>
-                        </t>
+                        </t> -->
                     </div>
 
                     <style>

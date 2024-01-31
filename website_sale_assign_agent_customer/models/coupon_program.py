@@ -17,10 +17,33 @@ class CouponProgram(models.Model):
 
             if not order and (groups or no_group_programs):
                 website = request and getattr(request, 'website', None)
-                order = website.sale_get_order() if website else None
+                
+                
+                
+                # GET CUSTOMER PRICELIST
+                agent_customers = request.env.user.sudo().partner_id.agent_customers
+                # Get the pricelist and partner based on the agent_customer_id
+
+                _agent_customer_id = request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent
+                if _agent_customer_id and _agent_customer_id in agent_customers.ids:
+                    partner = request.env['res.partner'].browse(_agent_customer_id)
+                    property_name = 'property_product_pricelist'
+
+                    ir_property = request.env['ir.property'].sudo().search([
+                        ('name', '=', property_name),
+                        ('res_id', '=', f'res.partner,{partner.id}'),
+                    ], limit=1)
+
+                    if ir_property and ir_property.value_reference:
+                        # Parse the value_reference to get the pricelist number
+                        pricelist_number = int(ir_property.value_reference.split(',')[1])
+                        pricelist = request.env['product.pricelist'].browse(pricelist_number)
+                        _pricelist = pricelist
+                
+                order = website.sale_get_order(force_pricelist=_pricelist.id,update_pricelist=True) if website and _pricelist else None
                 if not order:
                     ctx = self.env.context
-                    params = ctx.get('params') if ctx else None
+                    params = ctx.get('params') if ctx and _pricelist else None
                     if params and params.get('model') == 'sale.order':
                         order_id = params.get('id')
                         order = self.env['sale.order'].browse(order_id)

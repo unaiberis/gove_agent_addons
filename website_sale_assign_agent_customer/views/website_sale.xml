@@ -189,7 +189,7 @@
                     </div>
                 </t>
 
-                <span
+                <!-- <span
                     style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
                     <t t-set="is_available"
                         t-value="request.env['product.template'].sudo().search([('id', '=', product.id)]).virtual_available > 0" />
@@ -201,8 +201,8 @@
                     <span t-else="" style="color: red;">
                         <span>No stock</span>
                     </span>
-                </span>
-                <t t-if="website_sale_order">
+                </span> -->
+                <!-- <t t-if="website_sale_order">
                     <t t-foreach="website_sale_order.website_order_line" t-as="line">
                         <t t-set="prod_templ_id" t-value="line.product_id.product_tmpl_id" />
                         <t t-set="bin_prod_templ_id"
@@ -214,7 +214,7 @@
                             </div>
                         </t>
                     </t>
-                </t>
+                </t> -->
             </div>
         </xpath>
     </template>

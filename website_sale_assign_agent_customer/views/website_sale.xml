@@ -37,7 +37,7 @@
 
             <div class="row">
                 <t
-                    t-if="not request.website.sale_get_order() or request.website.sale_get_order() and request.website.sale_get_order().cart_quantity == 0">
+                    t-if="not request.website.sale_get_order() or request.website.sale_get_order()">
 
                     <div class="col-md-6 mb-3">
                         <h3 class="mb-3">Assign Customer to Order</h3>

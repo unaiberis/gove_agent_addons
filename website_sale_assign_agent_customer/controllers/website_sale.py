@@ -196,17 +196,16 @@ class WebsiteSale(WebsiteSale):
             # Assuming 'self._agent_customer_id' is the desired value
             partner.write({"customer_selected_by_agent": self._agent_customer_id})
 
-        # else:
-        #     customer_id_chosen_by_agent_record = request.env['agent.partner'].sudo().search([], limit=1)
-
-        #     if customer_id_chosen_by_agent_record:
-        #         customer_id_chosen_by_agent_record.write({'customer_id_chosen_by_agent': 0})
 
         # Get the pricelist and partner based on the agent_customer_id
         if self._agent_customer_id and self._agent_customer_id in agent_customers.ids:
+            # Retrieve the partner using the agent_customer_id
             partner = request.env["res.partner"].browse(self._agent_customer_id)
+
+            # Define the property name for the pricelist in partner's properties
             property_name = "property_product_pricelist"
 
+            # Search for the property related to the pricelist in the partner's properties
             ir_property = (
                 request.env["ir.property"]
                 .sudo()
@@ -219,13 +218,20 @@ class WebsiteSale(WebsiteSale):
                 )
             )
 
+            # Check if the ir_property exists and has a value_reference
             if ir_property and ir_property.value_reference:
                 # Parse the value_reference to get the pricelist number
                 pricelist_number = int(ir_property.value_reference.split(",")[1])
+
+                # Retrieve the pricelist using the pricelist number
                 pricelist = request.env["product.pricelist"].browse(pricelist_number)
+
+                # Set the pricelist to the class variable _pricelist
                 self._pricelist = pricelist
 
+                # Check if both partner and pricelist are available
                 if partner and pricelist:
+                    # Update the request context with the pricelist and partner information
                     request.context = dict(
                         request.context, pricelist=pricelist.id, partner=partner
                     )

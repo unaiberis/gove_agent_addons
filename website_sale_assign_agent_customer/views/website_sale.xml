@@ -9,7 +9,7 @@
                         <t
                             t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().name" />
                     </div>
-                </div>    
+                </div>
                 <div class="card-body">
                     <div>
                         <b>Modo de pago utilizado por el cliente:</b>
@@ -138,7 +138,7 @@
         </xpath>
     </template>
 
-    <template id="virtual_quantity_available" inherit_id="website_sale.cart_lines">
+    <!-- <template id="virtual_quantity_available" inherit_id="website_sale.cart_lines">
         <xpath expr="//td[hasclass('td-qty')]//div[hasclass('css_quantity')]" position="after">
             <t t-if="not ('descuento' in line.name.lower())">
                 <div class="contenido-inferior"> En stock: <t
@@ -156,8 +156,7 @@
                 }
             </style>
         </xpath>
-
-    </template>
+    </template> -->
 
     <template inherit_id="website_sale.payment" id="payment_remove_facturation_of_the_agent">
         <xpath
@@ -239,10 +238,28 @@
                             <div style="float: right; font-size: smaller;"> In cart: <span
                                     t-esc="line.product_uom_qty" />
                             </div>
+
+                            
                         </t>
                     </t>
                 </t>
             </div>
+        </xpath>
+        <!-- REPLACE PRODUCTS ENTIRE FORM -->
+        <xpath
+            expr="//form[hasclass('oe_product_cart')]//div[hasclass('o_wsale_product_information')]"
+            position="before">
+            <style>
+                form.card.oe_product_cart{
+                    height: 280px;
+                }
+                tr{
+                    height: 300px;
+                }
+                .oe_product.oe_image_full .o_wsale_product_information{
+                    position: relative;
+                }
+            </style>
         </xpath>
     </template>
 

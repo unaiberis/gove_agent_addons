@@ -272,6 +272,7 @@
                                     t-att-data-product-id="line.product_id.id"
                                     contenteditable="true">
                                     <t t-esc="int(line.product_uom_qty)" />
+                                    <p>Lelena</p>
                                 </div>
                                 <div class="input-group-append">
                                     <a t-attf-href="#"
@@ -282,7 +283,7 @@
                                 </div>
                             </div>
                         </t>
-                        <t t-else="">
+                        <!-- <t t-else="">
                             <div class="css_quantity input-group mx-auto border">
                                 <div class="input-group-prepend">
                                     <a t-attf-href="#"
@@ -295,7 +296,7 @@
                                     t-att-data-line-id="line.id"
                                     t-att-data-product-id="line.product_id.id"
                                     contenteditable="true">
-                                    0
+                                    0<p>Bifgarrena</p>
                                 </div>
                                 <div class="input-group-append">
                                     <a t-attf-href="#"
@@ -305,7 +306,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </t>
+                        </t> -->
                     </t>
                 </t>
                 

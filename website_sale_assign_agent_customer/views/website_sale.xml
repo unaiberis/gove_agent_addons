@@ -140,10 +140,11 @@
 
     <template id="virtual_quantity_available" inherit_id="website_sale.cart_lines">
         <xpath expr="//td[hasclass('td-qty')]//div[hasclass('css_quantity')]" position="after">
-            <div class="contenido-inferior">
-                <t t-esc="line.virtual_available_at_date" />
-            </div>
-
+            <t t-if="not ('descuento' in line.name.lower())">
+                <div class="contenido-inferior">
+                    <t t-esc="line.virtual_available_at_date" />
+                </div>
+            </t>
             <style>
                 /* Estilo para el contenido debajo del div superior */
                 .contenido-inferior {

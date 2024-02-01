@@ -10,5 +10,8 @@ class AgentPartner(models.Model):
 
     customer_id_chosen_by_agent = fields.Integer(
         string="Agent Customer",
-        default=True,
+        default=0,
+    )
+    agent_id  = fields.Integer(
+        string="Agent Id",
     )

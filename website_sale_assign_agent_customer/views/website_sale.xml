@@ -7,19 +7,19 @@
                     <div>
                         <b>Assigned Customer:</b>
                         <t
-                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().name" />
+                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().name" />
                     </div>
-                </div>
+                </div>    
                 <div class="card-body">
                     <div>
                         <b>Modo de pago utilizado por el cliente:</b>
                         <t
-                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
+                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
                     </div>
                 </div>
             </div>
             <t
-                t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent).sudo()">
+                t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo()">
                 <p>Please select a customer</p>
             </t>
         </t>
@@ -121,7 +121,7 @@
         <xpath expr="//div[@id='payment_method']" position="before">
             <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
             <t
-                t-if="request.env['agent.partner'].sudo().search([], limit=1).customer_id_chosen_by_agent != 0">
+                t-if="request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent != 0">
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
             </t>
         </xpath>
@@ -141,8 +141,8 @@
     <template id="virtual_quantity_available" inherit_id="website_sale.cart_lines">
         <xpath expr="//td[hasclass('td-qty')]//div[hasclass('css_quantity')]" position="after">
             <t t-if="not ('descuento' in line.name.lower())">
-                <div class="contenido-inferior">
-                    <t t-esc="line.virtual_available_at_date" />
+                <div class="contenido-inferior"> En stock: <t
+                        t-esc="int(line.virtual_available_at_date)" />
                 </div>
             </t>
             <style>
@@ -260,9 +260,9 @@
                         <t t-call="website_sale.search">
                             <t t-set="_classes" t-valuef="w-100 w-md-auto mt-2" />
                         </t>
-                        <t t-call="website_sale.pricelist_list">
+                        <!-- <t t-call="website_sale.pricelist_list">
                             <t t-set="_classes" t-valuef="mt-2 ml-md-2" />
-                        </t>
+                        </t> -->
                         <t t-call="website.pager">
                             <t t-set="_classes" t-valuef="mt-2 ml-md-2" />
                         </t>

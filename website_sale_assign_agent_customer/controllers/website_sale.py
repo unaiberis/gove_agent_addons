@@ -101,7 +101,7 @@ class WebsiteSale(WebsiteSale):
         # to be able to change the customer
         if post.get('agent_customer_id') and (
             (request.website.sale_get_order() and request.website.sale_get_order().cart_quantity == 0) or
-            (not request.website.sale_get_order())
+            (not request.website.sale_get_order()) or int(post.get('agent_customer_id')) == 0
         ):
 
             agent_customer_id = int(post.get('agent_customer_id'))

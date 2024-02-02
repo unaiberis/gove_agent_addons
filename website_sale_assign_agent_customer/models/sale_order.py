@@ -10,3 +10,6 @@ class SaleOrder(models.Model):
     agent_customer = fields.Many2one(
         comodel_name="res.partner", string="Agent Customer"
     )
+    purchaser_commentary = fields.Text(
+        string="Purchaser Commentary"
+    )

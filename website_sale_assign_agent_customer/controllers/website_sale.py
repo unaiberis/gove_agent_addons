@@ -68,6 +68,9 @@ class WebsiteSale(WebsiteSale):
                 "partner_id": order.agent_customer.id,
             }
         )
+        custom_comment = request.params.get('custom_comment')
+        # order.purchaser_commentary = 
+
         return res
 
     @http.route()

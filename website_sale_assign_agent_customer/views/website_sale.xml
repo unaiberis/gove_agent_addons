@@ -113,6 +113,19 @@
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
             </t>
         </xpath>
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div>
+                <label for="comment">Comentario:</label>
+                <textarea t-att-id="comment" t-att-name="comment"
+                    t-attf-value="{{ custom_comment }}" />
+            </div>
+            <t t-jquery="textarea#comment" t-operation="attributes">
+                <t t-set="readonly">true</t>
+            </t>
+
+        </xpath>
+
+
     </template>
 
     <template

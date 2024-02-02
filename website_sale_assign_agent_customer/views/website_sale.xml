@@ -98,7 +98,7 @@
         id="cart" inherit_id="website_sale.cart">
         <xpath expr="//div[hasclass('clearfix')]" position="after">
             <t t-if="selected_customer">
-            <!-- Show assigned customer and its payment mode in the cart page -->
+                <!-- Show assigned customer and its payment mode in the cart page -->
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
             </t>
         </xpath>
@@ -285,7 +285,7 @@
 
 
         <!-- CHANGE STYLE OF EVERY PRODUCT TO SHOW IMAGE BIGGER AND MAKE BOX HEIGHT BIGGER -->
-        
+
         <xpath
             expr="//form[hasclass('oe_product_cart')]//div[hasclass('o_wsale_product_information')]"
             position="before">
@@ -580,6 +580,16 @@
         <xpath expr="//div[@id='products_grid']" position="after">
             <!-- Nothing to do, this view is only meant to allow the server -->
             <!-- to know if the list view layout should be used -->
+        </xpath>
+    </template>
+    <!-- insert_customer_choose_option_and_selected_client_in_product_list -->
+    <template id="insert_customer_choose_option_and_selected_client_in_product_list"
+        inherit_id="website_sale_assign_agent_customer.products_inserted">
+        <xpath expr="//div[@id='oe_structure_website_sale_products_1']" position="before">
+            <t
+                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
+                <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
+            </t>
         </xpath>
     </template>
 

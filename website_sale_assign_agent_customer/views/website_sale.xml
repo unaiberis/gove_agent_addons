@@ -81,9 +81,8 @@
                                 purchasing with an agent user</p>
                             <t
                                 t-if="request.website.sale_get_order() and request.website.sale_get_order().cart_quantity != 0">
-                                <p class="text-center text-muted">You have to empty the cart to be
-                                    able
-                                    to change the customer</p>
+                                <p class="text-center text-muted">Your cart will be emptied when you
+                                    change the customer</p>
                             </t>
                         </div>
                     </div>

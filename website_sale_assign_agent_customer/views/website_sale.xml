@@ -25,15 +25,11 @@
         </t>
     </template>
 
-
+    <!-- Choose customer "Update Customer" Option -->
     <template id="choose_customer_from_agent">
-        <!-- <t t-if="not request.website.is_public_user() and
-        request.env.user.sudo().partner_id.agent and
-        selected_customer"> -->
         <form method="post" action="/shop/update_customer" class="container mt-3">
             <!-- Include the CSRF token as a hidden input -->
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-
 
             <div class="row">
                 <t
@@ -61,11 +57,6 @@
                         </h1>
                         <p class="text-center text-muted">Selected
                             customer</p>
-                        <!-- <t
-                            t-if="request.website.sale_get_order() and request.website.sale_get_order().cart_quantity != 0">
-                            <p class="text-center text-muted">You have to empty the cart to be able
-                                to change the customer</p>
-                        </t> -->
                     </div>
 
                     <style>
@@ -78,7 +69,6 @@
                         }
                         }
                     </style>
-
 
                 </t>
 
@@ -107,9 +97,8 @@
     <template
         id="cart" inherit_id="website_sale.cart">
         <xpath expr="//div[hasclass('clearfix')]" position="after">
-            <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
-
             <t t-if="selected_customer">
+            <!-- Show assigned customer and its payment mode in the cart page -->
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
             </t>
         </xpath>
@@ -119,7 +108,7 @@
     <template
         id="payment" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
-            <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
+            <!-- Show assigned customer and its payment mode in the payment page -->
             <t
                 t-if="request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent != 0">
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
@@ -130,33 +119,11 @@
     <template
         id="confirmation" inherit_id="website_sale.confirmation">
         <xpath expr="//div[hasclass('oe_cart')]" position="after">
-            <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
-
             <t t-if="selected_customer">
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
             </t>
         </xpath>
     </template>
-
-    <!-- <template id="virtual_quantity_available" inherit_id="website_sale.cart_lines">
-        <xpath expr="//td[hasclass('td-qty')]//div[hasclass('css_quantity')]" position="after">
-            <t t-if="not ('descuento' in line.name.lower())">
-                <div class="contenido-inferior"> En stock: <t
-                        t-esc="int(line.virtual_available_at_date)" />
-                </div>
-            </t>
-            <style>
-                /* Estilo para el contenido debajo del div superior */
-                .contenido-inferior {
-                width: 100%;
-                box-sizing: border-box;
-                /* Agrega cualquier estilo adicional que necesites para el div inferior */
-                background-color: #f0f0f0; /* Ejemplo de color de fondo */
-                padding: 10px; /* Ejemplo de relleno */
-                }
-            </style>
-        </xpath>
-    </template> -->
 
     <template inherit_id="website_sale.payment" id="payment_remove_facturation_of_the_agent">
         <xpath
@@ -230,89 +197,95 @@
                 </span>
                 <style>
                     .css_quantity {
-                        width: 110px;
-                        text-align: center;
-                        float: right;
-                        height: 38px;
+                    width: 110px;
+                    text-align: center;
+                    float: right;
+                    height: 38px;
                     }
-                
+
                     .js_quantity {
-                        font-size: x-small;
-                        height: 100%;
-                        display: flex;
-                        align-items: center; /* Center vertically */
-                        justify-content: center; /* Center horizontally */
-                        text-align: center;
-                        padding: 0;
+                    font-size: x-small;
+                    height: 100%;
+                    display: flex;
+                    align-items: center; /* Center vertically */
+                    justify-content: center; /* Center horizontally */
+                    text-align: center;
+                    padding: 0;
                     }
-                
+
                     .input-group-prepend,
                     .input-group-append {
-                        display: inline-block;
+                    display: inline-block;
                     }
                 </style>
-                
+
                 <t t-if="website_sale_order">
                     <t t-foreach="website_sale_order.website_order_line" t-as="line">
                         <t t-set="prod_templ_id" t-value="line.product_id.product_tmpl_id" />
                         <t t-set="bin_prod_templ_id"
                             t-value="request.env['product.template'].sudo().search([('id', '=', product.id)])" />
-                
-                        <t t-if="prod_templ_id == bin_prod_templ_id">
-                            <div class="css_quantity input-group mx-auto border">
-                                <div class="input-group-prepend">
-                                    <a t-attf-href="#"
-                                        class="btn btn-link js_add_cart_json d-none d-md-inline-block"
-                                        aria-label="Remove one" title="Remove one">
-                                        <i class="fa fa-minus"></i>
-                                    </a>
+                        <t t-if="bin_prod_templ_id and 0">
+
+                            <t t-if="prod_templ_id == bin_prod_templ_id">
+                                <div class="css_quantity input-group mx-auto border">
+                                    <div class="input-group-prepend">
+                                        <a
+                                            t-attf-href="'#?sign=minus&amp;product_id=' + str(product_id)"
+                                            class="btn btn-link js_add_cart_json d-none d-md-inline-block"
+                                            aria-label="Remove one" title="Remove one">
+                                            <i class="fa fa-minus"></i>
+                                        </a>
+                                    </div>
+                                    <div class="js_quantity form-control quantity"
+                                        t-att-data-line-id="line.id"
+                                        t-att-data-product-id="line.product_id.id"
+                                        contenteditable="true">
+                                        <t t-esc="int(line.product_uom_qty)" />
+                                    </div>
+                                    <div class="input-group-append">
+                                        <a
+                                            t-attf-href="'#?sign=plus&amp;product_id=' + bin_prod_templ_id.id"
+                                            class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block"
+                                            aria-label="Add one" title="Add one">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="js_quantity form-control quantity"
-                                    t-att-data-line-id="line.id"
-                                    t-att-data-product-id="line.product_id.id"
-                                    contenteditable="true">
-                                    <t t-esc="int(line.product_uom_qty)" />
-                                    <p>Lelena</p>
+                            </t>
+                            <t t-else="">
+                                <div class="css_quantity input-group mx-auto border">
+                                    <div class="input-group-prepend">
+                                        <a
+                                            t-attf-href="'#?sign=minus&amp;product_id=' + str(product_id)"
+                                            class="btn btn-link js_add_cart_json d-none d-md-inline-block"
+                                            aria-label="Remove one" title="Remove one">
+                                            <i class="fa fa-minus"></i>
+                                        </a>
+                                    </div>
+                                    <div class="js_quantity form-control quantity"
+                                        t-att-data-line-id="line.id"
+                                        t-att-data-product-id="line.product_id.id"
+                                        contenteditable="true"> 0
+                                    </div>
+                                    <div class="input-group-append">
+                                        <a
+                                            t-attf-href="'#?sign=plus&amp;product_id=' + bin_prod_templ_id.id"
+                                            class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block"
+                                            aria-label="Add one" title="Add one">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="input-group-append">
-                                    <a t-attf-href="#"
-                                        class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block"
-                                        aria-label="Add one" title="Add one">
-                                        <i class="fa fa-plus"></i>
-                                    </a>
-                                </div>
-                            </div>
+                            </t>
                         </t>
-                        <!-- <t t-else="">
-                            <div class="css_quantity input-group mx-auto border">
-                                <div class="input-group-prepend">
-                                    <a t-attf-href="#"
-                                        class="btn btn-link js_add_cart_json d-none d-md-inline-block"
-                                        aria-label="Remove one" title="Remove one">
-                                        <i class="fa fa-minus"></i>
-                                    </a>
-                                </div>
-                                <div class="js_quantity form-control quantity"
-                                    t-att-data-line-id="line.id"
-                                    t-att-data-product-id="line.product_id.id"
-                                    contenteditable="true">
-                                    0<p>Bifgarrena</p>
-                                </div>
-                                <div class="input-group-append">
-                                    <a t-attf-href="#"
-                                        class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block"
-                                        aria-label="Add one" title="Add one">
-                                        <i class="fa fa-plus"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </t> -->
                     </t>
                 </t>
-                
             </div>
         </xpath>
-        <!-- REPLACE PRODUCTS ENTIRE FORM -->
+
+
+        <!-- CHANGE STYLE OF EVERY PRODUCT TO SHOW IMAGE BIGGER AND MAKE BOX HEIGHT BIGGER -->
+        
         <xpath
             expr="//form[hasclass('oe_product_cart')]//div[hasclass('o_wsale_product_information')]"
             position="before">
@@ -344,6 +317,7 @@
                         <t t-call="website_sale.search">
                             <t t-set="_classes" t-valuef="w-100 w-md-auto mt-2" />
                         </t>
+                        <!-- Remove the option to choose a pricelist -->
                         <!-- <t t-call="website_sale.pricelist_list">
                             <t t-set="_classes" t-valuef="mt-2 ml-md-2" />
                         </t> -->
@@ -505,6 +479,7 @@
             </div>
         </xpath>
     </template>
+
     <template id="products_categories"
         inherit_id="website_sale_assign_agent_customer.products_inserted"
     >
@@ -608,28 +583,21 @@
         </xpath>
     </template>
 
-    <template id="products_inserted_berrixe"
-        inherit_id="website_sale_assign_agent_customer.products_inserted">
-        <xpath expr="//div[@id='oe_structure_website_sale_products_1']" position="before">
-            <t
-                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
-                <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
-            </t>
-        </xpath>
-    </template>
-
     <template id="products" inherit_id="website_sale.products">
         <xpath expr="//t[@t-call='website.layout']" position="replace">
+            <!-- If user is agent and a customer is selected show products -->
             <t
                 t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
                 <t t-call="website_sale_assign_agent_customer.products_inserted" />
             </t>
+            <!-- If user is agent and a customer is not selected then choose a customer -->
             <t
                 t-elif="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent">
                 <t t-call="website.layout">
                     <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
                 </t>
             </t>
+            <!-- If user is not an agent show products -->
             <t t-else="">
                 <t t-call="website_sale_assign_agent_customer.products_inserted" />
             </t>

@@ -232,7 +232,7 @@
                         <t t-set="prod_templ_id" t-value="line.product_id.product_tmpl_id" />
                         <t t-set="bin_prod_templ_id"
                             t-value="request.env['product.template'].sudo().search([('id', '=', product.id)])" />
-                        <t t-if="bin_prod_templ_id and 0">
+                        <t t-if="bin_prod_templ_id">
 
                             <t t-if="prod_templ_id == bin_prod_templ_id">
                                 <div class="css_quantity input-group mx-auto border">
@@ -260,7 +260,7 @@
                                     </div>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <!-- <t t-else="">
                                 <div class="css_quantity input-group mx-auto border">
                                     <div class="input-group-prepend">
                                         <a
@@ -284,7 +284,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            </t>
+                            </t> -->
                         </t>
                     </t>
                 </t>
@@ -299,13 +299,13 @@
             position="before">
             <style>
                 form.card.oe_product_cart{
-                height: 280px;
+                    height: 280px;
                 }
-                tr{
-                height: 300px;
+                .table-borderless tr {
+                    height: 300px;
                 }
                 .oe_product.oe_image_full .o_wsale_product_information{
-                position: relative;
+                    position: relative;
                 }
             </style>
         </xpath>

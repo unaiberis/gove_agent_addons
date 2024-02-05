@@ -328,7 +328,6 @@ class WebsiteSale(WebsiteSale):
 
     @http.route()
     def payment(self, **post):
-        # Your existing code here...
 
         # Retrieve the comment from the post data
         comment = post.get('comment_hidden')
@@ -338,9 +337,38 @@ class WebsiteSale(WebsiteSale):
         if sale_order and not sale_order.order_comments:
             sale_order.write({'order_comments': comment})
 
-        # Your existing code here...
-
         return super().payment(**post)
+
+    @http.route('/shop/cart/update', type='json', auth="public", website=True)
+    def update_cart(self, line_id, product_id, set_qty, csrf_token, **kwargs):
+        """
+        Update the cart based on the provided parameters.
+
+        :param line_id: Line ID of the cart item to update.
+        :param product_id: Product ID of the cart item.
+        :param set_qty: New quantity for the cart item.
+        :param csrf_token: CSRF token for security.
+        :param kwargs: Additional parameters.
+
+        :return: JSON response indicating the success or failure of the update.
+        """
+        # Ensure CSRF token is valid for security
+        WebsiteSale()._check_csrf_token(csrf_token)
+
+        # Convert IDs to integers
+        line_id = int(line_id)
+        product_id = int(product_id)
+        set_qty = int(set_qty)
+
+        # Get the cart and update the specified line
+        order = request.website.sale_get_order()
+        order_line = order.order_line.filtered(lambda line: line.id == line_id and line.product_id.id == product_id)
+        
+        if order_line:
+            order_line.write({'product_uom_qty': set_qty})
+            return {'success': True, 'message': 'Cart updated successfully'}
+        else:
+            return {'success': False, 'message': 'Cart item not found'}
 
 
     def empty_cart_before_changing_customer(self):

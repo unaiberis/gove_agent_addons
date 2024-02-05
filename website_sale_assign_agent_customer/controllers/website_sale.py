@@ -339,7 +339,7 @@ class WebsiteSale(WebsiteSale):
 
         return super().payment(**post)
 
-    @http.route('/shop/cart/update', type='json', auth="public", website=True)
+    @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
     def update_cart(self, line_id, product_id, set_qty, csrf_token, **kwargs):
         """
         Update the cart based on the provided parameters.

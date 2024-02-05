@@ -14,6 +14,9 @@ odoo.define('custom_cart_module.create_cart_line_from_shop', function (require) 
             var sign = $button.data('sign');
             var productID = $button.data('product-id');
             var lineID = $button.data('line-id');
+            var csrfToken = core.csrf_token;  // Include CSRF token
+
+            // Find the corresponding quantity input
             var $quantityInput = $('.js_quantity[data-line-id="' + lineID + '"]');
 
             var quantity = parseInt($quantityInput.text().trim());
@@ -33,22 +36,28 @@ odoo.define('custom_cart_module.create_cart_line_from_shop', function (require) 
                 'line_id': lineID,
                 'product_id': productID,
                 'set_qty': quantity,
-                'csrf_token': core.csrf_token,
+                'csrf_token': csrfToken,
             });
 
             // Make a POST request to update the cart
-            $.post('/shop/cart/update', {
-                'line_id': lineID,
-                'product_id': productID,
-                'set_qty': quantity,
-                'csrf_token': core.csrf_token, // Include CSRF token in the request
-            }).done(function (data) {
-                // Handle the response if needed
-                console.log('Cart updated successfully:', data);
-            }).fail(function (xhr, status, error) {
-                // Handle the error if needed
-                console.error('Error updating cart:', error);
+            $.ajax({
+                type: "POST",
+                url: "/shop/cart/updatefromshop",
+                data: {
+                    'line_id': lineID,
+                    'product_id': productID,
+                    'set_qty': quantity,
+                    'csrf_token': core.csrf_token,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log('Cart updated successfully:', data);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error updating cart:', error);
+                },
             });
+            
         });
 
         // Attach input event to update the quantity input

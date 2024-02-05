@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class AgentPartner(models.Model):
     _name = "agent.partner"
-    _description = "Model used to save customer id to use in the cart and when confirming the order"
+    _description = "Chosen Customer by Agent"
 
     customer_id_chosen_by_agent = fields.Integer(
         string="Agent Customer",

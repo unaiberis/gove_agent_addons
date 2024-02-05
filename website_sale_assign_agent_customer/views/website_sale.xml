@@ -17,6 +17,15 @@
                             t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
                     </div>
                 </div>
+                <t t-if="request.website.sale_get_order().order_comments">
+                    <div class="card-body">
+                        <div>
+                            <b>Comentario de la compra:</b>
+                            <t
+                                t-esc="request.website.sale_get_order().order_comments" />
+                        </div>
+                    </div>
+                </t>
             </div>
             <t
                 t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo()">

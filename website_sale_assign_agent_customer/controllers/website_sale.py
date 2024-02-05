@@ -326,6 +326,23 @@ class WebsiteSale(WebsiteSale):
 
         return request.render("website_sale.cart", values)
 
+    @http.route()
+    def payment(self, **post):
+        # Your existing code here...
+
+        # Retrieve the comment from the post data
+        comment = post.get('comment_hidden')
+
+        # Save the comment in the sale order if order_comments is empty
+        sale_order = request.website.sale_get_order()
+        if sale_order and not sale_order.order_comments:
+            sale_order.write({'order_comments': comment})
+
+        # Your existing code here...
+
+        return super().payment(**post)
+
+
     def empty_cart_before_changing_customer(self):
         order = request.website.sale_get_order(force_create=1)
         order_line = request.env["sale.order.line"].sudo()

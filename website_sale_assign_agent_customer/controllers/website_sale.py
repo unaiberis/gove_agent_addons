@@ -47,27 +47,28 @@ class WebsiteSale(WebsiteSale):
     @http.route()
     def payment_confirmation(self, **post):
         res = super().payment_confirmation(**post)
-        order = res.qcontext["order"]
-        order.agent_customer = int(
-            request.env["agent.partner"]
-            .sudo()
-            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
-            .customer_id_chosen_by_agent
-        )
-        if not order or not request.env.user.partner_id.agent:
-            return res
-        if not order.agent_customer:
-            return res
-        order.partner_id = order.agent_customer.id
-        order.onchange_partner_id()
-        order.user_id = request.env.user.id
-        request.env["mail.followers"].create(
-            {
-                "res_model": "sale.order",
-                "res_id": order.id,
-                "partner_id": order.agent_customer.id,
-            }
-        )
+        if request.env.user.sudo().partner_id.agent:
+            order = res.qcontext["order"]
+            order.agent_customer = int(
+                request.env["agent.partner"]
+                .sudo()
+                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .customer_id_chosen_by_agent
+            )
+            if not order or not request.env.user.partner_id.agent:
+                return res
+            if not order.agent_customer:
+                return res
+            order.partner_id = order.agent_customer.id
+            order.onchange_partner_id()
+            order.user_id = request.env.user.id
+            request.env["mail.followers"].create(
+                {
+                    "res_model": "sale.order",
+                    "res_id": order.id,
+                    "partner_id": order.agent_customer.id,
+                }
+            )
         return res
 
     @http.route()
@@ -113,11 +114,12 @@ class WebsiteSale(WebsiteSale):
             request.context, pricelist=pricelist.id, partner=request.env.user.partner_id
         )
 
-        agent_customer_id, agent_customers = self.get_agent_customer_from_url(**post)
+        if request.env.user.sudo().partner_id.agent:
+            agent_customer_id, agent_customers = self.get_agent_customer_from_url(**post)
 
-        self.set_pricelist_from_current_agent_customer(
-            agent_customer_id, agent_customers
-        )
+            self.set_pricelist_from_current_agent_customer(
+                agent_customer_id, agent_customers
+            )
 
         url = "/shop"
         if search:
@@ -292,13 +294,14 @@ class WebsiteSale(WebsiteSale):
             ):  # abandoned cart found, user have to choose what to do
                 values.update({"access_token": abandoned_order.access_token})
 
+        # Nik jarrittekue
         selected_customer_id = (
             request.env["agent.partner"]
             .sudo()
             .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
-
+        # Nik aldautekue
         values.update(
             {
                 "website_sale_order": order,
@@ -340,7 +343,7 @@ class WebsiteSale(WebsiteSale):
         return super().payment(**post)
 
     @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
-    def update_cart(self, line_id, product_id, set_qty, csrf_token, **kwargs):
+    def update_cart_from_shop(self, line_id, product_id, set_qty, csrf_token, **kwargs):
         """
         Update the cart based on the provided parameters.
 

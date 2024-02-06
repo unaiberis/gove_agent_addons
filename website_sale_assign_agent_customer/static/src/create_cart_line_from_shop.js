@@ -14,7 +14,7 @@ odoo.define('custom_cart_module.create_cart_line_from_shop', function (require) 
             var sign = $button.data('sign');
             var productID = $button.data('product-id');
             var lineID = $button.data('line-id');
-            var csrfToken = core.csrf_token;  // Include CSRF token
+            var csrfToken = core.csrf_token;
 
             // Find the corresponding quantity input
             var $quantityInput = $('.js_quantity[data-line-id="' + lineID + '"]');
@@ -27,6 +27,11 @@ odoo.define('custom_cart_module.create_cart_line_from_shop', function (require) 
             } else if (sign === 'minus' && quantity > 0) {
                 quantity -= 1;
             }
+
+            console.log('lineID:', lineID);
+            console.log('productID:', productID);
+            console.log('quantity:', quantity);
+
 
             // Update the quantity input
             $quantityInput.text(quantity);
@@ -57,7 +62,23 @@ odoo.define('custom_cart_module.create_cart_line_from_shop', function (require) 
                     console.error('Error updating cart:', error);
                 },
             });
-            
+
+        });
+
+        // Attach click event to handle quantity buttons
+        $(document).on('click', '.css_quantity .js_add_cart_json', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.currentTarget);
+            var $input = $link.closest('.css_quantity').find('.js_quantity');
+            var min = parseFloat($input.data("min") || 0);
+            var max = parseFloat($input.data("max") || Infinity);
+            var previousQty = parseFloat($input.text() || 0, 10);
+            var quantity = ($link.has(".fa-minus").length ? -1 : 1) + previousQty;
+            var newQty = quantity > min ? (quantity < max ? quantity : max) : min;
+            if (newQty !== previousQty) {
+                $input.text(newQty).trigger('input');  // Trigger input event
+            }
+            return false;
         });
 
         // Attach input event to update the quantity input

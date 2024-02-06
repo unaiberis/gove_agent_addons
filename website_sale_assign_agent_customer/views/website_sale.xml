@@ -203,7 +203,7 @@
                         <span>No stock</span>
                     </span>
                 </span>
-                <!-- <t t-if="website_sale_order">
+                <t t-if="website_sale_order">
                 </span>
                 <style>
                     .css_quantity {

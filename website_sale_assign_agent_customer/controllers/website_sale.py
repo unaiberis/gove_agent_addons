@@ -22,9 +22,6 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
 
 
 class WebsiteSale(WebsiteSale):
-    _agent_customer_id = False
-    _pricelist = False
-
     def check_field_validations(self, values):
         res = super().check_field_validations(values=values)
         order = request.website.sale_get_order(force_create=1)
@@ -50,27 +47,28 @@ class WebsiteSale(WebsiteSale):
     @http.route()
     def payment_confirmation(self, **post):
         res = super().payment_confirmation(**post)
-        order = res.qcontext["order"]
-        order.agent_customer = int(
-            request.env["agent.partner"]
-            .sudo()
-            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
-            .customer_id_chosen_by_agent
-        )
-        if not order or not request.env.user.partner_id.agent:
-            return res
-        if not order.agent_customer:
-            return res
-        order.partner_id = order.agent_customer.id
-        order.onchange_partner_id()
-        order.user_id = request.env.user.id
-        request.env["mail.followers"].create(
-            {
-                "res_model": "sale.order",
-                "res_id": order.id,
-                "partner_id": order.agent_customer.id,
-            }
-        )
+        if request.env.user.sudo().partner_id.agent:
+            order = res.qcontext["order"]
+            order.agent_customer = int(
+                request.env["agent.partner"]
+                .sudo()
+                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .customer_id_chosen_by_agent
+            )
+            if not order or not request.env.user.partner_id.agent:
+                return res
+            if not order.agent_customer:
+                return res
+            order.partner_id = order.agent_customer.id
+            order.onchange_partner_id()
+            order.user_id = request.env.user.id
+            request.env["mail.followers"].create(
+                {
+                    "res_model": "sale.order",
+                    "res_id": order.id,
+                    "partner_id": order.agent_customer.id,
+                }
+            )
         return res
 
     @http.route()
@@ -115,126 +113,13 @@ class WebsiteSale(WebsiteSale):
         request.context = dict(
             request.context, pricelist=pricelist.id, partner=request.env.user.partner_id
         )
-        # Initialize variable to False
-        agent_customer_id = False
 
-        # Get the agent customers associated with the current user
-        agent_customers = request.env.user.sudo().partner_id.agent_customers
+        if request.env.user.sudo().partner_id.agent:
+            agent_customer_id, agent_customers = self.get_agent_customer_from_url(**post)
 
-        # Check if the agent is trying to change the customer
-        if post.get("agent_customer_id") and (
-            (request.website.sale_get_order())
-            or (not request.website.sale_get_order())
-            or int(post.get("agent_customer_id")) == 0
-        ):
-            # Get the chosen agent customer ID from the post data
-            agent_customer_id = int(post.get("agent_customer_id"))
-
-            # Get the agent partner record for the current user
-            customer_id_chosen_by_agent_record = (
-                request.env["agent.partner"]
-                .sudo()
-                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+            self.set_pricelist_from_current_agent_customer(
+                agent_customer_id, agent_customers
             )
-
-            # Check if the chosen agent customer is valid
-            if (
-                agent_customer_id
-                and agent_customers
-                and agent_customer_id in agent_customers.ids
-                or agent_customer_id == 0
-            ):
-                # Set the chosen agent customer ID
-                self._agent_customer_id = agent_customer_id
-
-                # Check if there is a record for the agent's chosen customer
-                if customer_id_chosen_by_agent_record:
-                    # If the customer chosen is different and the cart is not empty, empty it
-                    if (
-                        agent_customer_id
-                        != customer_id_chosen_by_agent_record.customer_id_chosen_by_agent
-                    ):
-                        # Empty the cart before changing the customer
-                        order = request.website.sale_get_order(force_create=1)
-                        order_line = request.env["sale.order.line"].sudo()
-                        line_ids = order_line.search([("order_id", "=", order.id)])
-                        for line in line_ids:
-                            line_obj = order_line.browse([int(line)])
-                            if line_obj:
-                                line_obj.unlink()
-                    # Update the agent's chosen customer in the record
-                    customer_id_chosen_by_agent_record.write(
-                        {
-                            "agent_id": request.env.user.sudo().partner_id.id,
-                            "customer_id_chosen_by_agent": self._agent_customer_id,
-                        }
-                    )
-                else:
-                    # If no record exists and the cart is empty, create a new record
-                    if request.website.sale_get_order().cart_quantity != 0:
-                    # If the cart is not empty, empty it
-                        order = request.website.sale_get_order(force_create=1)
-                        order_line = request.env["sale.order.line"].sudo()
-                        line_ids = order_line.search([("order_id", "=", order.id)])
-                        for line in line_ids:
-                            line_obj = order_line.browse([int(line)])
-                            if line_obj:
-                                line_obj.unlink()
-
-                    request.env["agent.partner"].sudo().create(
-                        {
-                            "agent_id": request.env.user.sudo().partner_id.id,
-                            "customer_id_chosen_by_agent": self._agent_customer_id,
-                        }
-                    )
-                        
-        # Get the partner associated with the current user
-        partner = request.env.user.partner_id
-
-        # Update the 'customer_selected_by_agent' field in the partner record
-        if "customer_selected_by_agent" in partner:
-            # Assuming 'self._agent_customer_id' is the desired value
-            partner.write({"customer_selected_by_agent": self._agent_customer_id})
-
-
-        # Get the pricelist and partner based on the agent_customer_id
-        if self._agent_customer_id and self._agent_customer_id in agent_customers.ids:
-            # Retrieve the partner using the agent_customer_id
-            partner = request.env["res.partner"].browse(self._agent_customer_id)
-
-            # Define the property name for the pricelist in partner's properties
-            property_name = "property_product_pricelist"
-
-            # Search for the property related to the pricelist in the partner's properties
-            ir_property = (
-                request.env["ir.property"]
-                .sudo()
-                .search(
-                    [
-                        ("name", "=", property_name),
-                        ("res_id", "=", f"res.partner,{partner.id}"),
-                    ],
-                    limit=1,
-                )
-            )
-
-            # Check if the ir_property exists and has a value_reference
-            if ir_property and ir_property.value_reference:
-                # Parse the value_reference to get the pricelist number
-                pricelist_number = int(ir_property.value_reference.split(",")[1])
-
-                # Retrieve the pricelist using the pricelist number
-                pricelist = request.env["product.pricelist"].browse(pricelist_number)
-
-                # Set the pricelist to the class variable _pricelist
-                self._pricelist = pricelist
-
-                # Check if both partner and pricelist are available
-                if partner and pricelist:
-                    # Update the request context with the pricelist and partner information
-                    request.context = dict(
-                        request.context, pricelist=pricelist.id, partner=partner
-                    )
 
         url = "/shop"
         if search:
@@ -343,16 +228,17 @@ class WebsiteSale(WebsiteSale):
 
         # GET CUSTOMER PRICELIST
         agent_customers = request.env.user.sudo().partner_id.agent_customers
-        # Get the pricelist and partner based on the agent_customer_id
+        pricelist = False
 
-        self._agent_customer_id = (
+        # Get the pricelist and partner based on the agent_customer_id
+        agent_customer_id = (
             request.env["agent.partner"]
             .sudo()
             .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
-        if self._agent_customer_id and self._agent_customer_id in agent_customers.ids:
-            partner = request.env["res.partner"].browse(self._agent_customer_id)
+        if agent_customer_id and agent_customer_id in agent_customers.ids:
+            partner = request.env["res.partner"].browse(agent_customer_id)
             property_name = "property_product_pricelist"
 
             ir_property = (
@@ -371,11 +257,10 @@ class WebsiteSale(WebsiteSale):
                 # Parse the value_reference to get the pricelist number
                 pricelist_number = int(ir_property.value_reference.split(",")[1])
                 pricelist = request.env["product.pricelist"].browse(pricelist_number)
-                self._pricelist = pricelist
 
-        if self._pricelist:
+        if pricelist:
             order = request.website.sale_get_order(
-                force_pricelist=self._pricelist.id, update_pricelist=True
+                force_pricelist=pricelist.id, update_pricelist=True
             )
         else:
             order = request.website.sale_get_order()
@@ -409,13 +294,14 @@ class WebsiteSale(WebsiteSale):
             ):  # abandoned cart found, user have to choose what to do
                 values.update({"access_token": abandoned_order.access_token})
 
+        # Nik jarrittekue
         selected_customer_id = (
             request.env["agent.partner"]
             .sudo()
             .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
-
+        # Nik aldautekue
         values.update(
             {
                 "website_sale_order": order,
@@ -430,7 +316,7 @@ class WebsiteSale(WebsiteSale):
             order.order_line.filtered(lambda l: not l.product_id.active).unlink()
             _order = order
             if not request.env.context.get("pricelist"):
-                _order = order.with_context(pricelist=self._pricelist)
+                _order = order.with_context(pricelist=pricelist)
             values["suggested_products"] = _order._cart_accessories()
 
         if post.get("type") == "popover":
@@ -442,3 +328,173 @@ class WebsiteSale(WebsiteSale):
             )
 
         return request.render("website_sale.cart", values)
+
+    @http.route()
+    def payment(self, **post):
+
+        # Retrieve the comment from the post data
+        comment = post.get('comment_hidden')
+
+        # Save the comment in the sale order if order_comments is empty
+        sale_order = request.website.sale_get_order()
+        if sale_order and post: # and not sale_order.order_comments:
+            sale_order.write({'order_comments': comment})
+
+        return super().payment(**post)
+
+    @http.route('/shop/cart/getcurrentsaleorder', type='http', auth="public", website=True, csrf=False)
+    def get_current_saleorder(self, **post):
+        
+        return request.website.sale_get_order().order_comments
+
+    @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
+    def update_cart_from_shop(self, line_id, product_id, set_qty, csrf_token, **kwargs):
+        """
+        Update the cart based on the provided parameters.
+
+        :param line_id: Line ID of the cart item to update.
+        :param product_id: Product ID of the cart item.
+        :param set_qty: New quantity for the cart item.
+        :param csrf_token: CSRF token for security.
+        :param kwargs: Additional parameters.
+
+        :return: JSON response indicating the success or failure of the update.
+        """
+        # Ensure CSRF token is valid for security
+        WebsiteSale()._check_csrf_token(csrf_token)
+
+        # Convert IDs to integers
+        line_id = int(line_id)
+        product_id = int(product_id)
+        set_qty = int(set_qty)
+
+        # Get the cart and update the specified line
+        order = request.website.sale_get_order()
+        order_line = order.order_line.filtered(lambda line: line.id == line_id and line.product_id.id == product_id)
+        
+        if order_line:
+            order_line.write({'product_uom_qty': set_qty})
+            return {'success': True, 'message': 'Cart updated successfully'}
+        else:
+            return {'success': False, 'message': 'Cart item not found'}
+
+
+    def empty_cart_before_changing_customer(self):
+        order = request.website.sale_get_order(force_create=1)
+        order_line = request.env["sale.order.line"].sudo()
+        line_ids = order_line.search([("order_id", "=", order.id)])
+        for line in line_ids:
+            line_obj = order_line.browse([int(line)])
+            if line_obj:
+                line_obj.unlink()
+
+    def get_agent_customer_from_url(self, **post):
+        # Initialize variable to False
+        agent_customer_id = False
+
+        # Get the agent customers associated with the current user
+        agent_customers = request.env.user.sudo().partner_id.agent_customers
+
+        # Check if the agent is trying to change the customer
+        if post.get("agent_customer_id") and (
+            (request.website.sale_get_order())
+            or (not request.website.sale_get_order())
+            or int(post.get("agent_customer_id")) == 0
+        ):
+            # Get the chosen agent customer ID from the post data
+            agent_customer_id = int(post.get("agent_customer_id"))
+
+            # Get the agent partner record for the current user
+            customer_id_chosen_by_agent_record = (
+                request.env["agent.partner"]
+                .sudo()
+                .search(
+                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
+                )
+            )
+
+            # Check if the chosen agent customer is valid
+            if (
+                agent_customer_id
+                and agent_customers
+                and agent_customer_id in agent_customers.ids
+                or agent_customer_id == 0
+            ):
+                # Check if there is a record for the agent's chosen customer
+                if customer_id_chosen_by_agent_record:
+                    # If the customer chosen is different and the cart is not empty, empty it
+                    if (
+                        agent_customer_id
+                        != customer_id_chosen_by_agent_record.customer_id_chosen_by_agent
+                    ):
+                        # Empty the cart before changing the customer
+                        self.empty_cart_before_changing_customer()
+
+                    # Update the agent's chosen customer in the record
+                    customer_id_chosen_by_agent_record.write(
+                        {
+                            "agent_id": request.env.user.sudo().partner_id.id,
+                            "customer_id_chosen_by_agent": agent_customer_id,
+                        }
+                    )
+                else:
+                    # If no record exists and the cart is empty, create a new record
+                    if request.website.sale_get_order().cart_quantity != 0:
+                        # If the cart is not empty, empty it
+                        self.empty_cart_before_changing_customer()
+
+                    request.env["agent.partner"].sudo().create(
+                        {
+                            "agent_id": request.env.user.sudo().partner_id.id,
+                            "customer_id_chosen_by_agent": agent_customer_id,
+                        }
+                    )
+        # Return agent_customer_id and agent_customers
+        return agent_customer_id, agent_customers
+
+    def set_pricelist_from_current_agent_customer(
+        self, agent_customer_id, agent_customers
+    ):
+        # Get the partner associated with the current user
+        partner = request.env.user.partner_id
+
+        # Update the 'customer_selected_by_agent' field in the partner record
+        if "customer_selected_by_agent" in partner:
+            # Assuming 'agent_customer_id' is the desired value
+            partner.write({"customer_selected_by_agent": agent_customer_id})
+
+        # Get the pricelist and partner based on the agent_customer_id
+        if agent_customer_id and agent_customer_id in agent_customers.ids:
+            # Retrieve the partner using the agent_customer_id
+            partner = request.env["res.partner"].browse(agent_customer_id)
+
+            # Define the property name for the pricelist in partner's properties
+            property_name = "property_product_pricelist"
+
+            # Search for the property related to the pricelist in the partner's properties
+            ir_property = (
+                request.env["ir.property"]
+                .sudo()
+                .search(
+                    [
+                        ("name", "=", property_name),
+                        ("res_id", "=", f"res.partner,{partner.id}"),
+                    ],
+                    limit=1,
+                )
+            )
+
+            # Check if the ir_property exists and has a value_reference
+            if ir_property and ir_property.value_reference:
+                # Parse the value_reference to get the pricelist number
+                pricelist_number = int(ir_property.value_reference.split(",")[1])
+
+                # Retrieve the pricelist using the pricelist number
+                pricelist = request.env["product.pricelist"].browse(pricelist_number)
+
+                # Check if both partner and pricelist are available
+                if partner and pricelist:
+                    # Update the request context with the pricelist and partner information
+                    request.context = dict(
+                        request.context, pricelist=pricelist.id, partner=partner
+                    )

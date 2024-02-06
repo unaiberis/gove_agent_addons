@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<odoo>
+    <record id="view_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//page[@name='other_information']/group" position="inside">
+                <group>
+                    <field name="order_comments" />
+                </group>
+            </xpath> -->
+            <!-- <xpath expr="//page[@name='customer_signature']"
+                position="after">
+                <page string="Purchase Comments" name="purchase_comments">
+                    <group name="coments_group" string="Purchase Comment">
+                        <field name="order_comments" />
+                    </group>
+                </page>
+            </xpath> -->
+            <xpath expr="//group[@name='note_group']"
+                position="after">
+                <group name="coments_group" string="Purchase Comment">
+                    <field name="order_comments" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

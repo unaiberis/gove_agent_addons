@@ -7,8 +7,11 @@
         <field name="key">website.homepage.custom</field>
         <field name="website_id" eval="1" />
         <field name="arch" type="xml">
-            <xpath expr="//section/div[hasclass('container')]" position="after">
-                <!-- <p>USE MOME LINKS</p> -->
+            <xpath expr="//section/div[hasclass('container')]" position="before">
+                <!-- <script type="text/javascript">
+                    window.location.href = '/shop?agent_customer_id=0';
+                </script> -->
+                <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
             </xpath>
         </field>
     </record>

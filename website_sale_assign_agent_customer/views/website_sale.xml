@@ -34,6 +34,27 @@
         </t>
     </template>
 
+    <template id="customer_card">
+        <div class="card mt-3 mb-3 o_wsaac_agent_customers">
+            <div class="card-body">
+                <div>
+                    <b>Modo de pago utilizado por el cliente:</b>
+                    <t
+                        t-esc="request.env['res.partner'].sudo().browse(request.env.user.sudo().partner_id.id,  limit=1).sudo().customer_payment_mode_id.sudo().name" />
+                </div>
+            </div>
+            <t t-if="request.website.sale_get_order().order_comments">
+                <div class="card-body">
+                    <div>
+                        <b>Comentario de la compra:</b>
+                        <t
+                            t-esc="request.website.sale_get_order().order_comments" />
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+
     <!-- Choose customer "Update Customer" Option -->
     <template id="choose_customer_from_agent">
         <form method="post" action="/shop/update_customer" class="container mt-3">
@@ -120,6 +141,9 @@
             <t
                 t-if="request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent != 0">
                 <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
+            </t>
+            <t elif="not request.env.user.sudo().partner_id.agent">
+                <t t-call="website_sale_assign_agent_customer.customer_card" />
             </t>
         </xpath>
     </template>
@@ -299,13 +323,13 @@
             position="before">
             <style>
                 form.card.oe_product_cart{
-                    height: 280px;
+                height: 280px;
                 }
                 .table-borderless tr {
-                    height: 300px;
+                height: 300px;
                 }
                 .oe_product.oe_image_full .o_wsale_product_information{
-                    position: relative;
+                position: relative;
                 }
             </style>
         </xpath>

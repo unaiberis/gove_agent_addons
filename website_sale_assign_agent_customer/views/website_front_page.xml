@@ -11,7 +11,7 @@
                 <!-- <script type="text/javascript">
                     window.location.href = '/shop?agent_customer_id=0';
                 </script> -->
-                <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
+                <!-- <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" /> -->
             </xpath>
         </field>
     </record>

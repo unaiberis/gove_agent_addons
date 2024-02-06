@@ -337,10 +337,15 @@ class WebsiteSale(WebsiteSale):
 
         # Save the comment in the sale order if order_comments is empty
         sale_order = request.website.sale_get_order()
-        if sale_order and not sale_order.order_comments:
+        if sale_order and post: # and not sale_order.order_comments:
             sale_order.write({'order_comments': comment})
 
         return super().payment(**post)
+
+    @http.route('/shop/cart/getcurrentsaleorder', type='http', auth="public", website=True, csrf=False)
+    def get_current_saleorder(self, **post):
+        
+        return request.website.sale_get_order().order_comments
 
     @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
     def update_cart_from_shop(self, line_id, product_id, set_qty, csrf_token, **kwargs):

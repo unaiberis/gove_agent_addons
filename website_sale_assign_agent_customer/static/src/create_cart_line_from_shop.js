@@ -28,7 +28,7 @@ odoo.define('custom_cart_module.create_cart_line_from_shop', function (require) 
                 quantity -= 1;
             }
 
-            console.log('lineID:', lineID);
+                        console.log('lineID:', lineID);
             console.log('productID:', productID);
             console.log('quantity:', quantity);
 

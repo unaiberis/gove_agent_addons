@@ -292,7 +292,9 @@
                     </span>
                 </span>
 
-                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()" />
+                <!-- PRUEBAS BOTON AÑADIR AL CARRITO -->
+
+                <!-- <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()" />
                 <input name="product_id" t-att-value="product_variant_id" type="hidden" />
                 <t t-if="product_variant_id">
                     <a href="#" role="button" class="btn btn-secondary a-submit"
@@ -300,7 +302,7 @@
                         <span class="fa fa-shopping-cart"></span>
                         <span class="fa fa-shopping-cart" style="content: 'Añadir al carrito';"></span>
                     </a>
-                </t>
+                </t> -->
             </div>
         </xpath>
 

@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <!-- MEJOR NO PONER ESTE CÓDIGO PORQUE SINO AL CONFIRMAR PEDIDO NO AVISA QUE HAY QUE REFRESCAR -->
+    <!-- SI HA HABIDO ALGÚN ERROR CON EL MÉTODO DE ENVÍO -->
+
+    <!-- REMOVE PAY WITH IN PAYMENT -->
+
+    <template id="remove_pay_with_in_payment" inherit_id="website_sale.payment">
+        <xpath expr="//div[@class='col-12 col-xl order-xl-1 oe_cart']/div[3]" position="replace">
+            <t t-call="payment.payment_tokens_list">
+                <t t-set="mode" t-value="'payment'" />
+                <t t-set="submit_txt">Pay Now</t>
+                <t t-set="icon_right" t-value="1" />
+                <t t-set="icon_class" t-value="'fa-chevron-right'" />
+                <t t-set="submit_class" t-value="'btn btn-primary'" />
+                <t t-set="pms" t-value="tokens" />
+                <t t-set="form_action" t-value="'/shop/payment/token'" />
+                <t t-set="prepare_tx_url" t-value="'/shop/payment/transaction/'" />
+                <t t-set="partner_id" t-value="partner" />
+
+                <t t-set="back_button_icon_class" t-value="'fa-chevron-left'" />
+                <t t-set="back_button_txt">Return to Cart</t>
+                <t t-set="back_button_class" t-value="'btn btn-secondary'" />
+                <t t-set="back_button_link" t-value="'/shop/cart'" />
+            </t>
+        </xpath>
+    </template>
+
+    <!-- REMOVE THE BOX UNDER PAY WITH IN PAYMENT -->
+
+    <template id="remove_payment_mode_in_payment" inherit_id="payment.payment_tokens_list">
+        <xpath expr="//div[hasclass('card')]" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+    </template>
+
+
+</odoo>

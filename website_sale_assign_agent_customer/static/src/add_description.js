@@ -15,8 +15,6 @@ odoo.define('website_sale_assign_agent_customer.add_description', function (requ
             // Use standard AJAX request to get order data when the page loads
             getOrderData();
         }
-
-
     }
 
     // Function to create the form element
@@ -88,7 +86,11 @@ odoo.define('website_sale_assign_agent_customer.add_description', function (requ
 
             // Save the value using an AJAX request with CSRF token
             saveCommentValue(commentInput.val());
+
+            // Trigger the default behavior immediately
+            window.location.href = pagarAhoraButton.attr('href');
         });
+
 
         // Add event listener to update the hidden input with the comment value
         $('#comment').on('input', function () {

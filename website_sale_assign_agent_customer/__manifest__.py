@@ -34,6 +34,7 @@
     ],
     "data": [
         "views/assets.xml",
+        "views/products_xpath.xml",
         "views/sale_order_order_comments.xml",
         "views/website_sale.xml",
         "views/website_front_page.xml",

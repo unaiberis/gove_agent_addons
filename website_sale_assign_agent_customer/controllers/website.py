@@ -4,7 +4,7 @@ from odoo import http, models, fields, _
 
 
 class Website(Home):
-
+    # In the moment we don't want this redirect
     @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
         if request.env.user.sudo().partner_id.agent:

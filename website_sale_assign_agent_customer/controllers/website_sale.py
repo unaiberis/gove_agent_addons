@@ -347,6 +347,7 @@ class WebsiteSale(WebsiteSale):
         
         return request.website.sale_get_order().order_comments
 
+    # PRUEBATAKO KONTROLADORIE
     @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
     def update_cart_from_shop(self, line_id, product_id, set_qty, csrf_token, **kwargs):
         """

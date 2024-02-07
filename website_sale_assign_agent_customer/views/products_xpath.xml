@@ -277,4 +277,26 @@
             <!-- to know if the list view layout should be used -->
         </xpath>
     </template>
+
+    <!-- REMOVE THE BUTTON WITH THE IMAGE OF A CART THAT APPEARS TO ADD PRODUCT TO CART -->
+
+    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False"
+        customize_show="True" name="Add to Cart">
+        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="replace">
+            
+        </xpath>
+        <!-- <div class="o_wsale_product_btn">
+
+            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()" />
+            <input name="product_id" t-att-value="product_variant_id" type="hidden" />
+            <t t-if="product_variant_id">
+                <a href="#" role="button" class="btn btn-secondary a-submit"
+                    aria-label="Shopping cart" title="Shopping cart">
+                    <span class="fa fa-shopping-cart" />
+                </a>
+            </t>
+        </div> -->
+    </template>
+
+
 </odoo>

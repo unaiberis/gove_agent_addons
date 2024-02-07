@@ -13,9 +13,25 @@
                 <div class="card-body">
                     <div>
                         <b>Modo de pago utilizado por el cliente:</b>
-                        <t
-                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
+                        <t t-set="customer_id"
+                            t-value="int(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent)" />
+
+                        <t t-set="property_record"
+                            t-value="request.env['ir.property'].sudo().search([
+                            ('value_reference', 'ilike', 'account.payment.mode'),
+                            ('res_id', '=', 'res.partner,' + str(customer_id))
+                        ], limit=1)" />
+
+                        <t t-if="property_record">
+                            <t t-set="payment_mode_id"
+                                t-value="int(property_record.value_reference.split(',')[1])" />
+                            <t t-set="payment_mode"
+                                t-value="request.env['account.payment.mode'].sudo().browse(payment_mode_id)" />
+                            <t t-esc="payment_mode.note" />
+                        </t>
                     </div>
+
+
                 </div>
                 <t t-if="request.website.sale_get_order().order_comments">
                     <div class="card-body">
@@ -37,6 +53,17 @@
     <template id="customer_card">
         <div class="card mt-3 mb-3 o_wsaac_agent_customers">
             <div class="card-body">
+                <div>
+                    <b>Modo de pago utilizado por el cliente:</b>
+                    <t
+                        t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
+                </div>
+                <div>
+                    <b>ID de cliente:</b>
+
+                    <t
+                        t-esc="request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent" />
+                </div>
                 <div>
                     <b>Modo de pago utilizado por el cliente:</b>
                     <t
@@ -120,6 +147,39 @@
 
             </div>
         </form>
+    </template>
+
+    <!-- REMOVE PAY WITH IN PAYMENT -->
+
+    <template id="remove_pay_with_in_payment" inherit_id="website_sale.payment">
+        <xpath expr="//div[@class='col-12 col-xl order-xl-1 oe_cart']/div[3]" position="replace">
+            <t t-call="payment.payment_tokens_list">
+                <t t-set="mode" t-value="'payment'" />
+                <t t-set="submit_txt">Pay Now</t>
+                <t t-set="icon_right" t-value="1" />
+                <t t-set="icon_class" t-value="'fa-chevron-right'" />
+                <t t-set="submit_class" t-value="'btn btn-primary'" />
+                <t t-set="pms" t-value="tokens" />
+                <t t-set="form_action" t-value="'/shop/payment/token'" />
+                <t t-set="prepare_tx_url" t-value="'/shop/payment/transaction/'" />
+                <t t-set="partner_id" t-value="partner" />
+
+                <t t-set="back_button_icon_class" t-value="'fa-chevron-left'" />
+                <t t-set="back_button_txt">Return to Cart</t>
+                <t t-set="back_button_class" t-value="'btn btn-secondary'" />
+                <t t-set="back_button_link" t-value="'/shop/cart'" />
+            </t>
+        </xpath>
+    </template>
+
+    <!-- REMOVE THE BOX UNDER PAY WITH IN PAYMENT -->
+
+
+    <template
+        id="remove_payemnt_mode_in_payment" inherit_id="payment.payment_tokens_list">
+        <xpath expr="//t[@t-foreach='acquirers']/div[hasclass('o_payment_acquirer_select')]"
+            position="replace">
+        </xpath>
     </template>
 
 
@@ -235,7 +295,8 @@
                 <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()" />
                 <input name="product_id" t-att-value="product_variant_id" type="hidden" />
                 <t t-if="product_variant_id">
-                    <a href="#" role="button" class="btn btn-secondary a-submit" aria-label="Shopping cart" title="Shopping cart">
+                    <a href="#" role="button" class="btn btn-secondary a-submit"
+                        aria-label="Shopping cart" title="Shopping cart">
                         <span class="fa fa-shopping-cart"></span>
                         <span class="fa fa-shopping-cart" style="content: 'Añadir al carrito';"></span>
                     </a>

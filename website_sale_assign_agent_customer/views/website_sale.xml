@@ -176,22 +176,20 @@
 
 
     <template
-        id="remove_payemnt_mode_in_payment" inherit_id="payment.payment_tokens_list">
-        <xpath expr="//t[@t-foreach='acquirers']/div[hasclass('o_payment_acquirer_select')]"
+        id="remove_paymennt_mode_in_payment" inherit_id="payment.payment_tokens_list">
+        <!-- <xpath expr="//div[hasclass('card')]"
             position="replace">
+        </xpath> -->
+    </template>
+
+    <template id="remove_payment_mode_in_payment" inherit_id="payment.payment_tokens_list">
+        <xpath expr="//div[hasclass('card')]" position="attributes">
+            <attribute name="style">display: none;</attribute>
         </xpath>
     </template>
 
 
-    <template
-        id="cart" inherit_id="website_sale.cart">
-        <xpath expr="//div[hasclass('clearfix')]" position="after">
-            <t t-if="selected_customer">
-                <!-- Show assigned customer and its payment mode in the cart page -->
-                <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
-            </t>
-        </xpath>
-    </template>
+    <!-- Show assigned customer and its payment mode in the payment page -->
 
 
     <template
@@ -294,7 +292,8 @@
 
                 <!-- PRUEBAS BOTON AÑADIR AL CARRITO -->
 
-                <!-- <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()" />
+                <!-- <t t-set="product_variant_id"
+                t-value="product._get_first_possible_variant_id()" />
                 <input name="product_id" t-att-value="product_variant_id" type="hidden" />
                 <t t-if="product_variant_id">
                     <a href="#" role="button" class="btn btn-secondary a-submit"

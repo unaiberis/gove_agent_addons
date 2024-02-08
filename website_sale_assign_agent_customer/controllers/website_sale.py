@@ -47,28 +47,40 @@ class WebsiteSale(WebsiteSale):
     @http.route()
     def payment_confirmation(self, **post):
         res = super().payment_confirmation(**post)
-        if request.env.user.sudo().partner_id.agent:
-            order = res.qcontext["order"]
-            order.agent_customer = int(
-                request.env["agent.partner"]
-                .sudo()
-                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
-                .customer_id_chosen_by_agent
-            )
-            if not order or not request.env.user.partner_id.agent:
-                return res
-            if not order.agent_customer:
-                return res
-            order.partner_id = order.agent_customer.id
-            order.onchange_partner_id()
-            order.user_id = request.env.user.id
-            request.env["mail.followers"].create(
-                {
-                    "res_model": "sale.order",
-                    "res_id": order.id,
-                    "partner_id": order.agent_customer.id,
-                }
-            )
+        order = res.qcontext["order"]
+
+        if not order or not request.env.user.partner_id.agent:
+            return res
+        
+        order.agent_customer = int(
+            request.env["agent.partner"]
+            .sudo()
+            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+            .customer_id_chosen_by_agent
+        )
+        
+        if not order.agent_customer:
+            return res
+        
+
+        order.partner_id = order.agent_customer.id
+        order.onchange_partner_id()
+        order.user_id = request.env.user.id
+        
+        # Check if follower exists becuase you cant create a new one with the same res_model, res_id and partner_id
+        existing_follower = request.env["mail.followers"].search([
+            ("res_model", "=", "sale.order"),
+            ("res_id", "=", order.id),
+            ("partner_id", "=", order.agent_customer.id),
+        ])
+
+        if not existing_follower:
+            # No existe, puedes crear el nuevo registro
+            request.env["mail.followers"].create({
+                "res_model": "sale.order",
+                "res_id": order.id,
+                "partner_id": order.agent_customer.id,
+            })
         return res
 
     @http.route()
@@ -115,9 +127,9 @@ class WebsiteSale(WebsiteSale):
         )
 
         if request.env.user.sudo().partner_id.agent:
-            agent_customer_id, agent_customers = self.get_agent_customer_from_url(**post)
+            agent_customer_id, agent_customers = self._get_agent_customer_from_url(**post)
 
-            self.set_pricelist_from_current_agent_customer(
+            self._set_pricelist_from_current_agent_customer(
                 agent_customer_id, agent_customers
             )
 
@@ -343,44 +355,48 @@ class WebsiteSale(WebsiteSale):
         return super().payment(**post)
 
     @http.route('/shop/cart/getcurrentsaleorder', type='http', auth="public", website=True, csrf=False)
+
     def get_current_saleorder(self, **post):
-        
+
         return request.website.sale_get_order().order_comments
 
+
+
+
     # PRUEBATAKO KONTROLADORIE
-    @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
-    def update_cart_from_shop(self, line_id, product_id, set_qty, csrf_token, **kwargs):
-        """
-        Update the cart based on the provided parameters.
+    # @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
+    # def update_cart_from_shop(self, line_id, product_id, set_qty, csrf_token, **kwargs):
+    #     """
+    #     Update the cart based on the provided parameters.
 
-        :param line_id: Line ID of the cart item to update.
-        :param product_id: Product ID of the cart item.
-        :param set_qty: New quantity for the cart item.
-        :param csrf_token: CSRF token for security.
-        :param kwargs: Additional parameters.
+    #     :param line_id: Line ID of the cart item to update.
+    #     :param product_id: Product ID of the cart item.
+    #     :param set_qty: New quantity for the cart item.
+    #     :param csrf_token: CSRF token for security.
+    #     :param kwargs: Additional parameters.
 
-        :return: JSON response indicating the success or failure of the update.
-        """
-        # Ensure CSRF token is valid for security
-        WebsiteSale()._check_csrf_token(csrf_token)
+    #     :return: JSON response indicating the success or failure of the update.
+    #     """
+    #     # Ensure CSRF token is valid for security
+    #     WebsiteSale()._check_csrf_token(csrf_token)
 
-        # Convert IDs to integers
-        line_id = int(line_id)
-        product_id = int(product_id)
-        set_qty = int(set_qty)
+    #     # Convert IDs to integers
+    #     line_id = int(line_id)
+    #     product_id = int(product_id)
+    #     set_qty = int(set_qty)
 
-        # Get the cart and update the specified line
-        order = request.website.sale_get_order()
-        order_line = order.order_line.filtered(lambda line: line.id == line_id and line.product_id.id == product_id)
+    #     # Get the cart and update the specified line
+    #     order = request.website.sale_get_order()
+    #     order_line = order.order_line.filtered(lambda line: line.id == line_id and line.product_id.id == product_id)
         
-        if order_line:
-            order_line.write({'product_uom_qty': set_qty})
-            return {'success': True, 'message': 'Cart updated successfully'}
-        else:
-            return {'success': False, 'message': 'Cart item not found'}
+    #     if order_line:
+    #         order_line.write({'product_uom_qty': set_qty})
+    #         return {'success': True, 'message': 'Cart updated successfully'}
+    #     else:
+    #         return {'success': False, 'message': 'Cart item not found'}
 
 
-    def empty_cart_before_changing_customer(self):
+    def _empty_cart_before_changing_customer(self):
         order = request.website.sale_get_order(force_create=1)
         order_line = request.env["sale.order.line"].sudo()
         line_ids = order_line.search([("order_id", "=", order.id)])
@@ -389,7 +405,7 @@ class WebsiteSale(WebsiteSale):
             if line_obj:
                 line_obj.unlink()
 
-    def get_agent_customer_from_url(self, **post):
+    def _get_agent_customer_from_url(self, **post):
         # Initialize variable to False
         agent_customer_id = False
 
@@ -429,7 +445,7 @@ class WebsiteSale(WebsiteSale):
                         != customer_id_chosen_by_agent_record.customer_id_chosen_by_agent
                     ):
                         # Empty the cart before changing the customer
-                        self.empty_cart_before_changing_customer()
+                        self._empty_cart_before_changing_customer()
 
                     # Update the agent's chosen customer in the record
                     customer_id_chosen_by_agent_record.write(
@@ -442,7 +458,7 @@ class WebsiteSale(WebsiteSale):
                     # If no record exists and the cart is empty, create a new record
                     if request.website.sale_get_order().cart_quantity != 0:
                         # If the cart is not empty, empty it
-                        self.empty_cart_before_changing_customer()
+                        self._empty_cart_before_changing_customer()
 
                     request.env["agent.partner"].sudo().create(
                         {
@@ -453,7 +469,7 @@ class WebsiteSale(WebsiteSale):
         # Return agent_customer_id and agent_customers
         return agent_customer_id, agent_customers
 
-    def set_pricelist_from_current_agent_customer(
+    def _set_pricelist_from_current_agent_customer(
         self, agent_customer_id, agent_customers
     ):
         # Get the partner associated with the current user

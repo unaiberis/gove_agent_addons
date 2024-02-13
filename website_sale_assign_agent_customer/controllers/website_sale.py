@@ -46,42 +46,175 @@ class WebsiteSale(WebsiteSale):
 
     @http.route()
     def payment_confirmation(self, **post):
+        print("\n\nPAYMENT CONFIRMATION\n\n")
         res = super().payment_confirmation(**post)
-        order = res.qcontext["order"]
+        order = res.qcontext.get("order")
 
         if not order or not request.env.user.partner_id.agent:
             return res
-        
-        order.agent_customer = int(
+
+        _agent_customer = int(
             request.env["agent.partner"]
             .sudo()
             .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
-        
+
+        order.agent_customer = _agent_customer
+
         if not order.agent_customer:
             return res
-        
 
         order.partner_id = order.agent_customer.id
         order.onchange_partner_id()
         order.user_id = request.env.user.id
-        
+
         # Check if follower exists becuase you cant create a new one with the same res_model, res_id and partner_id
-        existing_follower = request.env["mail.followers"].search([
-            ("res_model", "=", "sale.order"),
-            ("res_id", "=", order.id),
-            ("partner_id", "=", order.agent_customer.id),
-        ])
+        existing_follower = request.env["mail.followers"].search(
+            [
+                ("res_model", "=", "sale.order"),
+                ("res_id", "=", order.id),
+                ("partner_id", "=", order.agent_customer.id),
+            ]
+        )
+
+        print("\n\nExisting follower", existing_follower, order, "\n\n")
 
         if not existing_follower:
             # No existe, puedes crear el nuevo registro
-            request.env["mail.followers"].create({
-                "res_model": "sale.order",
-                "res_id": order.id,
-                "partner_id": order.agent_customer.id,
-            })
+            request.env["mail.followers"].create(
+                {
+                    "res_model": "sale.order",
+                    "res_id": order.id,
+                    "partner_id": order.agent_customer.id,
+                }
+            )
+            print("\n\n Etzun existitzen ta sortu da \n\n")
+        elif request.env.user.sudo().partner_id.agent:
+            user_id = request.env.user.id
+
+            user = request.env["res.users"].sudo().browse(user_id)
+            partner_id = user.partner_id.id
+
+            
+            # Find the last sale order for the given partner_id
+            last_order = (
+                request.env["sale.order"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", partner_id),
+                    ],
+                    order="date_order desc",
+                    limit=1,
+                )
+            )
+            
+            last_order_customer = (
+                request.env["sale.order"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", _agent_customer),
+                    ],
+                    order="date_order desc",
+                    limit=1,
+                )
+            )
+            if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
+                order = last_order
+                print("\n\nAzkeneko order sortute", order, "\n\n")
+                order.agent_customer = int(
+                    request.env["agent.partner"]
+                    .sudo()
+                    .search(
+                        [("agent_id", "=", request.env.user.sudo().partner_id.id)],
+                        limit=1,
+                    )
+                    .customer_id_chosen_by_agent
+                )
+                order.user_id = request.env.user.id
+                order.partner_id = order.agent_customer.id
+
+                request.env["mail.followers"].create(
+                    {
+                        "res_model": "sale.order",
+                        "res_id": order.id,
+                        "partner_id": order.agent_customer.id,
+                    }
+                )
+                res.qcontext["order"] = order
+            elif last_order_customer:
+                res.qcontext["order"] = last_order_customer
+
+                print("\n\nRES qcontext",res.qcontext["order"],"\n\n")
+            print("\n\n Etzun existitzen ta sortu da \n\n")
+        print("\n\nAZKENEKO RES qcontext",res.qcontext["order"],"\n\n")
         return res
+
+    @http.route()
+    def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
+        """Method that should be called by the server when receiving an update
+        for a transaction. State at this point :
+
+         - UDPATE ME
+        """
+        if sale_order_id is None:
+            order = request.website.sale_get_order()
+            if not order and "sale_last_order_id" in request.session:
+                # Retrieve the last known order from the session if the session key `sale_order_id`
+                # was prematurely cleared. This is done to prevent the user from updating their cart
+                # after payment in case they don't return from payment through this route.
+                last_order_id = request.session["sale_last_order_id"]
+                order = request.env["sale.order"].sudo().browse(last_order_id).exists()
+            elif request.env.user.sudo().partner_id.agent:
+                user_id = request.env.user.id
+
+                user = request.env["res.users"].sudo().browse(user_id)
+                partner_id = user.partner_id.id
+
+                # Find the last sale order for the given partner_id
+                last_order = (
+                    request.env["sale.order"]
+                    .sudo()
+                    .search(
+                        [
+                            ("partner_id", "=", partner_id),
+                        ],
+                        order="date_order desc",
+                        limit=1,
+                    )
+                )
+                if last_order:
+                    order = last_order
+                    print("\n\nAzkeneko order sortute", order, "\n\n")
+
+        else:
+            order = request.env["sale.order"].sudo().browse(sale_order_id)
+            assert order.id == request.session.get("sale_last_order_id")
+
+        if transaction_id:
+            tx = request.env["payment.transaction"].sudo().browse(transaction_id)
+            assert tx in order.transaction_ids()
+        elif order:
+            tx = order.get_portal_last_transaction()
+        else:
+            tx = None
+
+        if not order or (order.amount_total and not tx):
+            return request.redirect("/shop")
+
+        if order and not order.amount_total and not tx:
+            order.with_context(send_email=True).action_confirm()
+            return request.redirect(order.get_portal_url())
+
+        # clean context and session, then redirect to the confirmation page
+        request.website.sale_reset()
+        if tx and tx.state == "draft":
+            return request.redirect("/shop")
+
+        PaymentProcessing.remove_payment_transaction(tx)
+        return request.redirect("/shop/confirmation")
 
     @http.route()
     def shop(self, page=0, category=None, search="", ppg=False, **post):
@@ -127,7 +260,9 @@ class WebsiteSale(WebsiteSale):
         )
 
         if request.env.user.sudo().partner_id.agent:
-            agent_customer_id, agent_customers = self._get_agent_customer_from_url(**post)
+            agent_customer_id, agent_customers = self._get_agent_customer_from_url(
+                **post
+            )
 
             self._set_pricelist_from_current_agent_customer(
                 agent_customer_id, agent_customers
@@ -345,23 +480,25 @@ class WebsiteSale(WebsiteSale):
     def payment(self, **post):
 
         # Retrieve the comment from the post data
-        comment = post.get('comment_hidden')
+        comment = post.get("comment_hidden")
 
         # Save the comment in the sale order if order_comments is empty
         sale_order = request.website.sale_get_order()
-        if sale_order and post: # and not sale_order.order_comments:
-            sale_order.write({'order_comments': comment})
+        if sale_order and post:  # and not sale_order.order_comments:
+            sale_order.write({"order_comments": comment})
 
         return super().payment(**post)
 
-    @http.route('/shop/cart/getcurrentsaleorder', type='http', auth="public", website=True, csrf=False)
-
-    def get_current_saleorder(self, **post):
+    @http.route(
+        "/shop/cart/getcurrentsaleorder",
+        type="http",
+        auth="public",
+        website=True,
+        csrf=False,
+    )
+    def _get_current_saleorder(self, **post):
 
         return request.website.sale_get_order().order_comments
-
-
-
 
     # PRUEBATAKO KONTROLADORIE
     # @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
@@ -388,13 +525,12 @@ class WebsiteSale(WebsiteSale):
     #     # Get the cart and update the specified line
     #     order = request.website.sale_get_order()
     #     order_line = order.order_line.filtered(lambda line: line.id == line_id and line.product_id.id == product_id)
-        
+
     #     if order_line:
     #         order_line.write({'product_uom_qty': set_qty})
     #         return {'success': True, 'message': 'Cart updated successfully'}
     #     else:
     #         return {'success': False, 'message': 'Cart item not found'}
-
 
     def _empty_cart_before_changing_customer(self):
         order = request.website.sale_get_order(force_create=1)

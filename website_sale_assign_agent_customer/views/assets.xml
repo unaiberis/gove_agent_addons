@@ -3,9 +3,10 @@
         inherit_id="website.assets_frontend">
         <xpath expr="." position="inside">
             <script type="text/javascript"
-                src="/website_sale_assign_agent_customer/static/src/add_description.js"></script>
+                src="/website_sale_assign_agent_customer/static/src/js/add_description.js"></script>
             <!-- <script type="text/javascript"
                 src="/website_sale_assign_agent_customer/static/src/create_cart_line_from_shop.js"></script> -->
+            <link rel="stylesheet" href="/website_sale_assign_agent_customer/static/src/css/styles.css" />
         </xpath>
     </template>
 </odoo>

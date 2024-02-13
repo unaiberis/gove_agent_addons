@@ -29,11 +29,15 @@ odoo.define('website_sale_assign_agent_customer.add_description', function (requ
             class: 'comments-title',
         }));
 
+        // Get the width of the cart_products table
+        var tableWidth = $('#cart_products').width();
+
         var commentInput = $('<textarea>', {
             id: 'comment',
             name: 'comment',
             rows: 3,
-            cols: 78,
+            // Set the cols attribute dynamically based on the table width
+            cols: Math.floor(tableWidth / (83/9)),  // Adjust the divisor as needed
             placeholder: 'Escribe tu comentario aquí...',
         });
 
@@ -62,7 +66,6 @@ odoo.define('website_sale_assign_agent_customer.add_description', function (requ
         });
     }
 
-
     // Function to update the comment input value
     function updateCommentInput(value) {
         var commentInput = $('#comment');
@@ -73,10 +76,10 @@ odoo.define('website_sale_assign_agent_customer.add_description', function (requ
         initializeForm();
 
         // Find the "Pagar ahora" button by its class
-        var pagarAhoraButton = $('.btn.btn-primary.float-right.d-none.d-xl-inline-block');
+        var pagarAhoraButtons = $('.btn.btn-primary.float-right.d-none.d-xl-inline-block, .btn.btn-secondary.float-right.d-none.d-xl-inline-block');
 
-        // Add event listener to the "Pagar ahora" button
-        pagarAhoraButton.on('click', function (event) {
+        // Add event listener to both "Pagar ahora" buttons
+        pagarAhoraButtons.on('click', function (event) {
             // Prevent the default link navigation
             event.preventDefault();
 
@@ -88,9 +91,8 @@ odoo.define('website_sale_assign_agent_customer.add_description', function (requ
             saveCommentValue(commentInput.val());
 
             // Trigger the default behavior immediately
-            window.location.href = pagarAhoraButton.attr('href');
+            window.location.href = $(this).attr('href');
         });
-
 
         // Add event listener to update the hidden input with the comment value
         $('#comment').on('input', function () {
@@ -111,11 +113,10 @@ odoo.define('website_sale_assign_agent_customer.add_description', function (requ
                 success: function (result) {
                     // console.log('Request successful:', result);
                     // If needed, manually navigate to the link href after processing
-                    window.location.href = pagarAhoraButton.attr('href');
+                    window.location.href = pagarAhoraButtons.attr('href');
                 },
                 error: function (xhr, status, error) {
                     // console.error('Error:', error);
-
                 },
             });
         }

@@ -48,6 +48,11 @@ class WebsiteSale(WebsiteSale):
     def payment_confirmation(self, **post):
         print("\n\nPAYMENT CONFIRMATION\n\n")
         res = super().payment_confirmation(**post)
+        
+        # We want always to go to the sale confirmation in the end
+        if res.qcontext.get("response_template") is None:
+            res.qcontext["response_template"] = 'website_sale.confirmation'
+
         order = res.qcontext.get("order")
 
         # if not order:
@@ -64,7 +69,7 @@ class WebsiteSale(WebsiteSale):
                     limit=1,
                 )
             )
-            print("Last order etten", last_order, request.env.user.partner_id)
+            print("\nLast order etten", last_order, request.env.user.partner_id,"\n")
             if not order:
                 order = last_order
 
@@ -211,6 +216,19 @@ class WebsiteSale(WebsiteSale):
                 if last_order:
                     order = last_order
                     print("\n\nAzkeneko order sortute", order, "\n\n")
+            
+            elif not order:
+                order = (
+                    request.env["sale.order"]
+                    .sudo()
+                    .search(
+                        [
+                            ("partner_id", "=", request.env.user.sudo().partner_id.id),
+                        ],
+                        order="id desc", #leno "date_order desc" zeon
+                        limit=1,
+                    )
+                )
 
         else:
             order = request.env["sale.order"].sudo().browse(sale_order_id)

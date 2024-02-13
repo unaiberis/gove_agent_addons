@@ -50,7 +50,24 @@ class WebsiteSale(WebsiteSale):
         res = super().payment_confirmation(**post)
         order = res.qcontext.get("order")
 
-        if not order or not request.env.user.partner_id.agent:
+        if not order:
+            return res
+        if not request.env.user.partner_id.agent:
+            last_order = (
+                request.env["sale.order"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", request.env.user.partner_id.id),
+                    ],
+                    order="id desc", #leno "date_order desc" zeon
+                    limit=1,
+                )
+            )
+            print("Last order etten", last_order, request.env.user.partner_id)
+            
+            res.qcontext["order"] = order
+
             return res
 
         _agent_customer = int(
@@ -105,7 +122,7 @@ class WebsiteSale(WebsiteSale):
                     [
                         ("partner_id", "=", partner_id),
                     ],
-                    order="date_order desc",
+                    order="id desc", #leno "date_order desc" zeon
                     limit=1,
                 )
             )
@@ -117,7 +134,7 @@ class WebsiteSale(WebsiteSale):
                     [
                         ("partner_id", "=", _agent_customer),
                     ],
-                    order="date_order desc",
+                    order="id desc", #leno "date_order desc" zeon
                     limit=1,
                 )
             )
@@ -183,7 +200,7 @@ class WebsiteSale(WebsiteSale):
                         [
                             ("partner_id", "=", partner_id),
                         ],
-                        order="date_order desc",
+                        order="id desc", #leno "date_order desc" zeon
                         limit=1,
                     )
                 )

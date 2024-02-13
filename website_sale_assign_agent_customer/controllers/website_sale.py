@@ -133,8 +133,10 @@ class WebsiteSale(WebsiteSale):
                     )
                     .customer_id_chosen_by_agent
                 )
-                order.user_id = request.env.user.id
                 order.partner_id = order.agent_customer.id
+                order.onchange_partner_id()
+                order.user_id = request.env.user.id
+
 
                 request.env["mail.followers"].create(
                     {

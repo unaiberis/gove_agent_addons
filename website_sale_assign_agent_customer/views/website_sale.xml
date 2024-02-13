@@ -326,15 +326,13 @@
             position="before">
             <style>
                 form.card.oe_product_cart{
-                <!-- height: 280px; -->
-                    height: 580px;
+                    height: 280px;
                 }
                 .table-borderless tr {
-                <!-- height: 300px; -->
-                    height: 600px;
+                    height: 300px;
                 }
                 .oe_product.oe_image_full .o_wsale_product_information{
-                position: relative;
+                    position: relative;
                 }
             </style>
         </xpath>

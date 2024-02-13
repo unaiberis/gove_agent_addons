@@ -50,8 +50,8 @@ class WebsiteSale(WebsiteSale):
         res = super().payment_confirmation(**post)
         order = res.qcontext.get("order")
 
-        if not order:
-            return res
+        # if not order:
+#             return res
         if not request.env.user.partner_id.agent:
             last_order = (
                 request.env["sale.order"]
@@ -65,8 +65,10 @@ class WebsiteSale(WebsiteSale):
                 )
             )
             print("Last order etten", last_order, request.env.user.partner_id)
-            
-            res.qcontext["order"] = order
+            if not order:
+                order = last_order
+
+            res.qcontext["order"] = last_order
 
             return res
 
@@ -77,36 +79,37 @@ class WebsiteSale(WebsiteSale):
             .customer_id_chosen_by_agent
         )
 
-        order.agent_customer = _agent_customer
+        if order:
+            order.agent_customer = _agent_customer
+        
+        if not request.env.user.partner_id.agent:
 
-        if not order.agent_customer:
-            return res
+            order.partner_id = order.agent_customer.id
+            order.onchange_partner_id()
+            order.user_id = request.env.user.id
 
-        order.partner_id = order.agent_customer.id
-        order.onchange_partner_id()
-        order.user_id = request.env.user.id
-
-        # Check if follower exists becuase you cant create a new one with the same res_model, res_id and partner_id
-        existing_follower = request.env["mail.followers"].search(
-            [
-                ("res_model", "=", "sale.order"),
-                ("res_id", "=", order.id),
-                ("partner_id", "=", order.agent_customer.id),
-            ]
-        )
-
-        print("\n\nExisting follower", existing_follower, order, "\n\n")
-
-        if not existing_follower:
-            # No existe, puedes crear el nuevo registro
-            request.env["mail.followers"].create(
-                {
-                    "res_model": "sale.order",
-                    "res_id": order.id,
-                    "partner_id": order.agent_customer.id,
-                }
+            # Check if follower exists becuase you cant create a new one with the same res_model, res_id and partner_id
+            existing_follower = request.env["mail.followers"].search(
+                [
+                    ("res_model", "=", "sale.order"),
+                    ("res_id", "=", order.id),
+                    ("partner_id", "=", order.agent_customer.id),
+                ]
             )
-            print("\n\n Etzun existitzen ta sortu da \n\n")
+
+            print("\n\nExisting follower", existing_follower, order, "\n\n")
+
+            if not existing_follower:
+                # No existe, puedes crear el nuevo registro
+                new_follower = request.env["mail.followers"].create(
+                    {
+                        "res_model": "sale.order",
+                        "res_id": order.id,
+                        "partner_id": order.agent_customer.id,
+                    }
+                )
+                print("\n\n Etzun existitzen ta sortu da: ",new_follower," \n\n")
+        
         elif request.env.user.sudo().partner_id.agent:
             user_id = request.env.user.id
 
@@ -151,23 +154,24 @@ class WebsiteSale(WebsiteSale):
                     .customer_id_chosen_by_agent
                 )
                 order.partner_id = order.agent_customer.id
+                print("\n\nOnchange partner aurretik\n\n")
                 order.onchange_partner_id()
                 order.user_id = request.env.user.id
 
 
-                request.env["mail.followers"].create(
+                new_follower2 = request.env["mail.followers"].create(
                     {
                         "res_model": "sale.order",
                         "res_id": order.id,
                         "partner_id": order.agent_customer.id,
                     }
                 )
+                print("\n\n Etzun existitzen ta sortu da2: ",new_follower2," \n\n")
                 res.qcontext["order"] = order
             elif last_order_customer:
                 res.qcontext["order"] = last_order_customer
 
                 print("\n\nRES qcontext",res.qcontext["order"],"\n\n")
-            print("\n\n Etzun existitzen ta sortu da \n\n")
         print("\n\nAZKENEKO RES qcontext",res.qcontext["order"],"\n\n")
         return res
 

@@ -48,8 +48,10 @@ class WebsiteSale(WebsiteSale):
     def payment_confirmation(self, **post):
         print("\n\nPAYMENT CONFIRMATION\n\n")
         res = super().payment_confirmation(**post)
+        order = res.qcontext.get('order')
+
         
-        self._check_payment_confirmation(res, **post)
+        self._check_payment_confirmation(res=res, order=order,**post)
 
         return res
 
@@ -417,8 +419,8 @@ class WebsiteSale(WebsiteSale):
 
         return request.website.sale_get_order().order_comments
 
-    def _check_payment_confirmation(self, res=False, **post):
-
+    def _check_payment_confirmation(self, res=False, order=False, **post):
+         
         if not request.env.user.partner_id.agent:
             last_order = (
                 request.env["sale.order"]
@@ -433,7 +435,7 @@ class WebsiteSale(WebsiteSale):
                 )
             )
             print("\nLast order etten", last_order, request.env.user.partner_id,"\n")
-            if order.id < last_order.id:
+            if not order or order and order.id < last_order.id:
                 order = last_order
 
                 request.session['sale_order_id'] = order.id

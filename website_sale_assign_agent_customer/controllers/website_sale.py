@@ -441,17 +441,17 @@ class WebsiteSale(WebsiteSale):
                 request.session['sale_order_id'] = order.id
 
                 print("\n if not order barrun klientie izenda", last_order, request.env.user.partner_id,"\n")
-
+                res.qcontext['order'] = order
                 return request.render("website_sale.confirmation", {'order': order})
 
             else:
                 print("\n if not order else klientie izenda", order, request.env.user.partner_id,"\n")
-                
+                res.qcontext['order'] = order
+
                 return res
 
 
         elif request.env.user.sudo().partner_id.agent:
-            
             _agent_customer = int(
                 request.env["agent.partner"]
                 .sudo()
@@ -464,7 +464,6 @@ class WebsiteSale(WebsiteSale):
 
             user = request.env["res.users"].sudo().browse(user_id)
             partner_id = user.partner_id.id
-
             
             # Find the last sale order for the given partner_id
             last_order = (
@@ -525,13 +524,15 @@ class WebsiteSale(WebsiteSale):
                     )
 
                     print("\n\n Etzun existitzen ta sortu da2: ",new_follower2," \n\n")
-                
+
+                res.qcontext['order'] = order
                 return request.render("website_sale.confirmation", {'order': order})
                 
             elif last_order_customer:
                 last_order_customer.agent_customer = _agent_customer
 
                 print("\n\nlast_order_customer ",last_order_customer,"\n\n")
+                res.qcontext['order'] = order
                 return request.render("website_sale.confirmation", {'order': last_order_customer})
 
 

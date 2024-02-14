@@ -49,136 +49,8 @@ class WebsiteSale(WebsiteSale):
         print("\n\nPAYMENT CONFIRMATION\n\n")
         res = super().payment_confirmation(**post)
         
-        order = res.qcontext.get("order")
+        self._check_payment_confirmation(res, **post)
 
-        if not request.env.user.partner_id.agent:
-            last_order = (
-                request.env["sale.order"]
-                .sudo()
-                .search(
-                    [
-                        ("partner_id", "=", request.env.user.partner_id.id),
-                    ],
-                    order="id desc", #leno "date_order desc" zeon
-                    limit=1,
-                )
-            )
-            print("\nLast order etten", last_order, request.env.user.partner_id,"\n")
-            if not order:
-                order = last_order
-
-                res.qcontext["order"] = last_order
-
-                return request.render("website_sale.confirmation", {'order': order})
-            else:
-                return res
-
-        _agent_customer = int(
-            request.env["agent.partner"]
-            .sudo()
-            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
-            .customer_id_chosen_by_agent
-        )
-
-        if order:
-            order.agent_customer = _agent_customer
-        
-        if not request.env.user.partner_id.agent:
-
-            order.partner_id = order.agent_customer.id
-            order.onchange_partner_id()
-            order.user_id = request.env.user.id
-
-            # Check if follower exists because you cant create a new one with the same res_model, res_id and partner_id
-            existing_follower = request.env["mail.followers"].search(
-                [
-                    ("res_model", "=", "sale.order"),
-                    ("res_id", "=", order.id),
-                    ("partner_id", "=", order.agent_customer.id),
-                ]
-            )
-
-            print("\n\nExisting follower", existing_follower, order, "\n\n")
-
-            if not existing_follower:
-                # No existe, puedes crear el nuevo registro
-                new_follower = request.env["mail.followers"].create(
-                    {
-                        "res_model": "sale.order",
-                        "res_id": order.id,
-                        "partner_id": order.agent_customer.id,
-                    }
-                )
-                print("\n\n Etzun existitzen ta sortu da: ",new_follower," \n\n")
-        
-        elif request.env.user.sudo().partner_id.agent:
-            user_id = request.env.user.id
-
-            user = request.env["res.users"].sudo().browse(user_id)
-            partner_id = user.partner_id.id
-
-            
-            # Find the last sale order for the given partner_id
-            last_order = (
-                request.env["sale.order"]
-                .sudo()
-                .search(
-                    [
-                        ("partner_id", "=", partner_id),
-                    ],
-                    order="id desc", #leno "date_order desc" zeon
-                    limit=1,
-                )
-            )
-            
-            last_order_customer = (
-                request.env["sale.order"]
-                .sudo()
-                .search(
-                    [
-                        ("partner_id", "=", _agent_customer),
-                    ],
-                    order="id desc", #leno "date_order desc" zeon
-                    limit=1,
-                )
-            )
-            if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
-                order = last_order
-                print("\n\nAzkeneko order sortute", order, "\n\n")
-                order.agent_customer = int(
-                    request.env["agent.partner"]
-                    .sudo()
-                    .search(
-                        [("agent_id", "=", request.env.user.sudo().partner_id.id)],
-                        limit=1,
-                    )
-                    .customer_id_chosen_by_agent
-                )
-                order.partner_id = order.agent_customer.id
-                print("\n\nOnchange partner aurretik\n\n")
-                order.onchange_partner_id()
-                order.user_id = request.env.user.id
-
-
-                new_follower2 = request.env["mail.followers"].create(
-                    {
-                        "res_model": "sale.order",
-                        "res_id": order.id,
-                        "partner_id": order.agent_customer.id,
-                    }
-                )
-                print("\n\n Etzun existitzen ta sortu da2: ",new_follower2," \n\n")
-                res.qcontext["order"] = order
-                
-                return request.render("website_sale.confirmation", {'order': order})
-                
-            elif last_order_customer:
-                res.qcontext["order"] = last_order_customer
-                print("\n\nRES qcontext",res.qcontext["order"],"\n\n")
-                return request.render("website_sale.confirmation", {'order': last_order_customer})
-
-
-        print("\n\nAZKENEKO RES qcontext",res.qcontext["order"],"\n\n")
         return res
 
     @http.route()
@@ -522,6 +394,8 @@ class WebsiteSale(WebsiteSale):
     @http.route()
     def payment(self, **post):
 
+        self._check_payment_confirmation(self, **post)
+        
         # Retrieve the comment from the post data
         comment = post.get("comment_hidden")
 
@@ -543,37 +417,123 @@ class WebsiteSale(WebsiteSale):
 
         return request.website.sale_get_order().order_comments
 
-    # PRUEBATAKO KONTROLADORIE
-    # @http.route('/shop/cart/updatefromshop', type='http', auth="public", website=True)
-    # def update_cart_from_shop(self, line_id, product_id, set_qty, csrf_token, **kwargs):
-    #     """
-    #     Update the cart based on the provided parameters.
+    def _check_payment_confirmation(self, res=False, **post):
 
-    #     :param line_id: Line ID of the cart item to update.
-    #     :param product_id: Product ID of the cart item.
-    #     :param set_qty: New quantity for the cart item.
-    #     :param csrf_token: CSRF token for security.
-    #     :param kwargs: Additional parameters.
+        if not request.env.user.partner_id.agent:
+            last_order = (
+                request.env["sale.order"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", request.env.user.partner_id.id),
+                        ("agent_customer", "=", False),
+                    ],
+                    order="id desc",
+                    limit=1,
+                )
+            )
+            print("\nLast order etten", last_order, request.env.user.partner_id,"\n")
+            if order.id < last_order.id:
+                order = last_order
 
-    #     :return: JSON response indicating the success or failure of the update.
-    #     """
-    #     # Ensure CSRF token is valid for security
-    #     WebsiteSale()._check_csrf_token(csrf_token)
+                request.session['sale_order_id'] = order.id
 
-    #     # Convert IDs to integers
-    #     line_id = int(line_id)
-    #     product_id = int(product_id)
-    #     set_qty = int(set_qty)
+                print("\n if not order barrun klientie izenda", last_order, request.env.user.partner_id,"\n")
 
-    #     # Get the cart and update the specified line
-    #     order = request.website.sale_get_order()
-    #     order_line = order.order_line.filtered(lambda line: line.id == line_id and line.product_id.id == product_id)
+                return request.render("website_sale.confirmation", {'order': order})
 
-    #     if order_line:
-    #         order_line.write({'product_uom_qty': set_qty})
-    #         return {'success': True, 'message': 'Cart updated successfully'}
-    #     else:
-    #         return {'success': False, 'message': 'Cart item not found'}
+            else:
+                print("\n if not order else klientie izenda", order, request.env.user.partner_id,"\n")
+                
+                return res
+
+
+        elif request.env.user.sudo().partner_id.agent:
+            
+            _agent_customer = int(
+                request.env["agent.partner"]
+                .sudo()
+                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .customer_id_chosen_by_agent
+            )
+
+           
+            user_id = request.env.user.id
+
+            user = request.env["res.users"].sudo().browse(user_id)
+            partner_id = user.partner_id.id
+
+            
+            # Find the last sale order for the given partner_id
+            last_order = (
+                request.env["sale.order"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", partner_id),
+                    ],
+                    order="id desc", #leno "date_order desc" zeon
+                    limit=1,
+                )
+            )
+            
+            last_order_customer = (
+                request.env["sale.order"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", _agent_customer),
+                    ],
+                    order="id desc", #leno "date_order desc" zeon
+                    limit=1,
+                )
+            )
+            if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
+                order = last_order
+                print("\n\nAzkeneko order sortute", order, "\n\n")
+                order.agent_customer = int(
+                    request.env["agent.partner"]
+                    .sudo()
+                    .search(
+                        [("agent_id", "=", request.env.user.sudo().partner_id.id)],
+                        limit=1,
+                    )
+                    .customer_id_chosen_by_agent
+                )
+                order.partner_id = order.agent_customer.id
+                print("\n\nOnchange partner aurretik\n\n")
+                order.onchange_partner_id()
+                order.user_id = request.env.user.id
+
+                existing_follower = request.env["mail.followers"].search(
+                    [
+                        ("res_model", "=", "sale.order"),
+                        ("res_id", "=", order.id),
+                        ("partner_id", "=", order.agent_customer.id),
+                    ]
+                )
+                
+                if not existing_follower:
+                    new_follower2 = request.env["mail.followers"].create(
+                        {
+                            "res_model": "sale.order",
+                            "res_id": order.id,
+                            "partner_id": order.agent_customer.id,
+                        }
+                    )
+
+                    print("\n\n Etzun existitzen ta sortu da2: ",new_follower2," \n\n")
+                
+                return request.render("website_sale.confirmation", {'order': order})
+                
+            elif last_order_customer:
+                last_order_customer.agent_customer = _agent_customer
+
+                print("\n\nlast_order_customer ",last_order_customer,"\n\n")
+                return request.render("website_sale.confirmation", {'order': last_order_customer})
+
+
+        print("\n\nlast_order_customer",last_order_customer,"\n\n")
 
     def _empty_cart_before_changing_customer(self):
         order = request.website.sale_get_order(force_create=1)

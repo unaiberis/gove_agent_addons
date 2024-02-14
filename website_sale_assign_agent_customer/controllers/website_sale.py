@@ -50,8 +50,10 @@ class WebsiteSale(WebsiteSale):
         res = super().payment_confirmation(**post)
         
         # We want always to go to the sale confirmation in the end
-        if res.qcontext.get("response_template") is None:
-            res.qcontext["response_template"] = 'website_sale.confirmation'
+        # template = 'website_sale.confirmation'
+        # location = '/es/shop/confirmation'
+        # if res.qcontext.get('response_template') is None:
+        #     res.qcontext['response_template'] = 'website_sale.confirmation'
 
         order = res.qcontext.get("order")
 
@@ -73,9 +75,11 @@ class WebsiteSale(WebsiteSale):
             if not order:
                 order = last_order
 
-            res.qcontext["order"] = last_order
+                res.qcontext["order"] = last_order
 
-            return res
+                return request.render("website_sale.confirmation", {'order': order})
+            else:
+                return res
 
         _agent_customer = int(
             request.env["agent.partner"]
@@ -173,10 +177,15 @@ class WebsiteSale(WebsiteSale):
                 )
                 print("\n\n Etzun existitzen ta sortu da2: ",new_follower2," \n\n")
                 res.qcontext["order"] = order
+                
+                return request.render("website_sale.confirmation", {'order': order})
+                
             elif last_order_customer:
                 res.qcontext["order"] = last_order_customer
-
                 print("\n\nRES qcontext",res.qcontext["order"],"\n\n")
+                return request.render("website_sale.confirmation", {'order': last_order_customer})
+
+
         print("\n\nAZKENEKO RES qcontext",res.qcontext["order"],"\n\n")
         return res
 
@@ -256,6 +265,7 @@ class WebsiteSale(WebsiteSale):
 
         PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect("/shop/confirmation")
+
 
     @http.route()
     def shop(self, page=0, category=None, search="", ppg=False, **post):

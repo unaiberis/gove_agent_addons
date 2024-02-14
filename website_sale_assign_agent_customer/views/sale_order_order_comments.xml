@@ -21,7 +21,7 @@
             </xpath> -->
             <xpath expr="//group[@name='note_group']"
                 position="after">
-                <group name="coments_group" string="Purchase Comment">
+                <group name="comments_group" string="Purchase Comment">
                     <field name="order_comments" />
                 </group>
             </xpath>

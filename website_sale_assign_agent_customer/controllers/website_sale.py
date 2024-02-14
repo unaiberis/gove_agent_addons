@@ -49,16 +49,8 @@ class WebsiteSale(WebsiteSale):
         print("\n\nPAYMENT CONFIRMATION\n\n")
         res = super().payment_confirmation(**post)
         
-        # We want always to go to the sale confirmation in the end
-        # template = 'website_sale.confirmation'
-        # location = '/es/shop/confirmation'
-        # if res.qcontext.get('response_template') is None:
-        #     res.qcontext['response_template'] = 'website_sale.confirmation'
-
         order = res.qcontext.get("order")
 
-        # if not order:
-#             return res
         if not request.env.user.partner_id.agent:
             last_order = (
                 request.env["sale.order"]
@@ -97,7 +89,7 @@ class WebsiteSale(WebsiteSale):
             order.onchange_partner_id()
             order.user_id = request.env.user.id
 
-            # Check if follower exists becuase you cant create a new one with the same res_model, res_id and partner_id
+            # Check if follower exists because you cant create a new one with the same res_model, res_id and partner_id
             existing_follower = request.env["mail.followers"].search(
                 [
                     ("res_model", "=", "sale.order"),

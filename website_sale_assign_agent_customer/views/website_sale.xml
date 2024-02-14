@@ -262,7 +262,7 @@
                     href="#"><i class="fa fa-shopping-cart" /> Add to Cart</a> -->
 
 
-                    <table class="mb16 table table-striped table-sm js_cart_lines" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                    <!-- <table class="mb16 table table-striped table-sm js_cart_lines" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                         <tbody>
                             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                                 <tr t-att-class="'optional_product info' if line.linked_line_id else None">
@@ -300,7 +300,7 @@
                                 </tr>
                             </t>
                         </tbody>
-                    </table>
+                    </table> -->
 
 
                 <!-- PRUEBAS BOTON AÑADIR AL CARRITO -->

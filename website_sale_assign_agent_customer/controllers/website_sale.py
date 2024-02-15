@@ -448,7 +448,7 @@ class WebsiteSale(WebsiteSale):
                     res.qcontext['response_template'] = "website_sale.confirmation"
                     if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
                         res.location = res.location + '/confirmation'
-                return request.render("website_sale.confirmation", {'order': order})
+                # return request.render("website_sale.confirmation", {'order': order})
 
             else:
                 print("\n if not order else klientie izenda", order, request.env.user.partner_id,"\n")
@@ -539,7 +539,8 @@ class WebsiteSale(WebsiteSale):
                     res.qcontext['response_template'] = "website_sale.confirmation"
                     if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
                         res.location = res.location + '/confirmation'
-                return request.render("website_sale.confirmation", {'order': order})
+                # return request.render("website_sale.confirmation", {'order': order})
+                return res
                 
             elif last_order_customer:
                 last_order_customer.agent_customer = _agent_customer
@@ -550,10 +551,15 @@ class WebsiteSale(WebsiteSale):
                     res.qcontext['response_template'] = "website_sale.confirmation"
                     if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
                         res.location = res.location + '/confirmation'
-                return request.render("website_sale.confirmation", {'order': last_order_customer})
+                # return request.render("website_sale.confirmation", {'order': last_order_customer})
+                return res
+        
+        current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
+        if not current_session_transaction_ids:
+            print("\n\nNo existe el transaction\n\n")
 
 
-        print("\n\nlast_order_customer",last_order_customer,"\n\n")
+        # print("\n\nlast_order_customer",last_order_customer,"\n\n")
 
     def _empty_cart_before_changing_customer(self):
         order = request.website.sale_get_order(force_create=1)

@@ -52,6 +52,8 @@ class WebsiteSale(WebsiteSale):
 
         
         self._check_payment_confirmation(res=res, order=order,**post)
+        if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
+            res.location = res.location + '/confirmation'
 
         return res
 
@@ -443,13 +445,18 @@ class WebsiteSale(WebsiteSale):
                 print("\n if not order barrun klientie izenda", last_order, request.env.user.partner_id,"\n")
                 if 'qcontext' in dir(res):
                     res.qcontext['order'] = order
+                    res.qcontext['response_template'] = "website_sale.confirmation"
+                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
+                        res.location = res.location + '/confirmation'
                 return request.render("website_sale.confirmation", {'order': order})
 
             else:
                 print("\n if not order else klientie izenda", order, request.env.user.partner_id,"\n")
                 if 'qcontext' in dir(res):
                     res.qcontext['order'] = order
-
+                    res.qcontext['response_template'] = "website_sale.confirmation"
+                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
+                        res.location = res.location + '/confirmation'
                 return res
 
 
@@ -529,6 +536,9 @@ class WebsiteSale(WebsiteSale):
 
                 if 'qcontext' in dir(res):
                     res.qcontext['order'] = order
+                    res.qcontext['response_template'] = "website_sale.confirmation"
+                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
+                        res.location = res.location + '/confirmation'
                 return request.render("website_sale.confirmation", {'order': order})
                 
             elif last_order_customer:
@@ -537,6 +547,9 @@ class WebsiteSale(WebsiteSale):
                 print("\n\nlast_order_customer ",last_order_customer,"\n\n")
                 if 'qcontext' in dir(res):
                     res.qcontext['order'] = order
+                    res.qcontext['response_template'] = "website_sale.confirmation"
+                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
+                        res.location = res.location + '/confirmation'
                 return request.render("website_sale.confirmation", {'order': last_order_customer})
 
 

@@ -557,7 +557,9 @@ class WebsiteSale(WebsiteSale):
         
         current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
         if not current_session_transaction_ids:
-            print("\n\nNo existe el transaction\n\n")
+            print("\n\nNO existe el transaction\n\n")
+        else:
+            print("\n\nSI existe el transaction\n\n")
 
         return res
 

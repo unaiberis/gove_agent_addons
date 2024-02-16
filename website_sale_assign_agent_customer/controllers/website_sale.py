@@ -47,11 +47,12 @@ class WebsiteSale(WebsiteSale):
     @http.route()
     def payment_confirmation(self, **post):
         print("\n\nPAYMENT CONFIRMATION\n\n")
+        self._check_payment_confirmation(**post)
+
         res = super().payment_confirmation(**post)
         order = res.qcontext.get('order')
 
         
-        self._check_payment_confirmation(res=res, order=order,**post)
         if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
             res.location = res.location + '/confirmation'
 
@@ -422,7 +423,7 @@ class WebsiteSale(WebsiteSale):
         return request.website.sale_get_order().order_comments
 
     def _check_payment_confirmation(self, res=False, order=False, **post):
-         
+
         if not request.env.user.partner_id.agent:
             last_order = (
                 request.env["sale.order"]
@@ -440,7 +441,7 @@ class WebsiteSale(WebsiteSale):
             if not order or order and order.id < last_order.id:
                 order = last_order
 
-                request.session['sale_order_id'] = order.id
+                request.session['sale_last_order_id'] = order.id
 
                 print("\n if not order barrun klientie izenda", last_order, request.env.user.partner_id,"\n")
                 if 'qcontext' in dir(res):
@@ -514,6 +515,7 @@ class WebsiteSale(WebsiteSale):
                 print("\n\nOnchange partner aurretik\n\n")
                 order.onchange_partner_id()
                 order.user_id = request.env.user.id
+                request.session['sale_last_order_id'] = order.id
 
                 existing_follower = request.env["mail.followers"].search(
                     [
@@ -552,12 +554,12 @@ class WebsiteSale(WebsiteSale):
                     if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
                         res.location = res.location + '/confirmation'
                 # return request.render("website_sale.confirmation", {'order': last_order_customer})
-                return res
         
         current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
         if not current_session_transaction_ids:
             print("\n\nNo existe el transaction\n\n")
 
+        return res
 
         # print("\n\nlast_order_customer",last_order_customer,"\n\n")
 

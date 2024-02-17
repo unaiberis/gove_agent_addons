@@ -49,14 +49,7 @@ class WebsiteSale(WebsiteSale):
         print("\n\nPAYMENT CONFIRMATION\n\n")
         self._check_payment_confirmation(**post)
 
-        res = super().payment_confirmation(**post)
-        order = res.qcontext.get('order')
-
-        
-        if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
-            res.location = res.location + '/confirmation'
-
-        return res
+        return super().payment_confirmation(**post)
 
     @http.route()
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
@@ -399,7 +392,7 @@ class WebsiteSale(WebsiteSale):
     @http.route()
     def payment(self, **post):
 
-        self._check_payment_confirmation(self, **post)
+        self._check_payment_confirmation(**post)
         
         # Retrieve the comment from the post data
         comment = post.get("comment_hidden")
@@ -422,7 +415,7 @@ class WebsiteSale(WebsiteSale):
 
         return request.website.sale_get_order().order_comments
 
-    def _check_payment_confirmation(self, res=False, order=False, **post):
+    def _check_payment_confirmation(self, order=None, **post):
 
         if not request.env.user.partner_id.agent:
             last_order = (
@@ -444,21 +437,9 @@ class WebsiteSale(WebsiteSale):
                 request.session['sale_last_order_id'] = order.id
 
                 print("\n if not order barrun klientie izenda", last_order, request.env.user.partner_id,"\n")
-                if 'qcontext' in dir(res):
-                    res.qcontext['order'] = order
-                    res.qcontext['response_template'] = "website_sale.confirmation"
-                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
-                        res.location = res.location + '/confirmation'
-                # return request.render("website_sale.confirmation", {'order': order})
 
             else:
                 print("\n if not order else klientie izenda", order, request.env.user.partner_id,"\n")
-                if 'qcontext' in dir(res):
-                    res.qcontext['order'] = order
-                    res.qcontext['response_template'] = "website_sale.confirmation"
-                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
-                        res.location = res.location + '/confirmation'
-                return res
 
 
         elif request.env.user.sudo().partner_id.agent:
@@ -469,7 +450,6 @@ class WebsiteSale(WebsiteSale):
                 .customer_id_chosen_by_agent
             )
 
-           
             user_id = request.env.user.id
 
             user = request.env["res.users"].sudo().browse(user_id)
@@ -535,25 +515,11 @@ class WebsiteSale(WebsiteSale):
                     )
 
                     print("\n\n Etzun existitzen ta sortu da2: ",new_follower2," \n\n")
-
-                if 'qcontext' in dir(res):
-                    res.qcontext['order'] = order
-                    res.qcontext['response_template'] = "website_sale.confirmation"
-                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
-                        res.location = res.location + '/confirmation'
-                # return request.render("website_sale.confirmation", {'order': order})
-                return res
                 
             elif last_order_customer:
                 last_order_customer.agent_customer = _agent_customer
 
                 print("\n\nlast_order_customer ",last_order_customer,"\n\n")
-                if 'qcontext' in dir(res):
-                    res.qcontext['order'] = order
-                    res.qcontext['response_template'] = "website_sale.confirmation"
-                    if hasattr(res, 'location') and res.location is not None and 'shop' in res.location and 'confirmation' not in res.location:
-                        res.location = res.location + '/confirmation'
-                # return request.render("website_sale.confirmation", {'order': last_order_customer})
         
         current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
         if not current_session_transaction_ids:
@@ -561,9 +527,6 @@ class WebsiteSale(WebsiteSale):
         else:
             print("\n\nSI existe el transaction\n\n")
 
-        return res
-
-        # print("\n\nlast_order_customer",last_order_customer,"\n\n")
 
     def _empty_cart_before_changing_customer(self):
         order = request.website.sale_get_order(force_create=1)

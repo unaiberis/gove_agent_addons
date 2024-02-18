@@ -66,11 +66,9 @@ class WebsiteSale(WebsiteSale):
                 # after payment in case they don't return from payment through this route.
                 last_order_id = request.session["sale_last_order_id"]
                 order = request.env["sale.order"].sudo().browse(last_order_id).exists()
+                print("\nValidate funtzionamentu normala\n")
             elif request.env.user.sudo().partner_id.agent:
-                user_id = request.env.user.id
-
-                user = request.env["res.users"].sudo().browse(user_id)
-                partner_id = user.partner_id.id
+                partner_id = request.env.user.partner_id.id
 
                 # Find the last sale order for the given partner_id
                 last_order = (
@@ -86,20 +84,12 @@ class WebsiteSale(WebsiteSale):
                 )
                 if last_order:
                     order = last_order
-                    print("\n\nAzkeneko order sortute", order, "\n\n")
+                    print("\n\nValidate Azkeneko order sortute", order, "\n\n")
             
-            elif not order:
-                order = (
-                    request.env["sale.order"]
-                    .sudo()
-                    .search(
-                        [
-                            ("partner_id", "=", request.env.user.sudo().partner_id.id),
-                        ],
-                        order="id desc", #leno "date_order desc" zeon
-                        limit=1,
-                    )
-                )
+            elif not request.env.user.sudo().partner_id.agent:
+                last_order_id = request.session["sale_last_order_id"]
+                order = request.env["sale.order"].sudo().browse(last_order_id).exists()
+                print("\nValidate elif not request.env.user.sudo().partner_id.agent:\n")
 
         else:
             order = request.env["sale.order"].sudo().browse(sale_order_id)
@@ -529,6 +519,7 @@ class WebsiteSale(WebsiteSale):
 
 
     def _empty_cart_before_changing_customer(self):
+        print("\nEMPTY CART Einde\n")
         order = request.website.sale_get_order(force_create=1)
         order_line = request.env["sale.order.line"].sudo()
         line_ids = order_line.search([("order_id", "=", order.id)])

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="customer_comment_assets_frontend" inherit_id="website.assets_frontend">
+          <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_customer_order_comment/static/src/js/website_customer_order_comment.js"></script>
+          </xpath>
+    </template>
+        
+    <template id="website_sale_customer_comment" inherit_id="website_sale.payment">     
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div class="mb8 row" t-if="not website.is_customer_comment_features">               
+                <div t-attf-class="form-group col-12">
+                    <label class="control-label" for="customer_comment">Customer Order Comment</label>
+                    <textarea rows="3" id="customer_comment" class="form-control" placeholder="Write a comment..."></textarea>                      
+                </div> 
+            </div>  
+        </xpath>        
+    </template>
+</odoo>

@@ -388,26 +388,8 @@ class WebsiteSale(WebsiteSale):
 
         self._check_payment_confirmation(**post)
         
-        # Retrieve the comment from the post data
-        comment = post.get("comment_hidden")
-
-        # Save the comment in the sale order if order_comments is empty
-        sale_order = request.website.sale_get_order()
-        if sale_order and post:  # and not sale_order.order_comments:
-            sale_order.write({"order_comments": comment})
-
         return super().payment(**post)
 
-    @http.route(
-        "/shop/cart/getcurrentsaleorder",
-        type="http",
-        auth="public",
-        website=True,
-        csrf=False,
-    )
-    def _get_current_saleorder(self, **post):
-
-        return request.website.sale_get_order().order_comments
 
     def _check_payment_confirmation(self, order=None, create_mail_follower=False, **post):
         if not request.env.user.partner_id.agent:
@@ -513,11 +495,11 @@ class WebsiteSale(WebsiteSale):
 
                 _logger.info(f"\n\nlast_order_customer {last_order_customer}\n")
 
-        current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
-        if not current_session_transaction_ids:
-            _logger.info("\n\nNO existe el transaction\n")
-        else:
-            _logger.info("\n\nSI existe el transaction\n")
+        # current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
+        # if not current_session_transaction_ids:
+        #     _logger.info("\n\nNO existe el transaction\n")
+        # else:
+        #     _logger.info("\n\nSI existe el transaction\n")
 
 
     def _empty_cart_before_changing_customer(self):

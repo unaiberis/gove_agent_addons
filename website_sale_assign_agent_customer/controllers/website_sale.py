@@ -46,7 +46,7 @@ class WebsiteSale(WebsiteSale):
 
     @http.route()
     def payment_confirmation(self, **post):
-        print("\n\nPAYMENT CONFIRMATION\n\n")
+        print("\nPAYMENT CONFIRMATION\n")
         self._check_payment_confirmation(**post)
 
         return super().payment_confirmation(**post)
@@ -84,7 +84,7 @@ class WebsiteSale(WebsiteSale):
                 )
                 if last_order:
                     order = last_order
-                    print("\n\nValidate Azkeneko order sortute", order, "\n\n")
+                    print("\nValidate Azkeneko order sortute", order, "\n")
             
             elif not request.env.user.sudo().partner_id.agent:
                 last_order_id = request.session["sale_last_order_id"]
@@ -471,7 +471,7 @@ class WebsiteSale(WebsiteSale):
             )
             if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
                 order = last_order
-                print("\n\nAzkeneko order sortute", order, "\n\n")
+                print("\nAzkeneko order sortute", order, "\n")
                 order.agent_customer = int(
                     request.env["agent.partner"]
                     .sudo()
@@ -482,7 +482,7 @@ class WebsiteSale(WebsiteSale):
                     .customer_id_chosen_by_agent
                 )
                 order.partner_id = order.agent_customer.id
-                print("\n\nOnchange partner aurretik\n\n")
+                print("\nOnchange partner aurretik\n")
                 order.onchange_partner_id()
                 order.user_id = request.env.user.id
                 request.session['sale_last_order_id'] = order.id
@@ -504,18 +504,18 @@ class WebsiteSale(WebsiteSale):
                         }
                     )
 
-                    print("\n\n Etzun existitzen ta sortu da2: ",new_follower2," \n\n")
+                    print("\n Etzun existitzen ta sortu da2: ",new_follower2," \n")
                 
             elif last_order_customer:
                 last_order_customer.agent_customer = _agent_customer
 
-                print("\n\nlast_order_customer ",last_order_customer,"\n\n")
+                print("\nlast_order_customer ",last_order_customer,"\n")
         
         current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
         if not current_session_transaction_ids:
-            print("\n\nNO existe el transaction\n\n")
+            print("\nNO existe el transaction\n")
         else:
-            print("\n\nSI existe el transaction\n\n")
+            print("\nSI existe el transaction\n")
 
 
     def _empty_cart_before_changing_customer(self):

@@ -23,7 +23,6 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
 _logger = logging.getLogger(__name__)
 
 
-
 class WebsiteSale(WebsiteSale):
     def check_field_validations(self, values):
         res = super().check_field_validations(values=values)
@@ -70,7 +69,7 @@ class WebsiteSale(WebsiteSale):
                 last_order_id = request.session["sale_last_order_id"]
                 order = request.env["sale.order"].sudo().browse(last_order_id).exists()
                 _logger.info("\n\nValidate funcionamiento normal\n")
-            # Nik jarrite 
+            # Nik jarrite
             elif request.env.user.sudo().partner_id.agent:
                 partner_id = request.env.user.partner_id.id
 
@@ -82,7 +81,7 @@ class WebsiteSale(WebsiteSale):
                         [
                             ("partner_id", "=", partner_id),
                         ],
-                        order="id desc", #leno "date_order desc" zeon
+                        order="id desc",  # leno "date_order desc" zeon
                         limit=1,
                     )
                 )
@@ -93,7 +92,9 @@ class WebsiteSale(WebsiteSale):
             elif not request.env.user.sudo().partner_id.agent:
                 last_order_id = request.session["sale_last_order_id"]
                 order = request.env["sale.order"].sudo().browse(last_order_id).exists()
-                _logger.info("\n\nValidate elif not request.env.user.sudo().partner_id.agent:\n")
+                _logger.info(
+                    "\n\nValidate elif not request.env.user.sudo().partner_id.agent:\n"
+                )
 
         else:
             order = request.env["sale.order"].sudo().browse(sale_order_id)
@@ -121,7 +122,6 @@ class WebsiteSale(WebsiteSale):
 
         PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect("/shop/confirmation")
-
 
     @http.route()
     def shop(self, page=0, category=None, search="", ppg=False, **post):
@@ -171,8 +171,11 @@ class WebsiteSale(WebsiteSale):
                 **post
             )
 
-            self._set_pricelist_from_current_agent_customer(
-                agent_customer_id, agent_customers
+            pricelist = (
+                self._set_pricelist_from_current_agent_customer(
+                    agent_customer_id, agent_customers
+                )
+                # or pricelist
             )
 
         url = "/shop"
@@ -243,6 +246,8 @@ class WebsiteSale(WebsiteSale):
         }
         if category:
             values["main_object"] = category
+
+        _logger.info("\n\n PRICELIST %s, PRICELIST NAME %s \n", pricelist, pricelist.name)
 
         # Get the selected customer object based on agent_customer_id
         selected_customer_id = (
@@ -387,11 +392,12 @@ class WebsiteSale(WebsiteSale):
     def payment(self, **post):
 
         self._check_payment_confirmation(**post)
-        
+
         return super().payment(**post)
 
-
-    def _check_payment_confirmation(self, order=None, create_mail_follower=False, **post):
+    def _check_payment_confirmation(
+        self, order=None, create_mail_follower=False, **post
+    ):
         if not request.env.user.partner_id.agent:
             last_order = (
                 request.env["sale.order"]
@@ -405,28 +411,35 @@ class WebsiteSale(WebsiteSale):
                     limit=1,
                 )
             )
-            _logger.info(f"\n\n Last order en _check_payment_confirmation {last_order} {request.env.user.partner_id}\n")
+            _logger.info(
+                f"\n\n Last order en _check_payment_confirmation {last_order} {request.env.user.partner_id} {last_order.name}\n"
+            )
             if not order or order and order.id < last_order.id:
                 order = last_order
 
-                request.session['sale_last_order_id'] = order.id
+                request.session["sale_last_order_id"] = order.id
 
-                _logger.info(f"\n\n if not order siendo cliente _check_payment_confirmation {last_order} {request.env.user.partner_id}\n")
+                _logger.info(
+                    f"\n\n if not order siendo cliente _check_payment_confirmation {last_order} {last_order.name} {request.env.user.partner_id}\n"
+                )
 
             else:
-                _logger.info(f"\n\n if not order else siendo cliente _check_payment_confirmation {order} {request.env.user.partner_id}\n")
-
+                _logger.info(
+                    f"\n\n if not order else siendo cliente _check_payment_confirmation {order} {order.name} {request.env.user.partner_id}\n"
+                )
 
         elif request.env.user.sudo().partner_id.agent:
             _agent_customer = int(
                 request.env["agent.partner"]
                 .sudo()
-                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .search(
+                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
+                )
                 .customer_id_chosen_by_agent
             )
 
             partner_id = request.env.user.partner_id.id
-            
+
             # Find the last sale order for the given partner_id
             last_order = (
                 request.env["sale.order"]
@@ -435,11 +448,11 @@ class WebsiteSale(WebsiteSale):
                     [
                         ("partner_id", "=", partner_id),
                     ],
-                    order="id desc", #leno "date_order desc" zeon
+                    order="id desc",  # leno "date_order desc" zeon
                     limit=1,
                 )
             )
-            
+
             last_order_customer = (
                 request.env["sale.order"]
                 .sudo()
@@ -447,13 +460,17 @@ class WebsiteSale(WebsiteSale):
                     [
                         ("partner_id", "=", _agent_customer),
                     ],
-                    order="id desc", #leno "date_order desc" zeon
+                    order="id desc",  # leno "date_order desc" zeon
                     limit=1,
                 )
             )
-            if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
+            if last_order and (
+                not last_order_customer or last_order.id > last_order_customer.id
+            ):
                 order = last_order
-                _logger.info(f"\n\n AGENT LAST_ORDER (not last_order_customer or last_order.id > last_order_customer.id) {order} \n")
+                _logger.info(
+                    f"\n\n AGENT LAST_ORDER (not last_order_customer or last_order.id > last_order_customer.id) {order} {order.name} \n"
+                )
                 order.agent_customer = int(
                     request.env["agent.partner"]
                     .sudo()
@@ -463,8 +480,11 @@ class WebsiteSale(WebsiteSale):
                     )
                     .customer_id_chosen_by_agent
                 )
-                request.session['sale_last_order_id'] = order.id
-                _logger.info(f"\n\n SALE LAST ORDER ID request.session['sale_last_order_id'] = {request.session.get('sale_last_order_id')}\n")
+                request.session["sale_last_order_id"] = order.id
+                _logger.info(
+                    f"\n\n SALE LAST ORDER ID request.session['sale_last_order_id'] = {request.session.get('sale_last_order_id')}, Order Name: {request.env['sale.order'].sudo().browse(request.session.get('sale_last_order_id')).name}\n"
+                )
+
 
                 if create_mail_follower:
                     order.partner_id = order.agent_customer.id
@@ -478,7 +498,7 @@ class WebsiteSale(WebsiteSale):
                             ("partner_id", "=", order.agent_customer.id),
                         ]
                     )
-                    
+
                     if not existing_follower:
                         new_follower = request.env["mail.followers"].create(
                             {
@@ -488,19 +508,14 @@ class WebsiteSale(WebsiteSale):
                             }
                         )
 
-                        _logger.info(f"\n\n MAIL FOLLOWER Se ha creado mail follower asegurando que no existía: {new_follower} \n")
+                        _logger.info(
+                            f"\n\n MAIL FOLLOWER Se ha creado mail follower asegurando que no existía: {new_follower} \n"
+                        )
 
             elif last_order_customer:
                 last_order_customer.agent_customer = _agent_customer
 
-                _logger.info(f"\n\nlast_order_customer {last_order_customer}\n")
-
-        # current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
-        # if not current_session_transaction_ids:
-        #     _logger.info("\n\nNO existe el transaction\n")
-        # else:
-        #     _logger.info("\n\nSI existe el transaction\n")
-
+                _logger.info(f"\n\nlast_order_customer {last_order_customer} {last_order_customer.name}\n")
 
     def _empty_cart_before_changing_customer(self):
         _logger.info("\n\nEMPTY CART hecho\n")
@@ -573,6 +588,21 @@ class WebsiteSale(WebsiteSale):
                             "customer_id_chosen_by_agent": agent_customer_id,
                         }
                     )
+
+        elif (
+            request.env["agent.partner"]
+            .sudo()
+            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1).exists()
+        ):
+            agent_customer_id = int(
+                request.env["agent.partner"]
+                .sudo()
+                .search(
+                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
+                ).customer_id_chosen_by_agent
+
+            )
+
         # Return agent_customer_id and agent_customers
         return agent_customer_id, agent_customers
 
@@ -622,3 +652,4 @@ class WebsiteSale(WebsiteSale):
                     request.context = dict(
                         request.context, pricelist=pricelist.id, partner=partner
                     )
+                    return pricelist

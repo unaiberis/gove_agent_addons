@@ -22,7 +22,7 @@ class CouponProgram(models.Model):
 
         if not order and (groups or no_group_programs):
             website = request and getattr(request, "website", None)
-            order = website.sale_get_order() if website else None
+            order = website.sale_get_order_without_updating_pricelist() if website else None
             if not order:
                 ctx = self.env.context
                 params = ctx.get("params") if ctx else None

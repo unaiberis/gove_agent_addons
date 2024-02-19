@@ -175,7 +175,7 @@ class WebsiteSale(WebsiteSale):
                 self._set_pricelist_from_current_agent_customer(
                     agent_customer_id, agent_customers
                 )
-                # or pricelist
+                or pricelist
             )
 
         url = "/shop"
@@ -247,7 +247,8 @@ class WebsiteSale(WebsiteSale):
         if category:
             values["main_object"] = category
 
-        _logger.info("\n\n PRICELIST %s, PRICELIST NAME %s \n", pricelist, pricelist.name)
+        if pricelist:
+            _logger.info("\n\n PRICELIST %s, PRICELIST NAME %s \n", pricelist, pricelist.name)
 
         # Get the selected customer object based on agent_customer_id
         selected_customer_id = (

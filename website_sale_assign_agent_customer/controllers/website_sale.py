@@ -471,7 +471,7 @@ class WebsiteSale(WebsiteSale):
             )
             if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
                 order = last_order
-                _logger.info(f"\n\n Último order creado en if last_order and (not last_order_customer or last_order.id > last_order_customer.id) {order} \n")
+                _logger.info(f"\n\n AGENT LAST_ORDER (not last_order_customer or last_order.id > last_order_customer.id) {order} \n")
                 order.agent_customer = int(
                     request.env["agent.partner"]
                     .sudo()

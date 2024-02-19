@@ -50,7 +50,7 @@ class WebsiteSale(WebsiteSale):
     @http.route()
     def payment_confirmation(self, **post):
         _logger.info("\n\nPAYMENT CONFIRMATION\n")
-        self._check_payment_confirmation(**post)
+        self._check_payment_confirmation(create_mail_follower=True, **post)
 
         return super().payment_confirmation(**post)
 
@@ -409,8 +409,7 @@ class WebsiteSale(WebsiteSale):
 
         return request.website.sale_get_order().order_comments
 
-    def _check_payment_confirmation(self, order=None, **post):
-
+    def _check_payment_confirmation(self, order=None, create_mail_follower=False, **post):
         if not request.env.user.partner_id.agent:
             last_order = (
                 request.env["sale.order"]
@@ -491,24 +490,25 @@ class WebsiteSale(WebsiteSale):
                 order.user_id = request.env.user.id
                 request.session['sale_last_order_id'] = order.id
 
-                existing_follower = request.env["mail.followers"].search(
-                    [
-                        ("res_model", "=", "sale.order"),
-                        ("res_id", "=", order.id),
-                        ("partner_id", "=", order.agent_customer.id),
-                    ]
-                )
-                
-                if not existing_follower:
-                    new_follower = request.env["mail.followers"].create(
-                        {
-                            "res_model": "sale.order",
-                            "res_id": order.id,
-                            "partner_id": order.agent_customer.id,
-                        }
+                if create_mail_follower:
+                    existing_follower = request.env["mail.followers"].search(
+                        [
+                            ("res_model", "=", "sale.order"),
+                            ("res_id", "=", order.id),
+                            ("partner_id", "=", order.agent_customer.id),
+                        ]
                     )
+                    
+                    if not existing_follower:
+                        new_follower = request.env["mail.followers"].create(
+                            {
+                                "res_model": "sale.order",
+                                "res_id": order.id,
+                                "partner_id": order.agent_customer.id,
+                            }
+                        )
 
-                    _logger.info(f"\n\n Se ha creado mail follower asegurando que no existía: {new_follower} \n")
+                        _logger.info(f"\n\n MAIL FOLLOWER Se ha creado mail follower asegurando que no existía: {new_follower} \n")
 
             elif last_order_customer:
                 last_order_customer.agent_customer = _agent_customer

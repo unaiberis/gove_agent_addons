@@ -482,7 +482,7 @@ class WebsiteSale(WebsiteSale):
                     .customer_id_chosen_by_agent
                 )
                 request.session['sale_last_order_id'] = order.id
-                _logger.info("\n\nrequest.session['sale_last_order_id'] = order.id\n")
+                _logger.info(f"\n\n SALE LAST ORDER ID request.session['sale_last_order_id'] = {request.session.get('sale_last_order_id')}\n")
 
                 if create_mail_follower:
                     order.partner_id = order.agent_customer.id

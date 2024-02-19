@@ -49,7 +49,7 @@ class WebsiteSale(WebsiteSale):
 
     @http.route()
     def payment_confirmation(self, **post):
-        _logger.info("\nPAYMENT CONFIRMATION\n")
+        _logger.info("\n\nPAYMENT CONFIRMATION\n")
         self._check_payment_confirmation(**post)
 
         return super().payment_confirmation(**post)
@@ -69,7 +69,7 @@ class WebsiteSale(WebsiteSale):
                 # after payment in case they don't return from payment through this route.
                 last_order_id = request.session["sale_last_order_id"]
                 order = request.env["sale.order"].sudo().browse(last_order_id).exists()
-                _logger.info("\nValidate funcionamiento normal\n")
+                _logger.info("\n\nValidate funcionamiento normal\n")
             # Nik jarrite 
             elif request.env.user.sudo().partner_id.agent:
                 partner_id = request.env.user.partner_id.id
@@ -88,12 +88,12 @@ class WebsiteSale(WebsiteSale):
                 )
                 if last_order:
                     order = last_order
-                    _logger.info("\nValidate Ultimo order creado", order, "\n")
+                    _logger.info("\n\nValidate Ultimo order creado", order, "\n")
             
             elif not request.env.user.sudo().partner_id.agent:
                 last_order_id = request.session["sale_last_order_id"]
                 order = request.env["sale.order"].sudo().browse(last_order_id).exists()
-                _logger.info("\nValidate elif not request.env.user.sudo().partner_id.agent:\n")
+                _logger.info("\n\nValidate elif not request.env.user.sudo().partner_id.agent:\n")
 
         else:
             order = request.env["sale.order"].sudo().browse(sale_order_id)
@@ -424,16 +424,16 @@ class WebsiteSale(WebsiteSale):
                     limit=1,
                 )
             )
-            _logger.info("\n Last order en _check_payment_confirmation", last_order, request.env.user.partner_id,"\n")
+            _logger.info("\n\n Last order en _check_payment_confirmation", last_order, request.env.user.partner_id,"\n")
             if not order or order and order.id < last_order.id:
                 order = last_order
 
                 request.session['sale_last_order_id'] = order.id
 
-                _logger.info("\n if not order siendo cliente _check_payment_confirmation", last_order, request.env.user.partner_id,"\n")
+                _logger.info("\n\n if not order siendo cliente _check_payment_confirmation", last_order, request.env.user.partner_id,"\n")
 
             else:
-                _logger.info("\n if not order else siendo cliente _check_payment_confirmation", order, request.env.user.partner_id,"\n")
+                _logger.info("\n\n if not order else siendo cliente _check_payment_confirmation", order, request.env.user.partner_id,"\n")
 
 
         elif request.env.user.sudo().partner_id.agent:
@@ -475,7 +475,7 @@ class WebsiteSale(WebsiteSale):
             )
             if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
                 order = last_order
-                _logger.info("\n Último order creado en if last_order and (not last_order_customer or last_order.id > last_order_customer.id)", order, "\n")
+                _logger.info("\n\n Último order creado en if last_order and (not last_order_customer or last_order.id > last_order_customer.id)", order, "\n")
                 order.agent_customer = int(
                     request.env["agent.partner"]
                     .sudo()
@@ -486,7 +486,7 @@ class WebsiteSale(WebsiteSale):
                     .customer_id_chosen_by_agent
                 )
                 order.partner_id = order.agent_customer.id
-                _logger.info("\nOnchange antes del partner\n")
+                _logger.info("\n\nOnchange antes del partner\n")
                 order.onchange_partner_id()
                 order.user_id = request.env.user.id
                 request.session['sale_last_order_id'] = order.id
@@ -508,22 +508,22 @@ class WebsiteSale(WebsiteSale):
                         }
                     )
 
-                    _logger.info("\n Se ha creado mail follower asegurando que no existia: ",new_follower2," \n")
+                    _logger.info("\n\n Se ha creado mail follower asegurando que no existia: ",new_follower2," \n")
                 
             elif last_order_customer:
                 last_order_customer.agent_customer = _agent_customer
 
-                _logger.info("\nlast_order_customer ",last_order_customer,"\n")
+                _logger.info("\n\nlast_order_customer ",last_order_customer,"\n")
         
         current_session_transaction_ids = PaymentProcessing.get_payment_transaction_ids()
         if not current_session_transaction_ids:
-            _logger.info("\nNO existe el transaction\n")
+            _logger.info("\n\nNO existe el transaction\n")
         else:
-            _logger.info("\nSI existe el transaction\n")
+            _logger.info("\n\nSI existe el transaction\n")
 
 
     def _empty_cart_before_changing_customer(self):
-        _logger.info("\nEMPTY CART Einde\n")
+        _logger.info("\n\nEMPTY CART Einde\n")
         order = request.website.sale_get_order(force_create=1)
         order_line = request.env["sale.order.line"].sudo()
         line_ids = order_line.search([("order_id", "=", order.id)])

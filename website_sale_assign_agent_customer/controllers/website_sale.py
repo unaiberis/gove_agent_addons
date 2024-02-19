@@ -486,7 +486,7 @@ class WebsiteSale(WebsiteSale):
 
                 if create_mail_follower:
                     order.partner_id = order.agent_customer.id
-                    _logger.info("\n\nOnchange antes del partner\n")
+                    _logger.info("\n\nONCHANGE antes del partner\n")
                     order.onchange_partner_id()
                     order.user_id = request.env.user.id
                     existing_follower = request.env["mail.followers"].search(

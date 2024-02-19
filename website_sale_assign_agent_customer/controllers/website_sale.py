@@ -443,10 +443,7 @@ class WebsiteSale(WebsiteSale):
                 .customer_id_chosen_by_agent
             )
 
-            user_id = request.env.user.id
-
-            user = request.env["res.users"].sudo().browse(user_id)
-            partner_id = user.partner_id.id
+            partner_id = request.env.user.partner_id.id
             
             # Find the last sale order for the given partner_id
             last_order = (
@@ -484,13 +481,14 @@ class WebsiteSale(WebsiteSale):
                     )
                     .customer_id_chosen_by_agent
                 )
-                order.partner_id = order.agent_customer.id
-                _logger.info("\n\nOnchange antes del partner\n")
-                order.onchange_partner_id()
-                order.user_id = request.env.user.id
                 request.session['sale_last_order_id'] = order.id
+                _logger.info("\n\nrequest.session['sale_last_order_id'] = order.id\n")
 
                 if create_mail_follower:
+                    order.partner_id = order.agent_customer.id
+                    _logger.info("\n\nOnchange antes del partner\n")
+                    order.onchange_partner_id()
+                    order.user_id = request.env.user.id
                     existing_follower = request.env["mail.followers"].search(
                         [
                             ("res_model", "=", "sale.order"),

@@ -19,7 +19,6 @@
     </template>
 
 
-
     <!-- Choose customer "Update Customer" Option -->
     <template id="choose_customer_from_agent">
         <form method="post" action="/shop/update_customer" class="container mt-3">
@@ -87,7 +86,7 @@
         </form>
     </template>
 
-    <!-- Show assigned customer and its payment mode in the payment page -->
+    <!-- Show assigned customer and its payment mode in the cart, payment and confirmation page -->
 
     <template
         id="payment" inherit_id="website_sale.payment">
@@ -106,9 +105,14 @@
     <template
         id="confirmation" inherit_id="website_sale.confirmation">
         <xpath expr="//div[hasclass('oe_cart')]" position="after">
-            <t t-if="selected_customer">
-                <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
-            </t>
+            <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
+        </xpath>
+    </template>
+
+    <template
+        id="cart" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('clearfix')]" position="after">
+            <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
         </xpath>
     </template>
 

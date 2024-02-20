@@ -7,7 +7,7 @@
     <field name="arch" type="xml">
       <xpath expr="//page[@name='order_lines']/group[last()]"
         position="after">
-        <group name="comments_group" string="Purchase Comment">
+        <group name="comments_group" string="Customer Order Comment">
           <field name="customer_comment" nolabel="1" />
         </group>
       </xpath>

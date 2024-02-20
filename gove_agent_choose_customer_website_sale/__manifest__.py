@@ -18,8 +18,8 @@
 #
 ###############################################################################
 {
-    "name": "Website Sale Assign Agent Customer",
-    "summary": "Assign agent customer to cart in checkout process",
+    "name": "Gove Agent Choose Customer Website Sale",
+    "summary": "Assign agent customer to cart in checkout process and more personalizations",
     "category": "Website",
     "version": "14.0.1.1.0",
     "author": "Trey (www.trey.es)",
@@ -31,11 +31,13 @@
         "sale_commission_group",
         "website_sale",
         "website_sale_checkout_extra_fields",
+        "website_sale_assign_agent_customer",
     ],
     "data": [
+        "views/assets.xml",
         "views/products_xpath.xml",
         "views/website_sale.xml",
-        "security/ir.model.access.csv"
+        "views/website_front_page.xml",
     ],
     "installable": True,
 }

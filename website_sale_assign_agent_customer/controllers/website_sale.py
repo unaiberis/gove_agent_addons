@@ -19,6 +19,8 @@ from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
 
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
+from odoo.addons.website_sale_coupon_delivery.controllers.main import WebsiteSaleCouponDelivery
+
 
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
@@ -26,14 +28,45 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
 _logger = logging.getLogger(__name__)
 
 class WebsiteSaleDelivery(WebsiteSaleDelivery):
+
     @http.route()
     def update_eshop_carrier(self, **post):
+        _logger.info("\n\nUPDATE ESHOP CARRIER 1\n")
+
         order = request.website.sale_get_order_without_updating_pricelist()
         carrier_id = int(post['carrier_id'])
         if order:
             order._check_carrier_quotation(force_carrier_id=carrier_id)
         return self._update_website_sale_delivery_return(order, **post)
 
+
+class WebsiteSaleCouponDelivery(WebsiteSaleCouponDelivery):
+
+    @http.route()
+    def update_eshop_carrier(self, **post):
+        _logger.info("\n\nUPDATE ESHOP CARRIER 2\n")
+
+        Monetary = request.env['ir.qweb.field.monetary']
+        result = super(WebsiteSaleCouponDelivery, self).update_eshop_carrier(**post)
+        order = request.website.sale_get_order()
+        free_shipping_lines = None
+
+        if order:
+            order.recompute_coupon_lines()
+            order.validate_taxes_on_sales_order()
+            free_shipping_lines = order._get_free_shipping_lines()
+
+        if free_shipping_lines:
+            currency = order.currency_id
+            amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
+            result.update({
+                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
+                'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
+                'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
+                'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
+                'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
+            })
+        return result
 
 class WebsiteSale(WebsiteSale):
     def check_field_validations(self, values):

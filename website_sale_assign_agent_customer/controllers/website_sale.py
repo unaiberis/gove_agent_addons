@@ -18,9 +18,21 @@ from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
 
+from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
+
+
 from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
 
 _logger = logging.getLogger(__name__)
+
+class WebsiteSaleDelivery(WebsiteSaleDelivery):
+    @http.route()
+    def update_eshop_carrier(self, **post):
+        order = request.website.sale_get_order_without_updating_pricelist()
+        carrier_id = int(post['carrier_id'])
+        if order:
+            order._check_carrier_quotation(force_carrier_id=carrier_id)
+        return self._update_website_sale_delivery_return(order, **post)
 
 
 class WebsiteSale(WebsiteSale):

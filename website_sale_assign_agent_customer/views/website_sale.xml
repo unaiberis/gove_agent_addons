@@ -88,6 +88,19 @@
 
     <!-- Show assigned customer and its payment mode in the cart, payment and confirmation page -->
 
+    <template id="customer_card">
+        <div class="card mt-3 mb-3 o_wsaac_agent_customers">
+            <div class="card-body">
+                <div>
+                    <b>Modo de pago utilizado por el cliente:</b>
+                    <t
+                        t-esc="request.env.user.partner_id.sudo().customer_payment_mode_id.sudo().name if request.env.user.partner_id and request.env.user.partner_id.customer_payment_mode_id else ''" />
+                </div>
+            </div>
+        </div>
+    </template>
+
+
     <template
         id="payment" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">

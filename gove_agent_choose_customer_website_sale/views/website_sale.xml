@@ -31,17 +31,6 @@
 </template>
 
 
-    <template id="customer_card">
-        <div class="card mt-3 mb-3 o_wsaac_agent_customers">
-            <div class="card-body">
-                <div>
-                    <b>Modo de pago utilizado por el cliente:</b>
-                    <t
-                        t-esc="request.env.user.partner_id.sudo().customer_payment_mode_id.sudo().name if request.env.user.partner_id and request.env.user.partner_id.customer_payment_mode_id else ''" />
-                </div>
-            </div>
-        </div>
-    </template>
 
     <!-- ADD PCT, PVP AND STOCK OR NO STOCK IN EACH PRODUCT -->
 

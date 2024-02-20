@@ -29,6 +29,8 @@ _logger = logging.getLogger(__name__)
 
 class WebsiteSaleDelivery(WebsiteSaleDelivery):
 
+    # If this function is not changed it raises a problem with delivery method
+    # when there is a pricelist and update_pricelist is True
     @http.route()
     def update_eshop_carrier(self, **post):
         _logger.info("\n\nUPDATE ESHOP CARRIER 1\n")
@@ -42,6 +44,8 @@ class WebsiteSaleDelivery(WebsiteSaleDelivery):
 
 class WebsiteSaleCouponDelivery(WebsiteSaleCouponDelivery):
 
+    # If this function is not changed it raises a problem with delivery method
+    # when there is a pricelist and update_pricelist is True
     @http.route()
     def update_eshop_carrier(self, **post):
         _logger.info("\n\nUPDATE ESHOP CARRIER 2\n")

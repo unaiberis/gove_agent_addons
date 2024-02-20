@@ -2,7 +2,7 @@
 <odoo>
     <template id="agent_customer_card_insert"
     inherit_id="website_sale_assign_agent_customer.agent_customer_card">
-    <xpath expr="//div[hasclass('o_wsaac_agent_customers')]" position="after">
+    <xpath expr="//div[hasclass('o_wsaac_agent_customers')]" position="inside">
         <t t-set="customer_id"
             t-value="int(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent)" />
 
@@ -17,12 +17,12 @@
                 t-value="int(property_record.value_reference.split(',')[1])" />
             <t t-set="payment_mode"
                 t-value="request.env['account.payment.mode'].sudo().browse(payment_mode_id)" />
-            <t t-esc="payment_mode.note" />
 
             <t t-if="payment_mode.note and payment_mode.note.strip()">
                 <div class="card-body">
                     <div>
                         <b>Modo de pago utilizado por el cliente:</b>
+                        <t t-esc="payment_mode.note" />
                     </div>
                 </div>
             </t>

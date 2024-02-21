@@ -559,7 +559,7 @@ class WebsiteSale(WebsiteSale):
                         )
 
                         _logger.info(
-                            f"\n\n MAIL FOLLOWER Se ha creado mail follower asegurando que no existía: {new_follower}  User Name: {request.env.user.sudo().partner_id.name}\n"
+                            f"\n\n MAIL FOLLOWER Se ha creado asegurando que no existía: {new_follower} Comprador: {order.agent_customer.name} User Name: {request.env.user.sudo().partner_id.name}\n"
                         )
 
             elif last_order_customer:

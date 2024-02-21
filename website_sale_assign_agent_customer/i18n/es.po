@@ -1,21 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#   * website_sale_assign_agent_customer
+# 	* website_sale_assign_agent_customer
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-24 08:18+0000\n"
-"PO-Revision-Date: 2020-02-18 11:02+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: Trey <info@trey.es>\n"
+"POT-Creation-Date: 2024-02-21 16:07+0000\n"
+"PO-Revision-Date: 2024-02-21 17:11+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
-"X-Generator: Poedit 2.0.6\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid "\" category."
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.payment_remove_facturation_of_the_agent
+msgid "&amp; Shipping"
+msgstr ""
 
 #. module: website_sale_assign_agent_customer
 #: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.agent_customer_card
@@ -23,22 +33,234 @@ msgid "<b>Assigned Customer:</b>"
 msgstr "<b>Cliente asignado:</b>"
 
 #. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.customer_card
+msgid "<b>Payment mode used by the customer:</b>"
+msgstr "<b>Modo de pago utilizado por cliente:</b>"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.payment_remove_facturation_of_the_agent
+msgid "<b>Shipping: </b>"
+msgstr "<b>Envío: </b>"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.payment_remove_facturation_of_the_agent
+msgid "<i class=\"fa fa-edit\"/> Edit"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.choose_customer_from_agent
+msgid "<option value=\"\">Select a customer...</option>"
+msgstr "<option value=\"\">Selecciona un cliente...</option>"
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__customer_id_chosen_by_agent
 #: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_sale_order__agent_customer
 msgid "Agent Customer"
 msgstr "Cliente del agente"
 
 #. module: website_sale_assign_agent_customer
-#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.cart
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__agent_id
+msgid "Agent Id"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_categories
+msgid ""
+"All\n"
+"                            Products"
+msgstr ""
+"Todos los\n"
+"                            Productos"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.choose_customer_from_agent
 msgid "Assign Customer to Order"
-msgstr "Asignar cliente al pedido"
+msgstr "Asignar Cliente a Pedido"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.payment_remove_facturation_of_the_agent
+msgid "Billing"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.sort
+msgid "Catalog price: High to Low"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.sort
+msgid "Catalog price: Low to High"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model,name:website_sale_assign_agent_customer.model_agent_partner
+msgid "Chosen Customer by Agent"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid ""
+"Click <i>\n"
+"                                            'New'</i> in the top-right corner to create your first\n"
+"                                        product."
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Mostrar nombre"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid ""
+"Drag building blocks here to customize the\n"
+"                                    header for \""
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.add_grid_or_list_option
+msgid "Grid"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__id
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_sale_order__id
+msgid "ID"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner____last_update
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_sale_order____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model:ir.model.fields,field_description:website_sale_assign_agent_customer.field_agent_partner__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.add_grid_or_list_option
+msgid "List"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.sort
+msgid "Name: A to Z"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.sort
+msgid "Name: Z to A"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.choose_customer_from_agent
+msgid "No customer selected yet."
+msgstr "Ningún cliente asignado aún."
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid "No product defined"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid "No product defined in category \""
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid "No results"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid "No results for \""
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.choose_customer_from_agent
+msgid ""
+"Please choose a customer to be able to continue\n"
+"                                purchasing with an agent user"
+msgstr ""
+"Por favor elige a un cliente para poder seguir\n"
+"                                comprando con el usuario de agente"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.agent_customer_card
+msgid "Please select a customer"
+msgstr "Por favor elige a un cliente"
 
 #. module: website_sale_assign_agent_customer
 #: model:ir.model,name:website_sale_assign_agent_customer.model_sale_order
 msgid "Sale Order"
-msgstr "Pedido de venta"
+msgstr ""
 
 #. module: website_sale_assign_agent_customer
-#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.cart
-msgid "Select a customer..."
-msgstr "Seleccione un cliente..."
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.choose_customer_from_agent
+msgid ""
+"Selected\n"
+"                            customer"
+msgstr ""
+"Cliente\n"
+"                            asignado"
 
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid "Shop"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_categories
+msgid "Show categories"
+msgstr "Enseñar categorías"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_attributes
+msgid "Show options"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.sort
+msgid "Sort by"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.sort
+msgid "Sorting by :"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.choose_customer_from_agent
+msgid "Update Customer"
+msgstr "Actualizar cliente"
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.choose_customer_from_agent
+msgid ""
+"Your cart will be emptied when you\n"
+"                                    change the customer"
+msgstr ""
+
+#. module: website_sale_assign_agent_customer
+#: model_terms:ir.ui.view,arch_db:website_sale_assign_agent_customer.products_inserted
+msgid "in category \""
+msgstr ""

@@ -21,7 +21,7 @@
             <t t-if="payment_mode.note and payment_mode.note.strip()">
                 <div class="card-body">
                     <div>
-                        <b>Modo de pago utilizado por el cliente:</b>
+                        <b>Payment mode used by the customer:</b>
                         <t t-esc="payment_mode.note" />
                     </div>
                 </div>

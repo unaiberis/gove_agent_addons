@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="agent_customer_card_insert"
-    inherit_id="website_sale_assign_agent_customer.agent_customer_card">
-    <xpath expr="//div[hasclass('o_wsaac_agent_customers')]" position="inside">
+    <template id="template_payment_mode" name="Payment Mode">
         <t t-set="customer_id"
             t-value="int(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent)" />
 
         <t t-set="property_record"
             t-value="request.env['ir.property'].sudo().search([
-                        ('value_reference', 'ilike', 'account.payment.mode'),
-                        ('res_id', '=', 'res.partner,' + str(customer_id))
-                    ], limit=1)" />
+                ('value_reference', 'ilike', 'account.payment.mode'),
+                ('res_id', '=', 'res.partner,' + str(customer_id))
+            ], limit=1)" />
 
         <t t-if="property_record">
             <t t-set="payment_mode_id"
@@ -19,17 +17,39 @@
                 t-value="request.env['account.payment.mode'].sudo().browse(payment_mode_id)" />
 
             <t t-if="payment_mode.note and payment_mode.note.strip()">
-                <div class="card-body">
-                    <div>
-                        <b>Payment mode used by the customer:</b>
-                        <t t-esc="payment_mode.note" />
-                    </div>
-                </div>
+                <t t-esc="payment_mode.note" />
             </t>
         </t>
-    </xpath>
-</template>
+    </template>
 
+    <template id="agent_customer_card_insert"
+        inherit_id="website_sale_assign_agent_customer.agent_customer_card">
+        <xpath expr="//div[hasclass('o_wsaac_agent_customers')]" position="inside">
+            <div class="card-body">
+                <div>
+                    <b>Payment mode used by the customer:</b>
+                    <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
+                        </div>
+            </div>
+
+        </xpath>
+    </template>
+
+    <template id="template_payment_tokens_list" inherit_id="payment.payment_tokens_list"
+        name="Replace Payment Mode">
+        <xpath expr="//div/label/span[hasclass('payment_option_name')]" position="replace">
+            <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
+
+        </xpath>
+    </template>
+
+
+    <template id="template_confirmation" inherit_id="website_sale.confirmation"
+        name="Replace Payment Mode">
+        <xpath expr="//table[hasclass('table')]/tbody/tr/td/t[2]" position="replace">
+            <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
+        </xpath>
+    </template>
 
 
     <!-- ADD PCT, PVP AND STOCK OR NO STOCK IN EACH PRODUCT -->

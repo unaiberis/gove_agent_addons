@@ -88,33 +88,6 @@
 
     <!-- Show assigned customer and its payment mode in the cart, payment and confirmation page -->
 
-    <template id="customer_card">
-        <div class="card mt-3 mb-3 o_wsaac_agent_customers">
-            <div class="card-body">
-                <div>
-                    <b>Payment mode used by the customer:</b>
-                    <t
-                        t-esc="request.env.user.partner_id.sudo().customer_payment_mode_id.sudo().name if request.env.user.partner_id and request.env.user.partner_id.customer_payment_mode_id else ''" />
-                </div>
-            </div>
-        </div>
-    </template>
-
-
-    <template
-        id="payment" inherit_id="website_sale.payment">
-        <xpath expr="//div[@id='payment_method']" position="before">
-            <!-- Show assigned customer and its payment mode in the payment page -->
-            <t
-                t-if="request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent != 0">
-                <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
-            </t>
-            <t t-elif="not request.env.user.sudo().partner_id.agent">
-                <t t-call="website_sale_assign_agent_customer.customer_card" />
-            </t>
-        </xpath>
-    </template>
-
     <template
         id="confirmation" inherit_id="website_sale.confirmation">
         <xpath expr="//div[hasclass('oe_cart')]" position="after">

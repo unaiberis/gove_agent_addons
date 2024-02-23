@@ -2,8 +2,13 @@
 <odoo>
     <template id="template_payment_mode" name="Payment Mode">
         <t t-set="customer_id"
-            t-value="int(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent)" />
-
+        t-value="int(
+            request.env['agent.partner'].sudo().search([
+                ('agent_id', '=', request.env.user.sudo().partner_id.id)
+            ], limit=1).customer_id_chosen_by_agent
+        ) if request.env.user.sudo().partner_id.agent else request.env.user.sudo().partner_id.id"
+    />
+    
         <t t-set="property_record"
             t-value="request.env['ir.property'].sudo().search([
                 ('value_reference', 'ilike', 'account.payment.mode'),
@@ -29,9 +34,8 @@
                 <div>
                     <b>Payment mode used by the customer:</b>
                     <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
-                        </div>
+                </div>
             </div>
-
         </xpath>
     </template>
 
@@ -39,7 +43,6 @@
         name="Replace Payment Mode">
         <xpath expr="//div/label/span[hasclass('payment_option_name')]" position="replace">
             <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
-
         </xpath>
     </template>
 

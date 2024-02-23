@@ -1,7 +1,4 @@
-from odoo import fields, models, api, _
-import logging
-
-_logger = logging.getLogger(__name__)
+from odoo import api, fields, models
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -15,8 +12,15 @@ class SaleOrder(models.Model):
         for order in self:
             if order.website_id.id == 1 and not order.access_token:
                 order.purchase_finished = False
-                _logger.info("Purchase finished set to False - website_id: %s, access_token: %s", order.website_id, order.access_token)
-            # elif order.website_id.id == 1 and order.access_token:
-            #     order.purchase_finished = True
             else:
                 order.purchase_finished = True
+
+    # Add a method to force recomputation
+    def force_recompute_purchase_finished(self):
+        for order in self:
+            order.purchase_finished = order._compute_purchase_finished()
+
+# Usage example:
+# Call the force_recompute_purchase_finished method on the records you want to recompute
+orders_to_recompute = self.env['sale.order'].search([])
+orders_to_recompute.force_recompute_purchase_finished()

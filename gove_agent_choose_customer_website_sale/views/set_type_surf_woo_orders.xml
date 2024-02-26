@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="auto_cancel_order_server_cron" model="ir.cron">
-        <field name="name">Set Surf Order Types Woo Orders</field>
-        <field name="interval_number">30</field>
+        <field name="name">Update Order Types</field>
+        <field name="interval_number">1</field>
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
         <field name="doall">True</field>

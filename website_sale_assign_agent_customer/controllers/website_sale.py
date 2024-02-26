@@ -578,7 +578,6 @@ class WebsiteSale(WebsiteSale):
                 line_obj.unlink()
 
     def _get_agent_customer_from_url(self, **post):
-        # Initialize variable to False
         agent_customer_id = False
 
         # Get the agent customers associated with the current user
@@ -586,75 +585,69 @@ class WebsiteSale(WebsiteSale):
 
         # Check if the agent is trying to change the customer
         if post.get("agent_customer_id") and (
-            (request.website.sale_get_order())
-            or (not request.website.sale_get_order())
+            request.website.sale_get_order() or not request.website.sale_get_order()
             or int(post.get("agent_customer_id")) == 0
         ):
-            # Get the chosen agent customer ID from the post data
             agent_customer_id = int(post.get("agent_customer_id"))
 
             # Get the agent partner record for the current user
             customer_id_chosen_by_agent_record = (
                 request.env["agent.partner"]
                 .sudo()
-                .search(
-                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
-                )
+                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
             )
 
             # Check if the chosen agent customer is valid
-            if (
-                agent_customer_id
-                and agent_customers
-                and agent_customer_id in agent_customers.ids
-                or agent_customer_id == 0
-            ):
+            if agent_customer_id in agent_customers.ids or agent_customer_id == 0:
                 # Check if there is a record for the agent's chosen customer
                 if customer_id_chosen_by_agent_record:
-                    # If the customer chosen is different and the cart is not empty, empty it
-                    if (
-                        agent_customer_id
-                        != customer_id_chosen_by_agent_record.customer_id_chosen_by_agent
-                    ):
-                        # Empty the cart before changing the customer
-                        self._empty_cart_before_changing_customer()
-
-                    # Update the agent's chosen customer in the record
-                    customer_id_chosen_by_agent_record.write(
-                        {
-                            "agent_id": request.env.user.sudo().partner_id.id,
-                            "customer_id_chosen_by_agent": agent_customer_id,
-                        }
+                    self._update_chosen_customer_record(
+                        agent_customer_id, customer_id_chosen_by_agent_record
                     )
                 else:
-                    # If no record exists and the cart is empty, create a new record
-                    if request.website.sale_get_order().cart_quantity != 0:
-                        # If the cart is not empty, empty it
-                        self._empty_cart_before_changing_customer()
-
-                    request.env["agent.partner"].sudo().create(
-                        {
-                            "agent_id": request.env.user.sudo().partner_id.id,
-                            "customer_id_chosen_by_agent": agent_customer_id,
-                        }
-                    )
+                    self._create_agent_partner_record(agent_customer_id)
 
         elif (
             request.env["agent.partner"]
             .sudo()
-            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1).exists()
+            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+            .exists()
         ):
             agent_customer_id = int(
                 request.env["agent.partner"]
                 .sudo()
-                .search(
-                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
-                ).customer_id_chosen_by_agent
-
+                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .customer_id_chosen_by_agent
             )
 
-        # Return agent_customer_id and agent_customers
         return agent_customer_id, agent_customers
+
+    def _update_chosen_customer_record(self, agent_customer_id, record):
+        if (
+            agent_customer_id
+            != record.customer_id_chosen_by_agent
+            and request.website.sale_get_order().cart_quantity != 0
+        ):
+            self._empty_cart_before_changing_customer()
+
+        record.write(
+            {
+                "agent_id": request.env.user.sudo().partner_id.id,
+                "customer_id_chosen_by_agent": agent_customer_id,
+            }
+        )
+
+    def _create_agent_partner_record(self, agent_customer_id):
+        if request.website.sale_get_order().cart_quantity != 0:
+            self._empty_cart_before_changing_customer()
+
+        request.env["agent.partner"].sudo().create(
+            {
+                "agent_id": request.env.user.sudo().partner_id.id,
+                "customer_id_chosen_by_agent": agent_customer_id,
+            }
+        )
+
 
     def _set_pricelist_from_current_agent_customer(
         self, agent_customer_id, agent_customers

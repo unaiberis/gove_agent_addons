@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- <record id="automation_auto_update_order_state" model="base.automation">
+    <record id="automation_auto_update_order_state" model="base.automation">
         <field name="name">Auto Update Order State</field>
         <field name="model_id" ref="model_sale_order"/>
         <field name="trigger">
-            <field name="trigger_type">on_create_or_write</field>
-            <field name="res_model">sale.order</field>
+on_create_or_write
         </field>
-        <field name="action">
-            <field name="action_type">object_create</field>
-            <field name="object_id" ref="model_ir_actions_server_auto_update_order_state"/>
-        </field>
-    </record> -->
+        <field name="action_server_id" ref="model_ir_actions_server_auto_update_order_state"/>
+    </record>
     
     <record id="model_ir_actions_server_auto_update_order_state" model="ir.actions.server">
         <field name="name">Auto Update Order State Action Server</field>

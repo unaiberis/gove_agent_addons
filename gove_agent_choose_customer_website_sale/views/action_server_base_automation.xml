@@ -20,7 +20,7 @@ sale_orders_to_update.write({'state': 'draft', 'woo_import_already_reset': True}
         </field>
     </record>
 
-    <record id="auto_cancel_order_server_cron" model="ir.cron">
+    <!-- <record id="auto_cancel_order_server_cron" model="ir.cron">
         <field name="name">Set Surf Order Types and Unconfirm Quotations</field>
         <field name="interval_number">30</field>
         <field name="interval_type">minutes</field>
@@ -39,5 +39,5 @@ orders_to_update.write({'type_id': 2})
 sale_orders_to_update = orders_to_update.filtered(lambda order: order.state == 'sale')
 sale_orders_to_update.write({'state': 'draft', 'woo_import_already_reset': True})
         </field>
-    </record>
+    </record> -->
 </odoo>

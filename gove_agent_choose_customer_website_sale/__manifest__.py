@@ -23,7 +23,7 @@
         "views/website_sale.xml",
         "views/website_front_page.xml",
         "views/show_draft_finished_column.xml",
-        "views/planned_actions.xml",
+        "views/action_server_base_automation.xml",
     ],
     "installable": True,
 }

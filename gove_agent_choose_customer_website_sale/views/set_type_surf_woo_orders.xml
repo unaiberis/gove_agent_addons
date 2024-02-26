@@ -6,15 +6,19 @@
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
         <field name="doall">True</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="model_id" ref="sale.model_sale_order" />
         <field name="state">code</field>
         <field name="code">
 model = env['sale.order']
-orders_to_update = model.search([('woo_status', '!=', False)])
+orders_to_update = model.search([('woo_status', '!=', False),
+('woo_import_already_reset', '=', False)])
+
+# Update type_id to 2 for all orders
 orders_to_update.write({'type_id': 2})
 
+# Filter orders in 'sale' state and update state to 'draft'
 sale_orders_to_update = orders_to_update.filtered(lambda order: order.state == 'sale')
-sale_orders_to_update.write({'state': 'draft'})
+sale_orders_to_update.write({'state': 'draft', 'woo_import_already_reset': True})
         </field>
     </record>
 </odoo>

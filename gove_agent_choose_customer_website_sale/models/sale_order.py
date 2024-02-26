@@ -6,6 +6,9 @@ class SaleOrder(models.Model):
     purchase_finished = fields.Boolean(
         string="Finished Purchase", compute="_compute_purchase_finished", store=True
     )
+    woo_import_already_reset = fields.Boolean(
+        string="Already Reset Once with Planned Action", default=False, store=True
+    )
 
     @api.depends('website_id', 'access_token')
     def _compute_purchase_finished(self):

@@ -8,6 +8,7 @@
             <xpath expr="//tree" position="inside">
                 <!-- Add your fields here -->
                 <field name="purchase_finished" optional="show" />
+                
             </xpath>
         </field>
     </record>

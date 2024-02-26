@@ -26,6 +26,9 @@ class WebsiteSale(WebsiteSale):
     def _check_payment_confirmation(
         self, order=None, create_mail_follower=False, **post
     ):
+        _logger.info(
+                f"\n\n CHECK PAYMENT CONFIRMATION \n"
+            )
         if not request.env.user.partner_id.agent:
             last_order = (
                 request.env["sale.order"]

@@ -5,20 +5,22 @@ from odoo.http import request
 class CouponProgram(models.Model):
     _inherit = "coupon.program"
 
-    def _keep_only_most_interesting_auto_applied_global_discount_program(self, order=None):
+    def _keep_only_most_interesting_auto_applied_global_discount_program(self, extra_computation=False, order=None):
         # Check if order is already passed, otherwise fetch it
-        order = order or self._get_order()
+        
+        if extra_computation:
+            order = order or self._get_order()
 
-        if order:
-            agent_partner = self._get_agent_partner()
+            if order:
+                agent_partner = self._get_agent_partner()
 
-            if agent_partner.customer_id_chosen_by_agent:
-                order.partner_id = agent_partner.customer_id_chosen_by_agent
+                if agent_partner.customer_id_chosen_by_agent:
+                    order.partner_id = agent_partner.customer_id_chosen_by_agent
 
-            groups = self._filter_groups(order)
-            applicable_programs = self._get_applicable_programs(groups, order)
+                groups = self._filter_groups(order)
+                applicable_programs = self._get_applicable_programs(groups, order)
 
-            return applicable_programs
+                return applicable_programs
 
         return super(CouponProgram, self)._keep_only_most_interesting_auto_applied_global_discount_program()
 

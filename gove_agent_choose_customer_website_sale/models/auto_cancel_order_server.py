@@ -7,4 +7,4 @@ class AutoCancelOrderServer(models.Model):
     @api.model
     def _auto_cancel_woocommerce_orders(self):
         orders_to_cancel = self.search([('woo_status', '!=', False), ('state', 'in', ['draft', 'sent', 'sale'])])
-        orders_to_cancel._action_cancel()
+        orders_to_cancel.write({'state': 'cancel'})

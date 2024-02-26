@@ -8,13 +8,21 @@
             <field name="res_model">sale.order</field>
         </field>
         <field name="action">
-            <field name="action_type">code</field>
-            <field name="code">
+            <field name="action_type">object_create</field>
+            <field name="object_id" ref="model_ir_actions_server_auto_update_order_state"/>
+        </field>
+    </record>
+    
+    <record id="model_ir_actions_server_auto_update_order_state" model="ir.actions.server">
+        <field name="name">Auto Update Order State Action Server</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">
 model = env['sale.order']
 orders_to_update = model.search([('woo_status', '!=', False), ('woo_import_already_reset', '=', False)])
 orders_to_update.write({'type_id': 2})
 sale_orders_to_update = orders_to_update.filtered(lambda order: order.state == 'sale')
-sale_orders_to_update.write({'state': 'draft', 'woo_import_already_reset': True})</field>
+sale_orders_to_update.write({'state': 'draft', 'woo_import_already_reset': True})
         </field>
     </record>
 

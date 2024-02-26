@@ -32,7 +32,7 @@ class WebsiteSale(WebsiteSale):
             order = self._get_last_order_for_customer(order)
 
         elif is_agent:
-            order = self._get_last_order_for_agent(order)
+            order = self._get_last_order_for_agent(order, create_mail_follower)
 
             if order and create_mail_follower:
                 self._handle_mail_follower_creation(order)
@@ -57,7 +57,7 @@ class WebsiteSale(WebsiteSale):
 
         return order
 
-    def _get_last_order_for_agent(self, order=None):
+    def _get_last_order_for_agent(self, order=None, create_mail_follower=False):
         agent_customer = int(
             request.env["agent.partner"]
             .sudo()

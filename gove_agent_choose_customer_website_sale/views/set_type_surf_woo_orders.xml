@@ -8,10 +8,10 @@
         <field name="doall">True</field>
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="state">code</field>
-        <field name="code">
-            model = env['sale.order']
-            orders_to_update = model.search([('woo_status', '!=', False)])
-            orders_to_update.write({'type_id': 2})
-        </field>
+        <field name="code" eval="('''
+model = env['sale.order']
+orders_to_update = model.search([('woo_status', '!=', False)])
+orders_to_update.write({'type_id': 2})
+''').strip()"/>
     </record>
 </odoo>

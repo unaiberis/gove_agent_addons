@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="automation_auto_update_order_state" model="base.automation">
-        <field name="name">Auto Update Order State</field>
-        <field name="model_id" ref="model_sale_order"/>
-        <field name="trigger">on_create_or_write</field>
-        <field name="action_server_id" ref="model_ir_actions_server_auto_update_order_state"/>
-    </record>
     
     <record id="model_ir_actions_server_auto_update_order_state" model="ir.actions.server">
         <field name="name">Auto Update Order State Action Server</field>
@@ -18,6 +12,13 @@ orders_to_update.write({'type_id': 2})
 sale_orders_to_update = orders_to_update.filtered(lambda order: order.state == 'sale')
 sale_orders_to_update.write({'state': 'draft', 'woo_import_already_reset': True})
         </field>
+    </record>
+
+    <record id="automation_auto_update_order_state" model="base.automation">
+        <field name="name">Auto Update Order State</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="action_server_id" ref="model_ir_actions_server_auto_update_order_state"/>
     </record>
 
     <!-- <record id="auto_cancel_order_server_cron" model="ir.cron">

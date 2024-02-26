@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="auto_cancel_order_server_cron" model="ir.cron">
-        <field name="name">Set Surf Order Types Woo Orders</field>
+        <field name="name">Set Surf Order Types and Convert to Quotations</field>
         <field name="interval_number">30</field>
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
@@ -12,6 +12,7 @@
 model = env['sale.order']
 orders_to_update = model.search([('woo_status', '!=', False)])
 orders_to_update.write({'type_id': 2})
+orders_to_update.action_done()
         </field>
     </record>
 </odoo>

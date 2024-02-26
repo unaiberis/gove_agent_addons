@@ -22,7 +22,7 @@
         "views/website_sale.xml",
         "views/website_front_page.xml",
         "views/show_draft_finished_column.xml",
-        "views/set_type_surf_woo_orders.xml",
+        "views/planned_actions.xml",
     ],
     "installable": True,
 }

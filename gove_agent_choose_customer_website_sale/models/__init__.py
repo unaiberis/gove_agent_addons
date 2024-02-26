@@ -5,4 +5,3 @@ from . import coupon_program
 from . import product_template
 from . import sale_order
 from . import website
-# from . import auto_cancel_order_server

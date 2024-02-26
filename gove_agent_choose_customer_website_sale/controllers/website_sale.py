@@ -17,8 +17,7 @@ from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers.main import Website
 from odoo.osv import expression
 
-
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import WebsiteSale
 
 _logger = logging.getLogger(__name__)
 

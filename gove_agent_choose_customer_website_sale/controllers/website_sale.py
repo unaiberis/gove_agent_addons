@@ -3,19 +3,9 @@
 import json
 import logging
 from datetime import datetime
-from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import fields, http, SUPERUSER_ID, tools, _
+from odoo import fields, http
 from odoo.http import request
-from odoo.addons.base.models.ir_qweb_fields import nl2br
-from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.payment.controllers.portal import PaymentProcessing
-from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.exceptions import ValidationError
-from odoo.addons.portal.controllers.portal import _build_url_w_params
-from odoo.addons.website.controllers.main import Website
-from odoo.osv import expression
 
 from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import WebsiteSale
 

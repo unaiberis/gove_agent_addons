@@ -428,7 +428,7 @@ class WebsiteSale(WebsiteSale):
                 _order = order.with_context(pricelist=pricelist)
             values["suggested_products"] = _order._cart_accessories()
             order.recompute_coupon_lines()
-            log_info("Order recompute_coupon_lines", order=order)
+            _logger.info(f"Order recompute_coupon_lines {order}")
 
 
         if post.get("type") == "popover":

@@ -508,7 +508,7 @@ class WebsiteSale(WebsiteSale):
                     log_info("ONCHANGE before setting partner")
                     order.onchange_partner_id()
                     order.user_id = request.env.user.id
-                    # order.recompute_coupon_lines()
+                    order.recompute_coupon_lines()
 
                     existing_follower = request.env["mail.followers"].search(
                         [

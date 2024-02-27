@@ -8,7 +8,7 @@ class CouponProgram(models.Model):
     def _keep_only_most_interesting_auto_applied_global_discount_program(self, extra_computation=False, order=None):
         # Check if order is already passed, otherwise fetch it
         
-        if extra_computation:
+        if extra_computation or True:
             order = order or self._get_order()
 
             if order:

@@ -118,13 +118,6 @@ class WebsiteSale(WebsiteSale):
         if not order or (order and order.id < last_order.id):
             order = last_order
             request.session["sale_last_order_id"] = order.id
-            _logger.info(
-                f"\n\n if not order being a customer _check_payment_confirmation {last_order} {last_order.name} {request.env.user.partner_id} User Name: {request.env.user.sudo().partner_id.name}\n"
-            )
-        else:
-            _logger.info(
-                f"\n\n if not order else being a customer _check_payment_confirmation {order} {order.name} {request.env.user.partner_id} User Name: {request.env.user.sudo().partner_id.name}\n"
-            )
 
         return order
 

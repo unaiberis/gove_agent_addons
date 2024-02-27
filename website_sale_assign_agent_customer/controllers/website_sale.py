@@ -428,6 +428,8 @@ class WebsiteSale(WebsiteSale):
                 _order = order.with_context(pricelist=pricelist)
             values["suggested_products"] = _order._cart_accessories()
             order.recompute_coupon_lines()
+            log_info("Order recompute_coupon_lines", order=order)
+
 
         if post.get("type") == "popover":
             # force no-cache so IE11 doesn't cache this XHR

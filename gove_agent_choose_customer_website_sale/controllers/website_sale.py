@@ -12,6 +12,12 @@ from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale imp
 _logger = logging.getLogger(__name__)
 
 class WebsiteSale(WebsiteSale):
+    
+    @http.route('/recompute_coupon_lines_checkout', type='json', auth='public')
+    def call_recompute_coupon_lines(self, **kw):
+        # Lógica para llamar a la función recompute_coupon_lines()
+        result = request.env['sale.order'].recompute_coupon_lines()
+        return result
 
     def _check_payment_confirmation(self, order=None, create_mail_follower=False, **post):
         _logger.info("\n\n CHECK PAYMENT CONFIRMATION \n")

@@ -428,7 +428,7 @@ class WebsiteSale(WebsiteSale):
                 _order = order.with_context(pricelist=pricelist)
             values["suggested_products"] = _order._cart_accessories()
             order.recompute_coupon_lines()
-            _logger.info(f"Order recompute_coupon_lines {order}")
+            _logger.info(f"\n\nCART ORDER recompute_coupon_lines {order}\n")
 
 
         if post.get("type") == "popover":
@@ -438,7 +438,7 @@ class WebsiteSale(WebsiteSale):
                 values,
                 headers={"Cache-Control": "no-cache"},
             )
-
+        _logger.info(f"\n\nCART RETURN {order}\n")
         return request.render("website_sale.cart", values)
 
     @http.route()

@@ -17,6 +17,8 @@ class WebsiteSale(WebsiteSale):
     def call_recompute_coupon_lines(self, **kw):
         # Lógica para llamar a la función recompute_coupon_lines()
         result = request.env['sale.order'].recompute_coupon_lines()
+        _logger.info("\n\n RECOMPUTE COUPON LINES \n")
+
         return result
 
     def _check_payment_confirmation(self, order=None, create_mail_follower=False, **post):

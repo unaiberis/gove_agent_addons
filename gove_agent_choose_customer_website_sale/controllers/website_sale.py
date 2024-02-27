@@ -16,8 +16,8 @@ class WebsiteSale(WebsiteSale):
     @http.route('/recompute_coupon_lines_checkout', type='json', auth='public')
     def call_recompute_coupon_lines(self, **kw):
         # Lógica para llamar a la función recompute_coupon_lines()
-        result = request.env['sale.order'].recompute_coupon_lines()
-        _logger.info("\n\n RECOMPUTE COUPON LINES \n")
+        result = request.env['coupon.program']._keep_only_most_interesting_auto_applied_global_discount_program(extra_computation=True)
+        _logger.info("\n\n RECOMPUTE COUPON LINES _keep_only_most_interesting_auto_applied_global_discount_program\n")
 
         return result
 

@@ -505,13 +505,15 @@ class WebsiteSale(WebsiteSale):
                 order.agent_customer = agent_customer.customer_id_chosen_by_agent
                 request.session["sale_last_order_id"] = order.id
                 log_info("Order set to last_order", order=order, agent_customer=agent_customer)
+                _logger.info(f"\n\nRECOMPUTE COUPON LINES {order}\n")
+                order.recompute_coupon_lines()
 
+                
                 if create_mail_follower:
                     order.partner_id = order.agent_customer.id
                     log_info("ONCHANGE before setting partner")
                     order.onchange_partner_id()
                     order.user_id = request.env.user.id
-                    order.recompute_coupon_lines()
 
                     existing_follower = request.env["mail.followers"].search(
                         [

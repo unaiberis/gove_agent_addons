@@ -14,6 +14,7 @@
         "sale_commission",
         "sale_commission_group",
         "website_sale",
+        "website_sale_multiple_coupon",
         "website_sale_checkout_extra_fields",
         "website_sale_assign_agent_customer",
         "woo_commerce_ept",

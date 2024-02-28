@@ -40,7 +40,7 @@ class SaleOrder(models.Model):
         applicable_programs = self.env['coupon.program']
         if applied_programs:
             applicable_programs = order._get_applicable_programs() + order._get_valid_applied_coupon_program()
-            applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program(extra_computation=True)
+            applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         programs_to_remove = applied_programs - applicable_programs
 
         reward_product_ids = applied_programs.discount_line_product_id.ids
@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
         programs = order._get_applicable_no_code_promo_program()
-        programs = programs._keep_only_most_interesting_auto_applied_global_discount_program(order=order, extra_computation=True)
+        programs = programs._keep_only_most_interesting_auto_applied_global_discount_program(order=order)
         for program in programs:
             # VFE REF in master _get_applicable_no_code_programs already filters programs
             # why do we need to reapply this bunch of checks in _check_promo_code ????

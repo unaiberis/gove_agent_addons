@@ -451,8 +451,8 @@ class WebsiteSale(WebsiteSale):
     def _check_payment_confirmation(
         self, order=None, create_mail_follower=False, **post
     ):
-        user_partner = request.env.user.partner_id
-        agent_partner = user_partner.sudo().partner_id if user_partner.agent else None
+        user_partner = request.env.user.sudo().partner_id
+        agent_partner = user_partner if user_partner.agent else None
 
         def log_info(message, order=None, agent_customer=None):
             _logger.info(

@@ -7,9 +7,9 @@ odoo.define('gove_agent_choose_customer_website_sale.recalculate_coupon_lines', 
         'use strict';
 
         $("button#o_payment_form_pay").bind("click", function(ev) {
-            // Llama a la función de Python recompute_coupon_lines()
-            ajax.jsonRpc("/recompute_coupon_lines_checkout", 'call', {
-                method: 'recompute_coupon_lines',
+            // Llama al controlador correcto /enable/extra/coupon/computation
+            ajax.jsonRpc("/enable/extra/coupon/computation", 'call', {
+                method: 'enable_extra_coupon_computation',
                 // Puedes enviar parámetros si es necesario
                 // params: {
                 //     // tus parámetros aquí

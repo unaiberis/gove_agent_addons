@@ -1,15 +1,20 @@
+import logging
+
 from odoo import api, fields, models, _
 from odoo.http import request
+_logger = logging.getLogger(__name__)
 
 
 class CouponProgram(models.Model):
     _inherit = "coupon.program"
 
-    def _keep_only_most_interesting_auto_applied_global_discount_program(self, extra_computation=False, order=None):
+    def _keep_only_most_interesting_auto_applied_global_discount_program(self, order=None):
         # Check if order is already passed, otherwise fetch it
         
-        if extra_computation:
+        if request.env.user.partner_id.extra_computation_enabled:
             order = order or self._get_order()
+
+            _logger.info(f"\n\nKEEP ONLY BARRUN EXTRA COMPUTATION\n")
 
             if order:
                 agent_partner = self._get_agent_partner()

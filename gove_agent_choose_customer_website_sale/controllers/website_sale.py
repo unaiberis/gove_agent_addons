@@ -73,6 +73,16 @@ class WebsiteSale(WebsiteSale):
         request.env.user.partner_id.extra_computation_enabled = False
         
         return res
+    
+    @http.route()
+    def payment(self):
+        
+        request.env.user.partner_id.extra_computation_enabled = True
+        _logger.info("\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True\n")
+        order = request.website.sale_get_order()
+        order.recompute_coupon_lines()
+
+        return super().payment()
 
     
     @http.route('/enable/extra/coupon/computation', type='json', auth='public')
@@ -80,6 +90,10 @@ class WebsiteSale(WebsiteSale):
         # Lógica para llamar a la función recompute_coupon_lines()
         request.env.user.partner_id.extra_computation_enabled = True
         _logger.info("\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True\n")
+        # order = request.website.sale_get_order()
+        # order.recompute_coupon_lines()
+        _logger.info("\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True {order}\n")
+
 
         return request.env.user.partner_id.extra_computation_enabled
 

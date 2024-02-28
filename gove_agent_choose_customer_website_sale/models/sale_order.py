@@ -18,7 +18,15 @@ class SaleOrder(models.Model):
             else:
                 order.purchase_finished = True
 
-    def _remove_invalid_reward_lines(self):
+    
+    def recompute_coupon_lines_extra_computation(self):
+        for order in self:
+            order._remove_invalid_reward_lines()    
+            if order.state != 'cancel':
+                order._create_new_no_code_promo_reward_lines_extra_computation()
+            order._update_existing_reward_lines()
+    
+    def _remove_invalid_reward_lines_extra_computation(self):
         """ Find programs & coupons that are not applicable anymore.
             It will then unlink the related reward order lines.
             It will also unset the order's fields that are storing

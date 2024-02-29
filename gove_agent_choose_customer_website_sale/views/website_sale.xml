@@ -21,8 +21,8 @@
             <t t-set="payment_mode"
                 t-value="request.env['account.payment.mode'].sudo().browse(payment_mode_id)" />
 
-            <t t-if="payment_mode.note and payment_mode.note.strip()">
-                <t t-esc="payment_mode.note" />
+            <t t-if="payment_mode.name and payment_mode.name.strip()">
+                <t t-esc="payment_mode.name" />
             </t>
         </t>
     </template>

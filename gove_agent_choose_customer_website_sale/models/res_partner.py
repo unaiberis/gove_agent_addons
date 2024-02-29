@@ -4,7 +4,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     extra_computation_enabled = fields.Boolean(
-        string="Extra Coupon Computation enabler", compute='_compute_extra_computation_enabled',
+        string="Extra Coupon Computation enabler",
         store=True, default=False
     )
 

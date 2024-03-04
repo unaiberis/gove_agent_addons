@@ -24,7 +24,6 @@ class WebsiteSale(WebsiteSale):
         if order.agent_customer.id:
             order.partner_id = order.agent_customer.id
 
-        
         _logger.info(f"\n\nPAYMENT CONFIRMATION  User Name: {request.env.user.sudo().partner_id.name}\n")
         self._check_payment_confirmation(create_mail_follower=True, **post)
 
@@ -123,6 +122,7 @@ class WebsiteSale(WebsiteSale):
                 .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
                 .customer_id_chosen_by_agent
             )
+            order.partner_id = request.env["res.partner"].browse(order.agent_customer)
             request.session["sale_last_order_id"] = order.id
 
             if create_mail_follower:
@@ -130,6 +130,8 @@ class WebsiteSale(WebsiteSale):
 
         elif last_order_customer:
             last_order_customer.agent_customer = agent_customer
+            order = last_order_customer
+            order.partner_id = request.env["res.partner"].browse(agent_customer)
 
             _logger.info(
                 f"\n\n last_order_customer {last_order_customer} {last_order_customer.name} User Name: {request.env.user.sudo().partner_id.name}\n"

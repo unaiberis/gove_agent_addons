@@ -288,7 +288,7 @@ class Website(models.Model):
             update_pricelist = True
 
         # update the pricelist
-        if update_pricelist and not request.env.user.partner_id.extra_computation_enabled:
+        if update_pricelist:
             request.session['website_sale_current_pl'] = pricelist_id
             values = {'pricelist_id': pricelist_id}
             sale_order.write(values)

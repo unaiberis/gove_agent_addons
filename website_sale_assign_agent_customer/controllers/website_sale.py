@@ -97,6 +97,11 @@ class WebsiteSale(WebsiteSale):
 
     @http.route()
     def payment_confirmation(self, **post):
+        order = request.website.sale_get_order()
+
+        if order.agent_customer.id:
+            order.partner_id = order.agent_customer.id
+
         _logger.info(f"\n\nPAYMENT CONFIRMATION  User Name: {request.env.user.sudo().partner_id.name}\n")
         self._check_payment_confirmation(create_mail_follower=True, **post)
 
@@ -445,6 +450,9 @@ class WebsiteSale(WebsiteSale):
 
     @http.route()
     def payment(self, **post):
+        order = request.website.sale_get_order()
+        if order.agent_customer.id:
+            order.partner_id = order.agent_customer.id
 
         self._check_payment_confirmation(**post)
 

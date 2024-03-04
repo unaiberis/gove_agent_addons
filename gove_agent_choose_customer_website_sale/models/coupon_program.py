@@ -9,7 +9,7 @@ class CouponProgram(models.Model):
     _inherit = "coupon.program"
 
     def _keep_only_most_interesting_auto_applied_global_discount_program(self, order=None):
-        if request.env.user.partner_id.extra_computation_enabled:
+#        if request.env.user.partner_id.extra_computation_enabled:
             groups = self.env['coupon.program.group'].search([
                 ('apply_always', '=', True),
             ])
@@ -19,15 +19,6 @@ class CouponProgram(models.Model):
                             and p not in groups.mapped('coupon_programs')
                             and p.apply_always)
 
-            if not order and (groups or no_group_programs):
-                website = request and getattr(request, 'website', None)
-                order = website.sale_get_order() if website else None
-                if not order:
-                    ctx = self.env.context
-                    params = ctx.get('params') if ctx else None
-                    if params and params.get('model') == 'sale.order':
-                        order_id = params.get('id')
-                        order = self.env['sale.order'].browse(order_id)
             if order:
                 groups = groups.filtered(lambda g: any(categ.id in g.partner_category_ids.ids for categ in order.partner_id.category_id))
                 applicable_programs = no_group_programs

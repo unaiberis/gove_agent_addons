@@ -14,57 +14,17 @@ from odoo.addons.website_sale_coupon_delivery.controllers.main import WebsiteSal
 
 _logger = logging.getLogger(__name__)
 
-class WebsiteSaleDelivery(WebsiteSaleDelivery):
-
-    # If this function is not changed it raises a problem with delivery method
-    # when there is a pricelist and update_pricelist is True
-    @http.route()
-    def update_eshop_carrier(self, **post):
-        _logger.info(f"\n\nUPDATE ESHOP CARRIER 1 User Name: {request.env.user.sudo().partner_id.name}\n")
-
-        order = request.website.sale_get_order_without_updating_pricelist()
-        carrier_id = int(post['carrier_id'])
-        if order:
-            order._check_carrier_quotation(force_carrier_id=carrier_id)
-        return self._update_website_sale_delivery_return(order, **post)
-
-
-class WebsiteSaleCouponDelivery(WebsiteSaleCouponDelivery):
-
-    # If this function is not changed it raises a problem with delivery method
-    # when there is a pricelist and update_pricelist is True
-    @http.route()
-    def update_eshop_carrier(self, **post):
-        _logger.info(f"\n\nUPDATE ESHOP CARRIER 2  User Name: {request.env.user.sudo().partner_id.name}\n")
-
-        Monetary = request.env['ir.qweb.field.monetary']
-        result = super(WebsiteSaleCouponDelivery, self).update_eshop_carrier(**post)
-        order = request.website.sale_get_order()
-        free_shipping_lines = None
-
-        if order:
-            order.recompute_coupon_lines()
-            order.validate_taxes_on_sales_order()
-            free_shipping_lines = order._get_free_shipping_lines()
-
-        if free_shipping_lines:
-            currency = order.currency_id
-            amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
-            result.update({
-                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
-                'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
-                'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
-                'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
-                'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
-            })
-        return result
-
-
-
 class WebsiteSale(WebsiteSale):
     
     @http.route()
     def payment_confirmation(self, **post):
+        
+        order = request.website.sale_get_order()
+
+        if order.agent_customer.id:
+            order.partner_id = order.agent_customer.id
+
+        
         _logger.info(f"\n\nPAYMENT CONFIRMATION  User Name: {request.env.user.sudo().partner_id.name}\n")
         self._check_payment_confirmation(create_mail_follower=True, **post)
 
@@ -76,26 +36,17 @@ class WebsiteSale(WebsiteSale):
     
     @http.route()
     def payment(self):
-        
         request.env.user.partner_id.extra_computation_enabled = True
         _logger.info("\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True\n")
         order = request.website.sale_get_order()
+        
+        if order.agent_customer.id:
+            order.partner_id = order.agent_customer.id
+
         order.recompute_coupon_lines()
 
         return super().payment()
 
-    
-    @http.route('/enable/extra/coupon/computation', type='json', auth='public')
-    def enable_extra_coupon_computation(self, **kw):
-        # Lógica para llamar a la función recompute_coupon_lines()
-        request.env.user.partner_id.extra_computation_enabled = True
-        _logger.info("\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True\n")
-        # order = request.website.sale_get_order()
-        # order.recompute_coupon_lines()
-        _logger.info("\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True {order}\n")
-
-
-        return request.env.user.partner_id.extra_computation_enabled
 
     def _check_payment_confirmation(self, order=None, create_mail_follower=False, **post):
         is_agent = request.env.user.partner_id.agent

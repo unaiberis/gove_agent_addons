@@ -7,8 +7,3 @@ class ResPartner(models.Model):
         string="Extra Coupon Computation enabler",
         store=True, default=False
     )
-
-    # @api.depends('sale_order_ids.purchase_finished')
-    # def _compute_extra_computation_enabled(self):
-    #     for partner in self:
-    #         partner.extra_computation_enabled = not any(partner.sale_order_ids.filtered(lambda order: not order.purchase_finished))

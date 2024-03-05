@@ -440,7 +440,7 @@ class WebsiteSale(WebsiteSale):
                 order.agent_customer = selected_customer_id
                 order.partner_id = order.agent_customer
             order.recompute_coupon_lines()
-            _logger.info(f"\n\nCART ORDER recompute_coupon_lines {order}\n")
+            _logger.info(f"\n\nCART ORDER recompute_coupon_lines {order} order.partner_id {order.partner_id}\n")
 
 
         if post.get("type") == "popover":

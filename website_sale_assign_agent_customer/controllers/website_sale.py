@@ -432,7 +432,8 @@ class WebsiteSale(WebsiteSale):
             if not request.env.context.get("pricelist"):
                 _order = order.with_context(pricelist=pricelist)
             values["suggested_products"] = _order._cart_accessories()
-            if order.agent_customer.id:
+            if selected_customer:
+                order.agent_customer.id = selected_customer
                 order.partner_id = order.agent_customer.id
             order.recompute_coupon_lines()
             _logger.info(f"\n\nCART ORDER recompute_coupon_lines {order}\n")

@@ -351,6 +351,10 @@ class WebsiteSale(WebsiteSale):
             .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
+        
+        _logger.info(f"\n\n CART \n {agent_customers}")
+
+        
         if agent_customer_id and agent_customer_id in agent_customers.ids:
             partner = request.env["res.partner"].browse(agent_customer_id)
             property_name = "property_product_pricelist"

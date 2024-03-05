@@ -10,7 +10,7 @@
         <xpath expr="//div[@id='payment_method']" position="before">
             <div class="mb8 row" t-if="not website.is_customer_comment_features">               
                 <div t-attf-class="form-group col-12">
-                    <label class="control-label" for="customer_comment">Customer Order Comment</label>
+                    <label class="control-label" style="font-size: 1.75rem; margin: 20px 0; font-family: 'Source Sans Pro', 'Odoo Unicode Support Noto', sans-serif;" for="customer_comment">Customer Order Comment</label>
                     <textarea rows="3" id="customer_comment" class="form-control" placeholder="Write a comment..."></textarea>                      
                 </div> 
             </div>  

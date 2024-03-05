@@ -437,7 +437,7 @@ class WebsiteSale(WebsiteSale):
                 _order = order.with_context(pricelist=pricelist)
             values["suggested_products"] = _order._cart_accessories()
             if selected_customer_id:
-                order.agent_customer.id = selected_customer_id
+                order.agent_customer = selected_customer_id
                 order.partner_id = order.agent_customer.id
             order.recompute_coupon_lines()
             _logger.info(f"\n\nCART ORDER recompute_coupon_lines {order}\n")

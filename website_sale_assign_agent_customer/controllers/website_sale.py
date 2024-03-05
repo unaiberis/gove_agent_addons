@@ -352,7 +352,7 @@ class WebsiteSale(WebsiteSale):
             .customer_id_chosen_by_agent
         )
         
-        _logger.info(f"\n\n CART \n {agent_customers}")
+        _logger.info(f"\n\n CART agent_customers: {agent_customers}\n ")
 
         
         if agent_customer_id and agent_customer_id in agent_customers.ids:
@@ -436,8 +436,8 @@ class WebsiteSale(WebsiteSale):
             if not request.env.context.get("pricelist"):
                 _order = order.with_context(pricelist=pricelist)
             values["suggested_products"] = _order._cart_accessories()
-            if selected_customer:
-                order.agent_customer.id = selected_customer
+            if selected_customer_id:
+                order.agent_customer.id = selected_customer_id
                 order.partner_id = order.agent_customer.id
             order.recompute_coupon_lines()
             _logger.info(f"\n\nCART ORDER recompute_coupon_lines {order}\n")

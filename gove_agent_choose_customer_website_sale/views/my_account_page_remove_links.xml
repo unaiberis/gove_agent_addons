@@ -6,8 +6,7 @@
         <field name="priority" eval="1"/>
         <field name="inherit_id" ref="purchase.portal_my_home_purchase"/>
         <field name="arch" type="xml">
-                <!-- Deja fuera el bloque XPath y todo su contenido -->
-        </field>
+<p>Custom text  </p>        </field>
     </record>
     
     

@@ -4,6 +4,7 @@
         priority="20">
         <!-- Remove the t-call blocks by replacing them with an empty block -->
         <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
+            <span></span>
         </xpath>
     </template>
 
@@ -21,6 +22,9 @@
                     <t t-set="url" t-value="'/my/orders'" />
                     <t t-set="placeholder_count" t-value="'order_count'" />
                 </t>
+            </t>
+            <t t-else="">
+                <span></span>
             </t>
         </xpath>
     </template>

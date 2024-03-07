@@ -4,12 +4,13 @@
         priority="20">
         <!-- Remove the t-call blocks by replacing them with an empty block -->
         <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
+            <p>custom_portal_my_home_purchase</p>
         </xpath>
     </template>
 
     <template id="custom_portal_my_home_sale" inherit_id="sale.portal_my_home_menu_sale">
         <xpath expr="//li" position="replace">
-            <p>TEXTO DE PRUEBA</p>
+            <p>custom_portal_my_home_sale</p>
 </xpath>
     </template>
 

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="custom_purchase_portal_my_home_purchase" model="ir.ui.view">
-        <field name="name">custom.purchase.portal.my.home.purchase</field>
+    <record id="purchase.portal_my_home_purchase" model="ir.ui.view">
+        <field name="name">purchase.portal_my_home_purchase</field>
         <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.portal_my_home_purchase"/>
-        <field name="arch" type="xml">
-            <!-- Include your customized content here -->
-<p>Custom text</p>
-            </field>
+        <field name="arch" type="xml" update="true">
+            <!-- Update the existing content directly -->
+prueba de texto        </field>
     </record>
+    
     
     
     <template id="custom_portal_my_home_sale" inherit_id="sale.portal_my_home_menu_sale">

@@ -17,8 +17,6 @@
                     <t t-set="url" t-value="'/my/quotes'" />
                     <t t-set="placeholder_count" t-value="'quotation_count'" />
                 </t>
-            </t>
-            <t t-if="request.env.user.sudo().partner_id.agent">
                 <t t-call="portal.portal_docs_entry">
                     <t t-set="title">Sales Orders</t>
                     <t t-set="url" t-value="'/my/orders'" />

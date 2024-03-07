@@ -18,7 +18,7 @@
 </xpath>
     </template>
 
-    <template id="sale.portal_my_home_sale" inherit_id="sale.portal_my_home_sale" priority="9">
+    <!-- <template id="sale.portal_my_home_sale" inherit_id="sale.portal_my_home_sale" priority="9">
         <!-- Remove the t-call blocks by replacing them with an empty block -->
         <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
             <t t-if="request.env.user.sudo().partner_id.agent">
@@ -37,5 +37,5 @@
                 <span></span>
             </t>
         </xpath>
-    </template>
+    </template> -->
 </odoo>

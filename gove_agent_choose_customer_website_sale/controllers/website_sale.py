@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 
 class Home(Home):
     def _login_redirect(self, uid, redirect=None):
-        return super()._login_redirect(redirect="/")
+        return super()._login_redirect(uid, redirect="/")
 
 class WebsiteSale(WebsiteSale):
     

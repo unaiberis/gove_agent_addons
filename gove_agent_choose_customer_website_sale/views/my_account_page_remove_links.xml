@@ -32,7 +32,6 @@
                             <t t-set="placeholder_count" t-value="'order_count'" />
                         </t>
                     </t>
-                    <p>Texto de prueba</p>
                 </xpath>
             </data>
         </field>

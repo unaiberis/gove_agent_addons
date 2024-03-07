@@ -2,7 +2,7 @@
 <odoo>
     <template id="custom_portal_my_home_purchase" inherit_id="purchase.portal_my_home_purchase" priority="20">
             <!-- Remove the t-call blocks by replacing them with an empty block -->
-            <xpath expr="//t[1]" position="replace">
+            <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
                 <p>Texto de prueba</p>
             </xpath>
     </template>

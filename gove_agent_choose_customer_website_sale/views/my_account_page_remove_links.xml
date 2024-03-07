@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <odoo>
     <!-- Remove Purchase Order for both agents and clients -->
     <template id="custom_portal_my_home_purchase" inherit_id="portal.portal_my_home_purchase"
@@ -18,5 +19,4 @@
             </t>
         </xpath>
     </template>
-    
 </odoo>

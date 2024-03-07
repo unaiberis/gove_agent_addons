@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="custom_purchase_portal_my_home_purchase" model="ir.ui.view">
-        <field name="name">custom.purchase.portal.my.home.purchase</field>
+    <record id="custom_show_purchase_orders" model="ir.ui.view">
+        <field name="name">custom.show.purchase.orders</field>
         <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.portal_my_home_purchase"/>
+        <field name="inherit_id" ref="portal.portal_my_home"/>
         <field name="arch" type="xml">
-            <!-- Include your customized content here -->
-            <xpath expr="//data" position="replace">
-custom text            </xpath>
+            <!-- Deja fuera el bloque XPath y todo su contenido -->
         </field>
     </record>
+    
     
     
     

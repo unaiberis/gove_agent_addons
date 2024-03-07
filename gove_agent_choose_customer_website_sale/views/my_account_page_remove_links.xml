@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="portal_my_home_purchase" name="Show Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="2">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-<span></span>        </xpath>
-      </template>
+<p>text</p>      </template>
     
     
     

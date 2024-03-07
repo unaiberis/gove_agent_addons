@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="custom_portal_my_home_purchase" inherit_id="purchase.portal_my_home_purchase"
-        priority="20">
-        <!-- Remove the t-call blocks by replacing them with an empty block -->
-        <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
-            <span></span>
+    <template id="portal_my_home_purchase" name="Show Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="99">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+
         </xpath>
-    </template>
+      </template>
+    
 
     <template id="portal_my_home_sale" name="Show Quotations / Sales Orders" customize_show="True"
-        inherit_id="portal.portal_my_home" priority="20">
+        inherit_id="portal.portal_my_home" priority="99">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-if="request.env.user.sudo().partner_id.agent">
                 <t t-call="portal.portal_docs_entry">

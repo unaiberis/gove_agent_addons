@@ -6,7 +6,7 @@
         <field name="priority" eval="12" />
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-
+                
             </xpath>
         </field>
     </record>
@@ -20,15 +20,19 @@
                 customize_show="True" priority="12">
 
                 <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-                    <t t-call="portal.portal_docs_entry">
-                        <t t-set="title">Quotations</t>
-                        <t t-set="url" t-value="'/my/quotes'" />
-                        <t t-set="placeholder_count" t-value="'quotation_count'" />
-                    </t>
-                    <t t-call="portal.portal_docs_entry">
-                        <t t-set="title">Sales Orders</t>
-                        <t t-set="url" t-value="'/my/orders'" />
-                        <t t-set="placeholder_count" t-value="'order_count'" />
+                    <t t-if="request.env.user.sudo().partner_id.agent">
+                        <!-- Access user_id here -->
+                        <p>User ID: <t t-esc="request.env.user.id"/></p>
+                            <t t-call="portal.portal_docs_entry">
+                            <t t-set="title">Quotations</t>
+                            <t t-set="url" t-value="'/my/quotes'" />
+                            <t t-set="placeholder_count" t-value="'quotation_count'" />
+                        </t>
+                        <t t-call="portal.portal_docs_entry">
+                            <t t-set="title">Sales Orders</t>
+                            <t t-set="url" t-value="'/my/orders'" />
+                            <t t-set="placeholder_count" t-value="'order_count'" />
+                        </t>
                     </t>
                     <p>Texto de prueba</p>
                 </xpath>

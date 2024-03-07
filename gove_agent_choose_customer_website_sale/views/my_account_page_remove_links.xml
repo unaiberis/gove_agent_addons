@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="custom_portal_my_home_purchase" inherit_id="purchase.portal_my_home_purchase"
-        priority="20">
+        priority="99">
         <!-- Remove the t-call blocks by replacing them with an empty block -->
         <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
             <p>custom_portal_my_home_purchase</p>
@@ -14,7 +14,7 @@
 </xpath>
     </template>
 
-    <template id="custom_portal_my_home_sale" inherit_id="sale.portal_my_home_sale" priority="20">
+    <template id="custom_portal_my_home_sale" inherit_id="sale.portal_my_home_sale" priority="9">
         <!-- Remove the t-call blocks by replacing them with an empty block -->
         <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
             <t t-if="request.env.user.sudo().partner_id.agent">

@@ -12,6 +12,7 @@
     "depends": [
         "portal",
         "sale",
+        "purchase",
         "sale_commission",
         "sale_commission_group",
         "website_sale",

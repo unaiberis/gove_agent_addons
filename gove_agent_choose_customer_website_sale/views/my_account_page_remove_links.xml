@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Remove Purchase Order for both agents and clients -->
     <template id="custom_portal_my_home_purchase" inherit_id="portal.portal_my_home_purchase"

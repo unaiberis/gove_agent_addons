@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Remove Purchase Order for both agents and clients -->
-    <template id="custom_portal_my_home_purchase" inherit_id="portal.portal_my_home_purchase"
+    <template id="custom_portal_my_home_purchase" inherit_id="purchase.portal_my_home_purchase"
         priority="99">
         <!-- Remove the t-call block by replacing it with an empty block -->
         <xpath expr="//t[t-call='portal.portal_docs_entry']" position="replace" />

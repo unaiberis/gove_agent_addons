@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template ref="purchase.portal_my_home_purchase">
-        <!-- Remove the t-call blocks by replacing them with an empty block -->
-            <p>custom_portal_my_home_purchase</p>
-    </template>
-
+    <record id="custom_portal_my_home_purchase" model="ir.ui.view">
+        <field name="name">custom.portal.my.home.purchase</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.portal_my_home_purchase"/>
+        <field name="arch" type="xml">
+            <!-- Replace the t-call blocks with an empty block -->
+            <div>
+                <p>custom_portal_my_home_purchase</p>
+            </div>
+        </field>
+    </record>
+    
     <template id="custom_portal_my_home_sale" inherit_id="sale.portal_my_home_menu_sale">
         <xpath expr="//li" position="replace">
             <p>custom_portal_my_home_sale</p>

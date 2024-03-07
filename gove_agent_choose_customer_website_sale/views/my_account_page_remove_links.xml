@@ -4,7 +4,6 @@
         priority="20">
         <!-- Remove the t-call blocks by replacing them with an empty block -->
         <xpath expr="//t[@t-call='portal.portal_docs_entry']" position="replace">
-            <span></span>
         </xpath>
     </template>
 

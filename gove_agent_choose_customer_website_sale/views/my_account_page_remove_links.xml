@@ -3,10 +3,10 @@
     <record id="custom_show_purchase_orders" model="ir.ui.view">
         <field name="name">custom.show.purchase.orders</field>
         <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="portal.portal_my_home"/>
         <field name="priority" eval="1"/>
+        <field name="inherit_id" ref="purchase.portal_my_home_purchase"/>
         <field name="arch" type="xml">
-            <!-- Deja fuera el bloque XPath y todo su contenido -->
+                <!-- Deja fuera el bloque XPath y todo su contenido -->
         </field>
     </record>
     

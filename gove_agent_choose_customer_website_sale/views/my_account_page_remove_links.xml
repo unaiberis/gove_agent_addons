@@ -21,9 +21,7 @@
 
                 <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
                     <t t-if="request.env.user.sudo().partner_id.agent">
-                        <!-- Access user_id here -->
-                        <p>User ID: <t t-esc="request.env.user.id"/></p>
-                            <t t-call="portal.portal_docs_entry">
+                        <t t-call="portal.portal_docs_entry">
                             <t t-set="title">Quotations</t>
                             <t t-set="url" t-value="'/my/quotes'" />
                             <t t-set="placeholder_count" t-value="'quotation_count'" />

@@ -10,7 +10,7 @@
 
     <template id="custom_portal_my_home_sale" inherit_id="sale.portal_my_home_sale" priority="20">
         <!-- Remove the t-call blocks by replacing them with an empty block -->
-        <xpath expr="//xpath/t[@t-call='portal.portal_docs_entry']" position="replace">
+        <xpath expr="/t[@t-call='portal.portal_docs_entry']" position="replace">
             <t t-if="request.env.user.sudo().partner_id.agent">
                 <t t-call="portal.portal_docs_entry">
                     <t t-set="title">Quotations</t>
@@ -18,8 +18,6 @@
                     <t t-set="placeholder_count" t-value="'quotation_count'" />
                 </t>
             </t>
-        </xpath>
-        <xpath expr="//xpath/t[@t-call='portal.portal_docs_entry']" position="replace">
             <t t-if="request.env.user.sudo().partner_id.agent">
                 <t t-call="portal.portal_docs_entry">
                     <t t-set="title">Sales Orders</t>

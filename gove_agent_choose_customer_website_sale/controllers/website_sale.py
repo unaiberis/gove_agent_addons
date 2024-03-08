@@ -10,14 +10,9 @@ from odoo.http import request
 from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import WebsiteSale
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 from odoo.addons.website_sale_coupon_delivery.controllers.main import WebsiteSaleCouponDelivery
-from odoo.addons.portal.controllers.web import Home
 
 
 _logger = logging.getLogger(__name__)
-
-class Home(Home):
-    def _login_redirect(self, uid, redirect=None):
-        return super()._login_redirect(uid, redirect="/")
 
 class WebsiteSale(WebsiteSale):
     

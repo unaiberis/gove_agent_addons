@@ -1,12 +1,5 @@
+import time
 from odoo import fields, models, api
-from odoo.addons.website_sale_stock.models.website import Website
-
-class Website(Website):
-
-    def get_current_pricelist(self):
-        pl = super().get_current_pricelist()
-        return pl
-    
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
@@ -27,8 +20,6 @@ class ProductTemplate(models.Model):
         combination_info.update({'PVP': product_template_PVP})
 
         return combination_info
-
-import time
 
 class UpdateResPartner(models.Model):
     _name = "update.res.partner"

@@ -314,7 +314,7 @@ class WebsiteSale(WebsiteSale):
         selected_customer = (
             request.env["res.partner"].sudo().browse(selected_customer_id)
         )
-        # Update the values dictionary with the selected customer's name
+        # Update the values dictionary with the selected customer's id
         values["selected_customer"] = selected_customer
 
         website_sale_order = request.website.sale_get_order()

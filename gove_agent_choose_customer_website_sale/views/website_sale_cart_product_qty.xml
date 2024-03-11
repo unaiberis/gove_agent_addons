@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add PCT, PVP and STOCK or NO STOCK in each product -->
+    <template
+        id="products_item_add_cart_product_qty" inherit_id="website_sale.products_item">
+        <xpath expr="//div[hasclass('product_price')]" position="inside">
+            <div class="product_price" itemprop="offers" itemscope="itemscope"
+                itemtype="http://schema.org/Offer">
+                <span
+                    style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
+                    <t t-set="is_available"
+                        t-value="request.env['product.template'].sudo().search([('id', '=', product.id)]).virtual_available > 0" />
+
+                    <span t-if="is_available" style="color: green;">
+                        <span>Stock</span>
+                    </span>
+
+                    <span t-else="" style="color: red;">
+                        <span>No stock</span>
+                    </span>
+                </span>
+            </div>
+        </xpath>
+    </template>
+</odoo>

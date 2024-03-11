@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Show payment mode in cart, payment and confirmation -->
     <template id="template_payment_mode" name="Payment Mode">
         <t t-set="customer_id"
         t-value="int(
@@ -55,7 +56,7 @@
     </template>
 
 
-    <!-- ADD PCT, PVP AND STOCK OR NO STOCK IN EACH PRODUCT -->
+    <!-- Add PCT, PVP and STOCK or NO STOCK in each product -->
 
     <template
         id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
@@ -100,7 +101,7 @@
         </xpath>
 
 
-        <!-- CHANGE STYLE OF EVERY PRODUCT TO SHOW IMAGE BIGGER AND MAKE BOX HEIGHT BIGGER -->
+        <!-- Change style of every product to show image bigger and make box height bigger -->
 
         <xpath
             expr="//form[hasclass('oe_product_cart')]//div[hasclass('o_wsale_product_information')]"
@@ -119,7 +120,7 @@
         </xpath>
     </template>
 
-    <!-- REMOVE PRICELIST FROM PRODUCT FROM WEBSITE SALE -->
+    <!-- Remove pricelist from product from webiste sale -->
 
     <template id="remove_pricelist_from_product_from_website_sale" inherit_id="website_sale.product"
         name="Remove Pricelist from Product Form in Website sale">

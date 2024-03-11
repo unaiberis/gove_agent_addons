@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template
+        id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
+        <xpath expr="//div[hasclass('product_price')]" position="after">
+            <div class="product_price" itemprop="offers" itemscope="itemscope"
+                itemtype="http://schema.org/Offer">
+                <div style="width: 100%; text-align: left;">
+                    <t
+                        t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
+                        <div style="font-size: x-small;">
+                            <span>PCT</span>
+                            <span t-esc="combination_info['price']"
+                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

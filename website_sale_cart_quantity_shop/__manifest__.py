@@ -14,6 +14,7 @@
     ],
     "data": [
         "views/assets.xml",
+        "views/website_sale.xml",
     ],
     "installable": True,
 }

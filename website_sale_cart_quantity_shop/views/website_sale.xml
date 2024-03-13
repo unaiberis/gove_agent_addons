@@ -20,7 +20,7 @@
                         </div>
                         <input type="text" class="form-control quantity" name="add_qty"
                             t-att-value="(order_line[0].product_uom_qty if len(order_line) > 0 else 0) if order_line else 0"
-                            title="" style="font-size: inherit;" />
+                            title="" style="font-size: inherit; max-width: 35px;" />
                         <div class="input-group-append">
                             <a class="btn btn-secondary float_left js_add_cart_json" style="font-size: inherit;"
                                 aria-label="Agregue uno" title="Agregue uno" href="#">

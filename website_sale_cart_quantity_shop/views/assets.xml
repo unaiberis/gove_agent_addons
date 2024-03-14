@@ -4,8 +4,8 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet"
                 href="/gove_agent_choose_customer_website_sale/static/src/css/styles.css" />
-            <!-- <script type="text/javascript"
-                src="/gove_agent_choose_customer_website_sale/static/src/js/recalculate_coupon_lines.js"></script> -->
+            <script type="text/javascript"
+                src="/website_sale_cart_quantity_shop/static/src/js/recalculate_product_qty.js"></script>
         </xpath>
     </template>
 </odoo>

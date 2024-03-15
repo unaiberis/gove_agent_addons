@@ -30,9 +30,9 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                 var inputField = $(this).parent().siblings("input.form-control.quantity");
                 self.modifiedInputField = inputField;
 
-                var oldValue = inputField.data('oldValue') || 0;
+                var oldValue = parseInt(inputField.val()) || 0;
                 var newValue = oldValue + 1;
-                inputField.val(newValue);
+                //inputField.val(newValue);
                 inputField.data('oldValue', newValue);
                 self.custom_add_qty = 1; // Asignar 1 para el botón de más
                 self.changeTriggeredByButton = true; // Establecer la bandera como verdadera
@@ -54,9 +54,9 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                 var inputField = $(this).parent().siblings("input.form-control.quantity");
                 self.modifiedInputField = inputField;
 
-                var oldValue = inputField.data('oldValue') || 0;
+                var oldValue = parseInt(inputField.val()) || 0;
                 var newValue = Math.max(oldValue - 1, 0);
-                inputField.val(newValue);
+                //inputField.val(newValue);
                 inputField.data('oldValue', newValue);
                 self.custom_add_qty = -1; // Asignar -1 para el botón de menos
                 self.changeTriggeredByButton = true; // Establecer la bandera como verdadera
@@ -72,9 +72,11 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
             });
 
 
-            $("input.form-control.quantity").change(function (event) {
-                if (!self.changeTriggeredByButton) { // Verificar si el cambio no fue provocado por los botones
-                    self.modifiedInputField = $(this); // Almacenar una referencia al campo de entrada modificado
+            $("input.form-control.quantity").on("change", function (event) {
+                // Almacenar una referencia al campo de entrada modificado
+                self.modifiedInputField = $(this);
+
+                if (!self.changeTriggeredByButton) {
                     var oldValue = $(this).data('oldValue') || 0;
                     var newValue = parseInt($(this).val().replace(',', '.')) || 0;
 
@@ -99,6 +101,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                     self.changeTriggeredByButton = false; // Restablecer la bandera a falso para futuros cambios
                 }
             });
+
 
 
         },
@@ -151,6 +154,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
 
                 var currentQuantity = parseInt(data.product_cart_qty) || 0;
                 $inputField.val(currentQuantity);
+                self.changeTriggeredByButton = true; // It is needed not to enter in the !self.changeTriggeredByButton if
 
                 console.log("Input Field6:", $inputField);
                 console.log("Current Quantity6:", currentQuantity);

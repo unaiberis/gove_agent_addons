@@ -80,9 +80,16 @@ class WebsiteSaleForm(WebsiteSaleForm):
             if sale_order and sale_order.order_line
             else []
         )
+        order_line2 = (
+            sale_order.order_line.filtered(
+                lambda line: line.product_id.id == product_id
+            )
+            if sale_order and sale_order.order_line
+            else []
+        )
         value["product_cart_qty"] = (
-            int(order_line[0].product_uom_qty)
-            if order_line and order_line[0].product_uom_qty
+            int(order_line2[0].product_uom_qty)
+            if order_line2 and order_line2[0].product_uom_qty
             else 0
         )
 

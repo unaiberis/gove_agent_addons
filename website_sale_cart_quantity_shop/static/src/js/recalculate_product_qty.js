@@ -22,76 +22,88 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
 
             var self = this;
 
-            $(".fa.fa-plus").parent().click(function (event) {
-                // Evitar el comportamiento predeterminado del enlace
-                event.preventDefault();
-                var inputField = $(this).parent().siblings("input.form-control.quantity");
-                var oldValue = inputField.data('oldValue') || 0;
-                var newValue = oldValue + 1;
-                inputField.val(newValue);
-                inputField.data('oldValue', newValue);
-                self.custom_add_qty = 1; // Asignar 1 para el botón de más
-                self.changeTriggeredByButton = true; // Establecer la bandera como verdadera
-
-                console.log("Plus Button Clicked:");
-                console.log("Old Value:", oldValue);
-                console.log("New Value:", newValue);
-                console.log("Custom Add Qty:", self.custom_add_qty);
-                console.log("Change Triggered By Button:", self.changeTriggeredByButton);
-
-                // Llamar a _onClickAdd con el botón como argumento
-                self._onClickAdd(event);
-            });
-
-            // Modificar el evento click del botón .fa.fa-minus
-            $(".fa.fa-minus").parent().click(function (event) {
-                // Evitar el comportamiento predeterminado del enlace
-                event.preventDefault();
-                var inputField = $(this).parent().siblings("input.form-control.quantity");
-                var oldValue = inputField.data('oldValue') || 0;
-                var newValue = Math.max(oldValue - 1, 0);
-                inputField.val(newValue);
-                inputField.data('oldValue', newValue);
-                self.custom_add_qty = -1; // Asignar -1 para el botón de menos
-                self.changeTriggeredByButton = true; // Establecer la bandera como verdadera
-
-                console.log("Minus Button Clicked:");
-                console.log("Old Value:", oldValue);
-                console.log("New Value:", newValue);
-                console.log("Custom Add Qty:", self.custom_add_qty);
-                console.log("Change Triggered By Button:", self.changeTriggeredByButton);
-
-                // Llamar a _onClickAdd con el botón como argumento
-                self._onClickAdd(event);
-            });
+            var modifiedInputField; // Definir una variable para almacenar el campo de entrada modificado
 
 
-            $("input.form-control.quantity").change(function (event) {
-                if (!self.changeTriggeredByButton) { // Verificar si el cambio no fue provocado por los botones
-                    var oldValue = $(this).data('oldValue') || 0;
-                    var newValue = parseInt($(this).val().replace(',', '.')) || 0;
+            $(".fa.fa-plus, .fa.fa-minus, input.form-control.quantity").on("change", function (event) {
+                if ($(this).hasClass("quantity")) { // Verificar si el cambio ocurrió en el campo de cantidad
+                    modifiedInputField = $(this); // Almacenar una referencia al campo de entrada modificado
+                } else { // Si no es el campo de cantidad, puede ser fa-plus o fa-minus
+                    var inputField = $(this).parent().siblings("input.form-control.quantity");
+                    modifiedInputField = inputField;
+                }
+                $(".fa.fa-plus").parent().click(function (event) {
+                    // Evitar el comportamiento predeterminado del enlace
+                    event.preventDefault();
+                    var inputField = $(this).parent().siblings("input.form-control.quantity");
+                    var oldValue = inputField.data('oldValue') || 0;
+                    var newValue = oldValue + 1;
+                    inputField.val(newValue);
+                    inputField.data('oldValue', newValue);
+                    self.custom_add_qty = 1; // Asignar 1 para el botón de más
+                    self.changeTriggeredByButton = true; // Establecer la bandera como verdadera
 
-                    if (newValue < 0 || isNaN(newValue)) {
-                        newValue = 0;
-                    }
-
-                    $(this).val(newValue);
-
-                    console.log("Old Value: " + oldValue);
-                    console.log("New Value: " + newValue);
-
-                    $(this).data('oldValue', newValue);
-
-                    self.custom_add_qty = newValue - oldValue; // Calcular la cantidad personalizada
-
-                    console.log("Custom Add Qty: " + self.custom_add_qty);
+                    console.log("Plus Button Clicked:");
+                    console.log("Old Value:", oldValue);
+                    console.log("New Value:", newValue);
+                    console.log("Custom Add Qty:", self.custom_add_qty);
+                    console.log("Change Triggered By Button:", self.changeTriggeredByButton);
 
                     // Llamar a _onClickAdd con el botón como argumento
                     self._onClickAdd(event);
-                } else {
-                    self.changeTriggeredByButton = false; // Restablecer la bandera a falso para futuros cambios
-                }
+                });
+
+                // Modificar el evento click del botón .fa.fa-minus
+                $(".fa.fa-minus").parent().click(function (event) {
+                    // Evitar el comportamiento predeterminado del enlace
+                    event.preventDefault();
+                    var inputField = $(this).parent().siblings("input.form-control.quantity");
+                    var oldValue = inputField.data('oldValue') || 0;
+                    var newValue = Math.max(oldValue - 1, 0);
+                    inputField.val(newValue);
+                    inputField.data('oldValue', newValue);
+                    self.custom_add_qty = -1; // Asignar -1 para el botón de menos
+                    self.changeTriggeredByButton = true; // Establecer la bandera como verdadera
+
+                    console.log("Minus Button Clicked:");
+                    console.log("Old Value:", oldValue);
+                    console.log("New Value:", newValue);
+                    console.log("Custom Add Qty:", self.custom_add_qty);
+                    console.log("Change Triggered By Button:", self.changeTriggeredByButton);
+
+                    // Llamar a _onClickAdd con el botón como argumento
+                    self._onClickAdd(event);
+                });
+
+
+                $("input.form-control.quantity").change(function (event) {
+                    if (!self.changeTriggeredByButton) { // Verificar si el cambio no fue provocado por los botones
+                        var oldValue = $(this).data('oldValue') || 0;
+                        var newValue = parseInt($(this).val().replace(',', '.')) || 0;
+
+                        if (newValue < 0 || isNaN(newValue)) {
+                            newValue = 0;
+                        }
+
+                        $(this).val(newValue);
+
+                        console.log("Old Value: " + oldValue);
+                        console.log("New Value: " + newValue);
+
+                        $(this).data('oldValue', newValue);
+
+                        self.custom_add_qty = newValue - oldValue; // Calcular la cantidad personalizada
+
+                        console.log("Custom Add Qty: " + self.custom_add_qty);
+
+                        // Llamar a _onClickAdd con el botón como argumento
+                        self._onClickAdd(event);
+                    } else {
+                        self.changeTriggeredByButton = false; // Restablecer la bandera a falso para futuros cambios
+                    }
+                });
             });
+
 
         },
 
@@ -131,27 +143,25 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                 console.log("Buy now is true.");
                 params.express = true;
             }
-            
+
             this._rpc({
                 route: "/shop/cart/update_json_from_shop",
                 params: params,
             }).then((data) => {
                 console.log("Data received from RPC call:", data);
-            
-                $("input.form-control.quantity").each(function () {
-                    var $inputField = $(this);
-                    var oldValue = parseInt($inputField.val().replace(',', '.')) || 0;
-                    var currentQuantity = parseInt(data.product_cart_qty) || 0;
-            
-                    var newValue = Math.min(oldValue, currentQuantity);
-                    $inputField.val(newValue);
-            
-                    console.log("Input Field:", $inputField);
-                    console.log("Old Value:", oldValue);
-                    console.log("Current Quantity:", currentQuantity);
-                    console.log("New Value:", newValue);
-                });
-            
+
+                var $inputField = modifiedInputField; // Usar la variable modifiedInputField
+                var oldValue = parseInt($inputField.val().replace(',', '.')) || 0;
+                var currentQuantity = parseInt(data.product_cart_qty) || 0;
+
+                var newValue = Math.min(oldValue, currentQuantity);
+                $inputField.val(newValue);
+
+                console.log("Input Field:", $inputField);
+                console.log("Old Value:", oldValue);
+                console.log("Current Quantity:", currentQuantity);
+                console.log("New Value:", newValue);
+
                 wSaleUtils.updateCartNavBar(data);
                 const $navButton = $("header .o_wsale_my_cart").parent();
                 let el = $();

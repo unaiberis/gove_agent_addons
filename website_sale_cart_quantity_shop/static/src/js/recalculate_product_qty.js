@@ -1,3 +1,6 @@
+// Copyright 2024 Unai Beristain - AvanzOSC
+// License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+
 odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function (require) {
     "use strict";
 

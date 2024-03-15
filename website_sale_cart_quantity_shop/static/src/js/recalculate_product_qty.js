@@ -12,7 +12,17 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
         });
 
         $(".fa.fa-plus").parent().click(function () {
-            console.log('Se ha hecho clic en el div con la clase "fa fa-plus"');
+            // Encontrar el input asociado al ícono de más
+            var $input = $(this).siblings("input.form-control.quantity");
+            // Obtener el valor actual del input y convertirlo a un número
+            var currentValue = parseInt($input.val()) || 0;
+            // Sumar 1 al valor actual
+            var newValue = currentValue + 1;
+            // Establecer el nuevo valor en el input
+            $input.val(newValue);
+
+            // Llamar a la función para manejar el cambio en la cantidad
+            change_in_qty(currentValue, newValue);
         });
 
         $(".fa.fa-minus").parent().click(function () {
@@ -40,12 +50,26 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
     }
 
     publicWidget.registry.WebsiteSale.include({
+        start: function () {
+            this._super.apply(this, arguments);
+
+            var self = this;
+
+            // Modificar el evento click del botón .fa.fa-plus
+            $(".fa.fa-plus").parent().click(function (event) {
+                // Evitar el comportamiento predeterminado del enlace
+                event.preventDefault();
+
+                // Llamar a _onClickAdd con el botón como argumento
+                self._onClickAdd(event);
+            });
+        },
         /**
          * @private
          * @param {MouseEvent} ev
          */
         _onClickAdd: function (ev) {
-            this.isDynamic = Boolean($(ev.currentTarget).data("is-dynamic"));
+            this.isDynamic = true;
             this.pageType = $(ev.currentTarget).data("page-type");
             this.targetEl = $(ev.currentTarget);
             return this._super.apply(this, arguments);
@@ -58,12 +82,15 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
          * @returns {Promise} never resolved
          */
         _submitForm: function () {
-            if (!this.isDynamic) {
-                return this._super.apply(this, arguments);
-            }
+            // if (!this.isDynamic) {
+            //     return this._super.apply(this, arguments);
+            // }
             const pageType = this.pageType;
             const params = this.rootProduct;
-            params.add_qty = params.quantity;
+            params.add_qty = 1;
+
+            console.log("Params: " + JSON.stringify(params));
+
 
             params.product_custom_attribute_values = JSON.stringify(
                 params.product_custom_attribute_values
@@ -99,5 +126,11 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
     plusIcons.forEach(function (plusIcon) {
         plusIcon.addEventListener("click", _handleClick);
     });
+
+    // Función para manejar el clic y enviar los parámetros a _submitForm
+    function handleClick(params) {
+        // Llamar a _submitForm con los parámetros establecidos
+        _submitForm(params);
+    }
 
 });

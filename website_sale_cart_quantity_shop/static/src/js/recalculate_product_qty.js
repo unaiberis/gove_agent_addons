@@ -138,20 +138,19 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
             }).then((data) => {
                 console.log("Data received from RPC call:", data);
             
-                // Integrate the logic for input value restriction here
-                $("input.form-control.quantity").each(function () {
-                    var $inputField = $(this);
-                    var oldValue = parseInt($inputField.val().replace(',', '.')) || 0;
-                    var currentQuantity = parseInt(data.quantity) || 0;
+                // $("input.form-control.quantity").each(function () {
+                //     var $inputField = $(this);
+                //     var oldValue = parseInt($inputField.val().replace(',', '.')) || 0;
+                //     var currentQuantity = parseInt(data.quantity) || 0;
             
-                    var newValue = Math.min(oldValue, currentQuantity);
-                    $inputField.val(newValue);
+                //     var newValue = Math.min(oldValue, currentQuantity);
+                //     $inputField.val(newValue);
             
-                    console.log("Input Field:", $inputField);
-                    console.log("Old Value:", oldValue);
-                    console.log("Current Quantity:", currentQuantity);
-                    console.log("New Value:", newValue);
-                });
+                //     console.log("Input Field:", $inputField);
+                //     console.log("Old Value:", oldValue);
+                //     console.log("Current Quantity:", currentQuantity);
+                //     console.log("New Value:", newValue);
+                // });
             
                 wSaleUtils.updateCartNavBar(data);
                 const $navButton = $("header .o_wsale_my_cart").parent();

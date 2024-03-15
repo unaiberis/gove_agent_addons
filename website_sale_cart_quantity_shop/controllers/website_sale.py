@@ -73,4 +73,17 @@ class WebsiteSaleForm(WebsiteSaleForm):
             },
         )
 
+        order_line = (
+            sale_order.order_line.filtered(
+                lambda line: line.product_template_id.id == product_id
+            )
+            if sale_order and sale_order.order_line
+            else []
+        )
+        value["product_cart_qty"] = (
+            int(order_line[0].product_uom_qty)
+            if order_line and order_line[0].product_uom_qty
+            else 0
+        )
+
         return value

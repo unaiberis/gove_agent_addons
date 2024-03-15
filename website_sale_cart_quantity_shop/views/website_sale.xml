@@ -7,7 +7,7 @@
                 itemtype="http://schema.org/Offer">
                 <div style="width: 100%; text-align: left;">
                     <div class="css_quantity input-group"
-                        style="justify-content: flex-end; font-size: 0.5rem">
+                        style="justify-content: flex-end; font-size: 0.7rem">
                         <t t-set="order_line"
                             t-value="website_sale_order.order_line.filtered(lambda line: line.product_template_id.id == product.id) if website_sale_order and website_sale_order.order_line else []" />
                         <!-- <t

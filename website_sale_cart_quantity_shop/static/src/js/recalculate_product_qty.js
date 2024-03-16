@@ -149,6 +149,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
 
                 self.oldValue = parseInt($inputField.val()) || 0;
                 self.newValue = parseInt(data.product_cart_qty) || 0;
+                $inputField.data('oldValue', self.newValue);
 
                 $inputField.val(self.newValue);
                 self.changeTriggeredByButton = true; // It is needed not to enter in the !self.changeTriggeredByButton if

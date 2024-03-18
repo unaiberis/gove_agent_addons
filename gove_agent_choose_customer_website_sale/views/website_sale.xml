@@ -120,7 +120,7 @@
         </xpath>
     </template>
 
-    <!-- Remove pricelist from product from webiste sale -->
+    <!-- Remove pricelist from product from website sale -->
 
     <template id="remove_pricelist_from_product_from_website_sale" inherit_id="website_sale.product"
         name="Remove Pricelist from Product Form in Website sale">
@@ -129,6 +129,8 @@
             position="replace">
         </xpath>
     </template>
+    
+    <!-- Remove cart button from product from website sale -->
 
     <template id="template_products_item" inherit_id="website_sale.products_item" name="Template Name">
         <xpath expr="//div[contains(@class, 'o_wsale_product_btn')]" position="attributes">

@@ -6,7 +6,6 @@ odoo.define("website_sale_checkout_extra_fields.website_sale_checkout_extra_fiel
   const $checkout_link = $('a[href*="/shop/checkout"]');
   const $inputs = $(".js_wscef_field");
   if ($checkout_link.length && $inputs.length) {
-    console.log("Sartu naiz")
     $checkout_link.on("click", function (e) {
       e.preventDefault();
       var values = {};

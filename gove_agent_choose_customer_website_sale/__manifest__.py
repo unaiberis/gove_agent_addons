@@ -24,7 +24,6 @@
     "data": [
         "views/assets.xml",
         "views/website_sale.xml",
-        "views/website_sale_cart_product_qty.xml",
         "views/website_front_page.xml",
         "views/my_account_page_remove_links.xml",
         "views/show_draft_finished_column.xml",

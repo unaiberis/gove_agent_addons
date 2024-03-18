@@ -129,4 +129,10 @@
             position="replace">
         </xpath>
     </template>
+
+    <template id="template_products_item" inherit_id="website_sale.products_item" name="Template Name">
+        <xpath expr="//div[contains(@class, 'o_wsale_product_btn')]" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+    </template>    
 </odoo>

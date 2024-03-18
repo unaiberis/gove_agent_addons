@@ -21,6 +21,8 @@ class ProductTemplate(models.Model):
 
         return combination_info
 
+
+"""
 class UpdateResPartner(models.Model):
     _name = "update.res.partner"
 
@@ -83,4 +85,4 @@ class UpdateResPartner(models.Model):
         elapsed_time = end_time - start_time
         print(f"Total Elapsed Time: {round(elapsed_time, 2)} seconds")        # Commit the changes to the database
         self.env.cr.commit()
-
+"""

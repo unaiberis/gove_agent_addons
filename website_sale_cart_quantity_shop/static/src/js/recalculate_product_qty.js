@@ -154,7 +154,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                 $inputField.val(self.newValue);
                 self.changeTriggeredByButton = true; // It is needed not to enter in the !self.changeTriggeredByButton if
 
-                if (data.product_cart_qty == data.product_available_qty) {
+                if (data.product_cart_qty == data.product_available_qty && data.product_cart_qty != 0) {
                     $inputField.css({
                         "color": "white",
                         "background-color": "black",

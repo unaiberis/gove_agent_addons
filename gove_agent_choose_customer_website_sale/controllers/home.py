@@ -15,7 +15,7 @@ class Home(PortalHome):
     @http.route('/')
     def index(self, **kw):
         # Comprobar si el usuario está autenticado
-        if not request.env.user._is_public():
+        if request.env.user._is_public():
             _logger.info("\n\nIntento de acceso a la página principal por un usuario no autenticado\n\n")
             return super().index(**kw)
         else:
@@ -36,7 +36,7 @@ class WebsiteSale(BaseWebsiteSale):
     @http.route()
     def shop(self, page=0, category=None, search="", ppg=False, **post):
         # Comprobar si el usuario está autenticado
-        if not request.env.user._is_public():
+        if request.env.user._is_public():
             _logger.info("\n\nIntento de acceso a la tienda por un usuario no autenticado\n\n")
             return http.local_redirect('/web/login', query=request.params, keep_hash=True)
         else:

@@ -18,9 +18,8 @@ class Home(PortalHome):
         if request.env.user._is_public():
             _logger.info("\n\nIntento de acceso a la página principal por un usuario no autenticado\n\n")
             return super().index(**kw)
-        else:
-            # Si no está autenticado, redirigir a /web/login
-            return http.local_redirect('/web/login', query=request.params, keep_hash=True)
+        # Si no está autenticado, redirigir a /web/login
+        return http.local_redirect('/web/login', query=request.params, keep_hash=True)
 
     @http.route('/my', auth='user')
     def home(self, **kw):
@@ -39,7 +38,6 @@ class WebsiteSale(BaseWebsiteSale):
         if request.env.user._is_public():
             _logger.info("\n\nIntento de acceso a la tienda por un usuario no autenticado\n\n")
             return http.local_redirect('/web/login', query=request.params, keep_hash=True)
-        else:
-            _logger.info("\n\nReturn 2\n\n")
-            return super(WebsiteSale, self).shop(page=page, category=category, search=search, ppg=ppg, **post)
+        _logger.info("\n\nReturn 2\n\n")
+        return super(WebsiteSale, self).shop(page=page, category=category, search=search, ppg=ppg, **post)
 

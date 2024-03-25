@@ -1,11 +1,45 @@
 # Copyright 2024 Unai Beristain - AvanzOSC
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo.addons.portal.controllers.web import Home
+import logging
+from odoo import http
+from odoo.addons.portal.controllers.web import Home as PortalHome
+from odoo.addons.website_sale.controllers.main import WebsiteSale as BaseWebsiteSale
 
-# When someone logs in it redirects to / instead of to /my
-class Home(Home):
+from odoo.http import route, request
+
+_logger = logging.getLogger(__name__)
+
+class Home(PortalHome):
+
+    @http.route('/')
+    def index(self, **kw):
+        # Comprobar si el usuario está autenticado
+        if not request.env.user._is_public():
+            _logger.info("\n\nIntento de acceso a la página principal por un usuario no autenticado\n\n")
+            return super().index(**kw)
+        else:
+            # Si no está autenticado, redirigir a /web/login
+            return http.local_redirect('/web/login', query=request.params, keep_hash=True)
+
+    @http.route('/my', auth='user')
+    def home(self, **kw):
+        return super().home(**kw)
+
+    # Sobreescribir el método de redirección de inicio de sesión
     def _login_redirect(self, uid, redirect=None):
         return super()._login_redirect(uid, redirect="/")
+    
+class WebsiteSale(BaseWebsiteSale):
 
+    # Sobreescribir el método para manejar solicitudes a URLs que contienen /shop/
+    @http.route()
+    def shop(self, page=0, category=None, search="", ppg=False, **post):
+        # Comprobar si el usuario está autenticado
+        if not request.env.user._is_public():
+            _logger.info("\n\nIntento de acceso a la tienda por un usuario no autenticado\n\n")
+            return http.local_redirect('/web/login', query=request.params, keep_hash=True)
+        else:
+            _logger.info("\n\nReturn 2\n\n")
+            return super(WebsiteSale, self).shop(page=page, category=category, search=search, ppg=ppg, **post)
 

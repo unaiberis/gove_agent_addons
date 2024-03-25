@@ -17,13 +17,8 @@ class Home(PortalHome):
         # Comprobar si el usuario está autenticado
         if request.env.user._is_public():
             _logger.info("\n\nIntento de acceso a la página principal por un usuario no autenticado\n\n")
-            return super().index(**kw)
-        # Si no está autenticado, redirigir a /web/login
-        return http.local_redirect('/web/login', query=request.params, keep_hash=True)
-
-    @http.route('/my', auth='user')
-    def home(self, **kw):
-        return super().home(**kw)
+            return http.local_redirect('/web/login', query=request.params, keep_hash=True)
+        return super().index(**kw)
 
     # Sobreescribir el método de redirección de inicio de sesión
     def _login_redirect(self, uid, redirect=None):

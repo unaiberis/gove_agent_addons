@@ -1,7 +1,3 @@
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# 	* gove_agent_choose_customer_website_sale
-#
 msgid ""
 msgstr ""
 
@@ -12,23 +8,23 @@ msgstr "<b>Modo de pago utilizado por el cliente:</b>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "<span>MSRP</span>"
+msgstr "<span>PVP (precio de venta recomendado)</span>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid "<span>No stock</span>"
 msgstr "<span>No hay stock</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
-msgid "<span>PCT</span>"
-msgstr "<span>PCT</span>"
-
-#. module: gove_agent_choose_customer_website_sale
-#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
-msgid "<span>PVP</span>"
+msgid "<span>RRP</span>"
 msgstr "<span>PVP</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid "<span>Stock</span>"
-msgstr "<span>Existencias</span>"
+msgstr "<span>En Stock</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__woo_import_already_reset
@@ -52,7 +48,7 @@ msgstr "Programa de cupones"
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__display_name
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website__display_name
 msgid "Display Name"
-msgstr "Nombre Mostrado"
+msgstr "Nombre mostrado"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_partner__extra_computation_enabled
@@ -81,19 +77,19 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order____last_update
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website____last_update
 msgid "Last Modified on"
-msgstr "Última Modificación el"
+msgstr "Última modificación el"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_product_template
 msgid "Product Template"
-msgstr "Plantilla de Producto"
+msgstr "Plantilla de producto"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_sale_order
 msgid "Sale Order"
-msgstr "Orden de Venta"
+msgstr "Orden de venta"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_website
 msgid "Website"
-msgstr "Sitio Web"
+msgstr "Sitio web"

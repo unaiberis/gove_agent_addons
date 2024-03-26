@@ -1,7 +1,3 @@
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# 	* gove_agent_choose_customer_website_sale
-#
 msgid ""
 msgstr ""
 
@@ -12,18 +8,18 @@ msgstr "<b>Mode de paiement utilisé par le client :</b>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "<span>MSRP</span>"
+msgstr "<span>PVC</span>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid "<span>No stock</span>"
 msgstr "<span>Aucun stock</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
-msgid "<span>PCT</span>"
-msgstr "<span>PCT</span>"
-
-#. module: gove_agent_choose_customer_website_sale
-#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
-msgid "<span>PVP</span>"
-msgstr "<span>PVP</span>"
+msgid "<span>RRP</span>"
+msgstr "<span>PRP</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price

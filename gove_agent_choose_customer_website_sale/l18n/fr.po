@@ -19,7 +19,7 @@ msgstr "<span>Aucun stock</span>"
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid "<span>RRP</span>"
-msgstr "<span>PRP</span>"
+msgstr "<span>PVP</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price

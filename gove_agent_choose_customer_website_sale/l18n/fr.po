@@ -8,12 +8,12 @@ msgstr ""
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.agent_customer_card_insert
 msgid "<b>Payment mode used by the customer:</b>"
-msgstr "<b>Modo de pago utilizado por el cliente:</b>"
+msgstr "<b>Mode de paiement utilisé par le client :</b>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid "<span>No stock</span>"
-msgstr "<span>No hay stock</span>"
+msgstr "<span>Aucun stock</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
@@ -28,22 +28,22 @@ msgstr "<span>PVP</span>"
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid "<span>Stock</span>"
-msgstr "<span>Existencias</span>"
+msgstr "<span>Stock</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__woo_import_already_reset
 msgid "Already Reset Once with Planned Action"
-msgstr "Ya reiniciado una vez con acción planificada"
+msgstr "Déjà réinitialisé une fois avec une action planifiée"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_res_partner
 msgid "Contact"
-msgstr "Contacto"
+msgstr "Contact"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_coupon_program
 msgid "Coupon Program"
-msgstr "Programa de cupones"
+msgstr "Programme de coupon"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_coupon_program__display_name
@@ -52,18 +52,18 @@ msgstr "Programa de cupones"
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__display_name
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website__display_name
 msgid "Display Name"
-msgstr "Nombre Mostrado"
+msgstr "Nom d'affichage"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_partner__extra_computation_enabled
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_users__extra_computation_enabled
 msgid "Extra Coupon Computation enabler"
-msgstr "Activador de cálculo adicional de cupones"
+msgstr "Activateur de calcul supplémentaire de coupon"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__purchase_finished
 msgid "Finished Purchase"
-msgstr "Compra finalizada"
+msgstr "Achat terminé"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_coupon_program__id
@@ -81,19 +81,19 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order____last_update
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website____last_update
 msgid "Last Modified on"
-msgstr "Última Modificación el"
+msgstr "Dernière modification le"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_product_template
 msgid "Product Template"
-msgstr "Plantilla de Producto"
+msgstr "Modèle d'article"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_sale_order
 msgid "Sale Order"
-msgstr "Orden de Venta"
+msgstr "Commande de vente"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_website
 msgid "Website"
-msgstr "Sitio Web"
+msgstr "Site web"

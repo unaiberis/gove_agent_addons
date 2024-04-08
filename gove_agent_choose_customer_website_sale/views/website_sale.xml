@@ -68,7 +68,7 @@
                         t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
                         <div style="font-size: x-small;">
                             <!-- PCT -->
-                            <span>MSRP</span> 
+                            <span>Price</span> 
                             <span t-esc="combination_info['price']"
                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                         </div>

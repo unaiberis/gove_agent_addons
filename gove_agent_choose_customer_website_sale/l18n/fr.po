@@ -8,8 +8,8 @@ msgstr "<b>Mode de paiement utilisé par le client :</b>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
-msgid "<span>MSRP</span>"
-msgstr "<span>PVC</span>"
+msgid "<span>Price</span>"
+msgstr "<span>Prix</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
@@ -19,7 +19,7 @@ msgstr "<span>Aucun stock</span>"
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid "<span>RRP</span>"
-msgstr "<span>PVP</span>"
+msgstr "<span>PPC</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price

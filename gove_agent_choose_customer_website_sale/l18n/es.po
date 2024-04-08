@@ -8,8 +8,8 @@ msgstr "<b>Modo de pago utilizado por el cliente:</b>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
-msgid "<span>MSRP</span>"
-msgstr "<span>PVP (precio de venta recomendado)</span>"
+msgid "<span>Price</span>"
+msgstr "<span>Precio</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price

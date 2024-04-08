@@ -6,7 +6,7 @@
         <field name="priority" eval="12" />
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-                
+                <t></t>
             </xpath>
         </field>
     </record>
@@ -16,8 +16,7 @@
         <field name="name">Show Quotations / Sales Orders</field>
         <field name="priority" eval="12" />
         <field name="arch" type="xml">
-            <data name="Show Quotations / Sales Orders" inherit_id="portal.portal_my_home"
-                customize_show="True" priority="12">
+            <data name="Show Quotations / Sales Orders" inherit_id="portal.portal_my_home" customize_show="True" priority="12">
 
                 <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
                     <t t-if="request.env.user.sudo().partner_id.agent">

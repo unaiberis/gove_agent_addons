@@ -73,28 +73,6 @@ class WebsiteSaleCouponDelivery(WebsiteSaleCouponDelivery):
         return result
 
 class WebsiteSale(WebsiteSale):
-    def check_field_validations(self, values):
-        res = super().check_field_validations(values=values)
-        order = request.website.sale_get_order(force_create=1)
-
-        if (
-            request.env["agent.partner"]
-            .sudo()
-            .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
-            .customer_id_chosen_by_agent
-        ):
-            order.agent_customer = int(
-                request.env["agent.partner"]
-                .sudo()
-                .search(
-                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
-                )
-                .customer_id_chosen_by_agent
-            )
-        else:
-            res["error"] = True
-        return res
-
     @http.route()
     def payment_confirmation(self, **post):
         order = request.website.sale_get_order()

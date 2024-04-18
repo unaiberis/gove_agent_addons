@@ -65,28 +65,39 @@
                 itemtype="http://schema.org/Offer">
 
                 <div class="d-flex flex-row justify-content-between align-items-center">
-                    <div class="w-70 d-flex flex-column">             
-                        <div style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                            <t t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
+                    <div class="w-70 d-flex flex-column">
+                        <div
+                            style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                            <t
+                                t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
                                 <div>
                                     <!-- PCT -->
-                                    <span style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Price</span> 
-                                    <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                    <span
+                                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                                        Price</span>
+                                    <span t-esc="combination_info['price']"
+                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                 </div>
                             </t>
                         </div>
-                
+
                         <t t-if="combination_info['PVP']">
-                            <div style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                            <div
+                                style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                                 <div>
                                     <!-- PVP -->
-                                    <span style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">RRP</span>
-                                    <span t-esc="combination_info['PVP']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                    <span
+                                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                                        RRP</span>
+                                    <span t-esc="combination_info['PVP']"
+                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                 </div>
                             </div>
                         </t>
                     </div>
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px;">CODE: <t t-esc="product.default_code"/></div>
+                    <div
+                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px;">
+                        CODE: <t t-esc="product.default_code" /></div>
                 </div>
                 <span
                     style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
@@ -124,14 +135,23 @@
         </xpath>
     </template>
 
-    <!-- Remove pricelist from product from website sale -->
 
     <template id="remove_pricelist_from_product_from_website_sale" inherit_id="website_sale.product"
         name="Remove Pricelist from Product Form in Website sale">
+
+        <!-- Remove pricelist from product from website sale -->
+
         <xpath
             expr="//div[@class='col-md-8']/div[@class='form-inline justify-content-end']/t[@t-call='website_sale.pricelist_list']"
             position="replace">
         </xpath>
+
+        <xpath expr="//div[@id='product_attributes_simple']" position="after">
+
+            <div style="font-family: Roboto; font-size: 14px;"> CODE: <t
+                    t-esc="product.default_code" /></div>
+        </xpath>
+
     </template>
 
     <!-- Remove cart button from product from website sale -->
@@ -142,4 +162,6 @@
             <attribute name="style">display: none;</attribute>
         </xpath>
     </template>
+
+
 </odoo>

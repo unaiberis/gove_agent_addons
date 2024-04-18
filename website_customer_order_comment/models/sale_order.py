@@ -5,7 +5,7 @@ from odoo import api, fields, models
 from lxml import etree
 
 
-class sale_order(models.Model):
+class SaleOrder(models.Model):
 
     """Adds the fields for options of the customer order comment"""
 

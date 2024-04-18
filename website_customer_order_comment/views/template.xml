@@ -18,8 +18,8 @@
     </template>
 
     <!-- Add comment in report -->
-    <template id="report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
-        <xpath expr="//div[@class='page']/p[@id='fiscal_position_remark']" position="after">
+    <template id="report_saleorder_document_inherit" inherit_id="gove_reports.report_sale_order_gove_doc">
+        <xpath expr="/t/div[hasclass('page')]/p[@id='fiscal_position_remark']" position="after">
             <p t-if="doc.customer_comment" t-esc="doc.customer_comment"/>
         </xpath>
     </template>

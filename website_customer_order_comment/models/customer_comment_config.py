@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class website(models.Model):
+class Website(models.Model):
 
     """Adds the fields for options of the Customer Order Comment."""
 

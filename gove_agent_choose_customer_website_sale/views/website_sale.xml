@@ -3,13 +3,13 @@
     <!-- Show payment mode in cart, payment and confirmation -->
     <template id="template_payment_mode" name="Payment Mode">
         <t t-set="customer_id"
-        t-value="int(
+            t-value="int(
             request.env['agent.partner'].sudo().search([
                 ('agent_id', '=', request.env.user.sudo().partner_id.id)
             ], limit=1).customer_id_chosen_by_agent
         ) if request.env.user.sudo().partner_id.agent else request.env.user.sudo().partner_id.id"
-    />
-    
+        />
+
         <t t-set="property_record"
             t-value="request.env['ir.property'].sudo().search([
                 ('value_reference', 'ilike', 'account.payment.mode'),
@@ -63,29 +63,42 @@
         <xpath expr="//div[hasclass('product_price')]" position="replace">
             <div class="product_price" itemprop="offers" itemscope="itemscope"
                 itemtype="http://schema.org/Offer">
-                <div style="width: 100%; text-align: left;">
-                    <t
-                        t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
-                        <div style="font-size: x-small;">
-                            <!-- PCT -->
-                            <span>Price</span> 
-                            <span t-esc="combination_info['price']"
-                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                        </div>
-                    </t>
-                </div>
 
-                <t t-if="combination_info['PVP']">
-                    <div style="width: 100%; text-align: left;">
-                        <div style="font-size: x-small;">
-                            <!-- PVP -->
-                            <span>RRP</span>
-                            <span t-esc="combination_info['PVP']"
-                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="w-70 d-flex flex-column">
+                        <div
+                            style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                            <t
+                                t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
+                                <div>
+                                    <!-- PCT -->
+                                    <span
+                                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                                        Price</span>
+                                    <span t-esc="combination_info['price']"
+                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                </div>
+                            </t>
                         </div>
+
+                        <t t-if="combination_info['PVP']">
+                            <div
+                                style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                                <div>
+                                    <!-- PVP -->
+                                    <span
+                                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                                        RRP</span>
+                                    <span t-esc="combination_info['PVP']"
+                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                </div>
+                            </div>
+                        </t>
                     </div>
-                </t>
-
+                    <div
+                        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px;">
+                        CODE: <t t-esc="product.default_code" /></div>
+                </div>
                 <span
                     style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
                     <t t-set="is_available"
@@ -122,21 +135,33 @@
         </xpath>
     </template>
 
-    <!-- Remove pricelist from product from website sale -->
 
     <template id="remove_pricelist_from_product_from_website_sale" inherit_id="website_sale.product"
         name="Remove Pricelist from Product Form in Website sale">
+
+        <!-- Remove pricelist from product from website sale -->
+
         <xpath
             expr="//div[@class='col-md-8']/div[@class='form-inline justify-content-end']/t[@t-call='website_sale.pricelist_list']"
             position="replace">
         </xpath>
+
+        <xpath expr="//div[@id='product_attributes_simple']" position="after">
+
+            <div style="font-family: Roboto; font-size: 14px;"> CODE: <t
+                    t-esc="product.default_code" /></div>
+        </xpath>
+
     </template>
-    
+
     <!-- Remove cart button from product from website sale -->
 
-    <template id="template_products_item" inherit_id="website_sale.products_item" name="Template Name">
+    <template id="template_products_item" inherit_id="website_sale.products_item"
+        name="Template Name">
         <xpath expr="//div[contains(@class, 'o_wsale_product_btn')]" position="attributes">
             <attribute name="style">display: none;</attribute>
         </xpath>
-    </template>    
+    </template>
+
+
 </odoo>

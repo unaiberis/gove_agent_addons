@@ -2,8 +2,7 @@
 <odoo>
     <template id="customer_comment_assets_frontend" inherit_id="website.assets_frontend">
         <xpath expr="." position="inside">
-            <script type="text/javascript"
-                src="/website_customer_order_comment/static/src/js/website_customer_order_comment.js"></script>
+            <script type="text/javascript" src="/website_customer_order_comment/static/src/js/website_customer_order_comment.js"></script>
         </xpath>
     </template>
 
@@ -11,22 +10,20 @@
         <xpath expr="//div[@id='payment_method']" position="before">
             <div class="mb8 row" t-if="not website.is_customer_comment_features">
                 <div t-attf-class="form-group col-12">
-                    <label class="control-label"
-                        style="font-size: 1.75rem; margin: 20px 0; font-family: 'Source Sans Pro', 'Odoo Unicode Support Noto', sans-serif;"
-                        for="customer_comment">Customer Order Comment</label>
-                    <textarea rows="3" id="customer_comment" class="form-control"
-                        placeholder="Write a comment..."></textarea>
+                    <label class="control-label" style="font-size: 1.75rem; margin: 20px 0; font-family: 'Source Sans Pro', 'Odoo Unicode Support Noto', sans-serif;" for="customer_comment">Customer Order Comment</label>
+                    <textarea rows="3" id="customer_comment" class="form-control" placeholder="Write a comment..."></textarea>
                 </div>
             </div>
         </xpath>
     </template>
 
     <!-- Add comment in report -->
-    <template id="report_saleorder_document_inherit"
-        inherit_id="gove_reports.report_sale_order_gove_doc">
+    <template id="report_saleorder_document_inherit" inherit_id="gove_reports.report_sale_order_gove_doc">
         <xpath expr="//div[hasclass('page')]" position="inside">
-            <h6>Comentario de cliente:</h6>
-            <t t-if="doc.customer_comment" t-esc="doc.customer_comment" />
+            <t t-if="doc.customer_comment and doc.customer_comment != ''">
+                <h6>Comentario de cliente:</h6>
+                <t t-esc="doc.customer_comment" />
+            </t>
         </xpath>
     </template>
 

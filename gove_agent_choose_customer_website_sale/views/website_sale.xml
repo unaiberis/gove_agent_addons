@@ -85,7 +85,7 @@
                 <t t-set="inventory_availability" t-value="product.inventory_availability" />
 
                 <div id="stock_widget" style="width: 100%; display: flex; justify-content: space-between; font-size: smaller; text-align: left;">
-                    <t t-set="is_available" t-value="product.inventory_availability and product.inventory_availability in ['available', 'limited']" />
+                    <t t-set="is_available" t-value="request.env['product.template'].sudo().search([('id', '=', product.id)]).virtual_available > 0" />
 
                     <span t-if="is_available" style="color: green;">
                         <span>Stock</span>

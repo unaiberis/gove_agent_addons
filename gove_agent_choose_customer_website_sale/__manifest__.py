@@ -28,6 +28,7 @@
         "views/my_account_page_remove_links.xml",
         "views/show_draft_finished_column.xml",
 #       "views/action_server_base_automation.xml",
+        "security/ir.model.access.csv"
 
 
     ],

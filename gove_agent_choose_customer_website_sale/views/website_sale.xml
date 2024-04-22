@@ -99,7 +99,7 @@
                         style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px;">
                         CODE: <t t-esc="product.default_code" /></div>
                 </div>
-                <span
+                <span id="stock_widget"
                     style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
                     <t t-set="is_available"
                         t-value="request.env['product.template'].sudo().search([('id', '=', product.id)]).virtual_available > 0" />

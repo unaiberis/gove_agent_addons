@@ -94,45 +94,7 @@
                     <span t-else="" style="color: red;">
                         <span>No stock</span>
                     </span>
-
-                    <!-- Nuevo span a la derecha -->
-                    <t t-if="product.inventory_availability and product.inventory_availability in ['available', 'limited']">
-                        <span style="display: inline-block; margin-left: 10px;">
-                            <!-- Contenido del nuevo span -->
-                            <!-- Bloque de código adicional -->
-                            <t t-if="product.product_type == 'product' and _.contains(['always', 'threshold'], product.inventory_availability)">
-                                <t t-if="product.virtual_available gt 0">
-                                    <div t-if="product.inventory_availability == 'always'" t-attf-class="availability_message_#{product.product_template} text-success mt16">
-                                        <t t-esc="product.virtual_available_formatted" />
-                                        <t t-esc="product.uom_name" />
- available
-                                    </div>
-                                    <t t-if="product.inventory_availability == 'threshold'">
-                                        <div t-if="product.virtual_available lte product.available_threshold" t-attf-class="availability_message_#{product.product_template} text-warning mt16">
-                                            <i class="fa fa-exclamation-triangle" title="Warning" role="img" aria-label="Warning"/>
-                                            <t t-esc="product.virtual_available_formatted" />
-                                            <t t-esc="product.uom_name" />
- available
-                                        </div>
-                                        <div t-if="product.virtual_available gt product.available_threshold" t-attf-class="availability_message_#{product.product_template} text-success mt16">In stock</div>
-                                    </t>
-                                </t>
-                                <div t-if="product.cart_qty" t-attf-class="availability_message_#{product.product_template} text-warning mt8">
-                        You already added <t t-if="!product.virtual_available">all</t>
-                                    <t t-esc="product.cart_qty" />
-                                    <t t-esc="product.uom_name" />
- in your cart.
-                                </div>
-                                <div t-if="!product.cart_qty and product.virtual_available lte 0" t-attf-class="availability_message_#{product.product_template} text-danger mt16">
-                                    <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/>
- Temporarily out of stock</div>
-                            </t>
-                            <div t-if="product.product_type == 'product' and product.inventory_availability == 'custom'" t-attf-class="availability_message_#{product.product_template} text-success mt16">
-                                <t t-esc="product.custom_message" />
-                            </div>
-                        </span>
-                    </t>
-                </span>
+                    <span t-esc="product.virtual_available" />
             </div>
         </xpath>
 

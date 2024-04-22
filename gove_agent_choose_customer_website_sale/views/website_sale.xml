@@ -117,7 +117,7 @@
                             <t t-esc="product.uom_name" />
  in your cart.
                         </div>
-                        <div t-if="!product.cart_qty and product.virtual_available &lt;= 0" t-attf-class="availability_message_#{product_template} text-danger mt16">
+                        <div t-if="not product.cart_qty and product.virtual_available &lt;= 0" t-attf-class="availability_message_#{product_template} text-danger mt16">
                             <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/>
  Temporarily out of stock</div>
 

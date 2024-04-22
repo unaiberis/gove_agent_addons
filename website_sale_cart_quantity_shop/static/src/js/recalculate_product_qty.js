@@ -10,7 +10,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
 
     function isCategoryPage() {
         const url = window.location.href;
-        return url.includes("/category/") || (url.includes("/shop") && !url.includes("/shop/"));
+        return url.includes("/category/") || (url.includes("/shop") && !url.includes("/shop/")) || url.includes("/shop/page/");
     }
     if (isCategoryPage()) {
 

@@ -84,7 +84,7 @@
                 </div>
                 <t t-set="inventory_availability" t-value="product.inventory_availability" />
 
-                <span id="stock_widget" style="width: 100%; display: inline-block; font-size: smaller; text-align: left;">
+                <div id="stock_widget" style="width: 100%; display: flex; justify-content: space-between; font-size: smaller; text-align: left;">
                     <t t-set="is_available" t-value="product.inventory_availability and product.inventory_availability in ['available', 'limited']" />
 
                     <span t-if="is_available" style="color: green;">
@@ -95,7 +95,7 @@
                         <span>No stock</span>
                     </span>
                     <span t-esc="product.virtual_available" />
-                </span>
+                </div>
             </div>
         </xpath>
 

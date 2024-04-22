@@ -79,10 +79,10 @@ odoo.define('gove_agent_choose_customer_website_sale.available_quantity', functi
 
     publicWidget.registry.WebsiteSale.include({
         /**
-         * Adds the stock checking to the regular _onChangeCombination method
+         * Adds the stock checking to the regular _start method
          * @override
          */
-        _onChangeCombination: function () {
+        _start: function () {
             this._super.apply(this, arguments);
             VariantMixin._onChangeCombinationStock2.apply(this, arguments);
         }

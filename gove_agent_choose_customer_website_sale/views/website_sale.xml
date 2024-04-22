@@ -95,6 +95,7 @@
                         <span>No stock</span>
                     </span>
                     <span t-esc="product.virtual_available" />
+                </span>
             </div>
         </xpath>
 

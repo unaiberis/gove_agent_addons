@@ -94,7 +94,7 @@
                     <span t-else="" style="color: red;">
                         <span>No stock</span>
                     </span>
-                    <t t-if="product.product_type == 'product' and _.contains(['always', 'threshold'], product.inventory_availability)">
+                    <t t-if="_.contains(['always', 'threshold'], product.inventory_availability)">
                         <t t-if="product.virtual_available &gt; 0">
                             <div t-if="product.inventory_availability == 'always'" t-attf-class="availability_message_#{product_template} text-success mt16">
                                 <t t-esc="virtual_available_formatted" />

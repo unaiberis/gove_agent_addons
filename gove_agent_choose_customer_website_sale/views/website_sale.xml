@@ -112,7 +112,7 @@
                             </t>
                         </t>
                         <div t-if="product.cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
-                You already added <t t-if="!product.virtual_available">all</t>
+                You already added <t t-if="not product.virtual_available">all</t>
                             <t t-esc="product.cart_qty" />
                             <t t-esc="product.uom_name" />
  in your cart.

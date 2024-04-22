@@ -104,7 +104,7 @@
                             <t t-if="product.inventory_availability == 'threshold'">
                                 <div t-if="product.virtual_available &lt;= product.available_threshold" t-attf-class="availability_message_#{product_template} text-warning mt16">
                                     <i class="fa fa-exclamation-triangle" title="Warning" role="img" aria-label="Warning"/>
-                                    <t t-esc="product.virtual_available_formatted" />
+                                    <t t-esc="product.virtual_available" />
                                     <t t-esc="product.uom_name" />
  available
                                 </div>

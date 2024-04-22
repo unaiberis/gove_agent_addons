@@ -6,8 +6,6 @@
                 href="/gove_agent_choose_customer_website_sale/static/src/css/styles.css" />
             <!-- <script type="text/javascript"
                 src="/gove_agent_choose_customer_website_sale/static/src/js/recalculate_coupon_lines.js"></script> -->
-            <script type="text/javascript"
-                src="/gove_agent_choose_customer_website_sale/static/src/js/available_quantity.js"></script>
         </xpath>
     </template>
 </odoo>

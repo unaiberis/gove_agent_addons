@@ -62,7 +62,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                     // Reset totalIncrement and totalDecrement to zero after handling the click
                     totalIncrement = 0;
                     totalDecrement = 0;
-                }, 500); // Debounce time set to 2000 milliseconds (2 seconds)
+                }, 300);
 
                 // Click event handler for the plus button
                 $(".fa.fa-plus").parent().click(function (event) {

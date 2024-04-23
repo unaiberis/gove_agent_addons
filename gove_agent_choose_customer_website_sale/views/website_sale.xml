@@ -94,6 +94,8 @@
                     <span t-else="" style="color: red;">
                         <span>No stock</span>
                     </span> -->
+                    <t t-set="int_virtual_available" t-value="int(product.virtual_available)" />
+
                     <t t-if="product.inventory_availability in ['always', 'threshold']">
                         <t t-if="product.virtual_available &gt; 0">
                             <div t-if="product.inventory_availability == 'always'" t-attf-class="availability_message_#{product_template} text-success" style="margin-bottom: 5px;">
@@ -104,7 +106,7 @@
                             <t t-if="product.inventory_availability == 'threshold'">
                                 <div t-if="product.virtual_available &lt;= product.available_threshold" t-attf-class="availability_message_#{product_template} text-warning" style="margin-bottom: 5px;">
                                     <i class="fa fa-exclamation-triangle" title="Warning" role="img" aria-label="Warning"/>
-                                    <t t-esc="product.virtual_available" />
+                                    <t t-esc="int_virtual_available" />
                                     <t t-esc="product.uom_name" />
  available
                                 </div>
@@ -122,7 +124,6 @@
  Temporarily out of stock</div>
 
                     </t>
-                    <!-- <span t-esc="product.virtual_available" /> -->
                 </div>
             </div>
         </xpath>

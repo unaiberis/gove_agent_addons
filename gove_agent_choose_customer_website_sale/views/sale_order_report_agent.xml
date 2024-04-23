@@ -15,7 +15,7 @@
                     <div t-field="doc.agent_customer" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
                 </t>
             </t>
-            <t t-if="not doc.agent_customer">
+            <t t-else="">
                 <t t-set="address">
                     <div t-if="doc.partner_invoice_id.ref" name="customer_code">
                         <strong> Customer code: <span t-field="doc.partner_invoice_id.ref"/>
@@ -46,7 +46,7 @@
                     </t>
                 </t>
             </t>
-            <t t-if="not doc.agent_customer">
+            <t t-else="">
                 <t t-if="doc.partner_invoice_id == doc.partner_shipping_id or doc.partner_shipping_id != doc.partner_invoice_id">
                     <t t-set="information_block">
                         <strong>Invoicing Address:</strong>

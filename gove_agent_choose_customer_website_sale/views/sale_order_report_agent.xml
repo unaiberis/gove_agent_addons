@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <template id="report_saleorder_document_inherit" inherit_id="gove_reports.report_sale_order_gove_doc">
-        <xpath expr="//t[@t-set='address']" position="replace">
+        <xpath expr="//t[@t-call='gove_reports.external_layout_gove']/t[1]" position="replace">
             <t t-if="doc.agent_customer">
                 <t t-set="address">
                     <div t-if="doc.agent_customer.ref" name="customer_code">
@@ -14,6 +14,23 @@
                     <span t-field="doc.partner_shipping_id.name"/>
                     <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
                 </t>
+            </t>
+            <t t-else="">
+                <t t-set="address">
+                    <div t-if="doc.partner_invoice_id.ref" name="customer_code">
+                        <strong> Customer code: <span t-field="doc.partner_invoice_id.ref"/>
+                        </strong>
+                    </div>
+                    <p/>
+                    <strong>Shipping Address:</strong>
+                    <br/>
+                    <span t-field="doc.partner_shipping_id.name"/>
+                    <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-call='gove_reports.external_layout_gove']/t[2]" position="replace">
+            <t t-if="doc.agent.customer">
                 <t t-if="doc.partner_invoice_id == doc.partner_shipping_id or doc.partner_shipping_id != doc.partner_invoice_id">
                     <t t-set="information_block">
                         <strong>Invoicing Address:</strong>
@@ -30,17 +47,6 @@
                 </t>
             </t>
             <t t-else="">
-                <t t-set="address">
-                    <div t-if="doc.partner_invoice_id.ref" name="customer_code">
-                        <strong> Customer code: <span t-field="doc.partner_invoice_id.ref"/>
-                        </strong>
-                    </div>
-                    <p/>
-                    <strong>Shipping Address:</strong>
-                    <br/>
-                    <span t-field="doc.partner_shipping_id.name"/>
-                    <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
-                </t>
                 <t t-if="doc.partner_invoice_id == doc.partner_shipping_id or doc.partner_shipping_id != doc.partner_invoice_id">
                     <t t-set="information_block">
                         <strong>Invoicing Address:</strong>
@@ -54,7 +60,7 @@
                             <span t-esc="partner.vat"/>
                         </p>
                     </t>
-                </t>-
+                </t>
             </t>
         </xpath>
     </template>

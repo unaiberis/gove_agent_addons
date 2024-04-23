@@ -30,7 +30,7 @@
             </t>
         </xpath>
         <xpath expr="//t[@t-call='gove_reports.external_layout_gove']/t[2]" position="replace">
-            <t t-if="doc.agent.customer">
+            <t t-if="doc.agent_customer">
                 <t t-if="doc.partner_invoice_id == doc.partner_shipping_id or doc.partner_shipping_id != doc.partner_invoice_id">
                     <t t-set="information_block">
                         <strong>Invoicing Address:</strong>

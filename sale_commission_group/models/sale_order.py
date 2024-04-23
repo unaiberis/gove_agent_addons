@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     agents_name = fields.Char(
-        string="Agents", compute="_compute_agents_name", store=True
+        string="Agents Name", compute="_compute_agents_name", store=True
     )
 
     @api.depends("order_line.agent_ids")

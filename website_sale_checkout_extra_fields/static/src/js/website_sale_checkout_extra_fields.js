@@ -1,4 +1,4 @@
-odoo.define("website_sale_checkout_extra_fields.validate_fields", function (require) {
+odoo.define("website_sale_checkout_extra_fields.website_sale_checkout_extra_fields", function (require) {
   "use strict";
 
   require("web.dom_ready");

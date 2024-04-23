@@ -1,0 +1,76 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_customer_order_comment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-27 09:55+0000\n"
+"PO-Revision-Date: 2024-05-27 09:55+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: website_customer_order_comment
+#: model_terms:ir.ui.view,arch_db:website_customer_order_comment.report_saleorder_document_inherit
+msgid "Comentario de cliente:"
+msgstr ""
+
+#. module: website_customer_order_comment
+#: model:ir.model,name:website_customer_order_comment.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: website_customer_order_comment
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_sale_order__customer_comment
+#: model_terms:ir.ui.view,arch_db:website_customer_order_comment.custom_customer_view_sale_order_inherit_form
+#: model_terms:ir.ui.view,arch_db:website_customer_order_comment.view_website_config_settings_customer_comments_inherit
+#: model_terms:ir.ui.view,arch_db:website_customer_order_comment.website_sale_customer_comment
+msgid "Customer Order Comment"
+msgstr "Comentario Cliente"
+
+#. module: website_customer_order_comment
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_website__display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: website_customer_order_comment
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_res_config_settings__is_customer_comment_features
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_website__is_customer_comment_features
+msgid "Do you want to disable customer order comment feature"
+msgstr ""
+
+#. module: website_customer_order_comment
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_sale_order__id
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_website__id
+msgid "ID"
+msgstr ""
+
+#. module: website_customer_order_comment
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_sale_order____last_update
+#: model:ir.model.fields,field_description:website_customer_order_comment.field_website____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: website_customer_order_comment
+#: model:ir.model,name:website_customer_order_comment.model_sale_order
+msgid "Sale Order"
+msgstr ""
+
+#. module: website_customer_order_comment
+#: model:ir.model,name:website_customer_order_comment.model_website
+msgid "Website"
+msgstr "Sitio web"
+
+#. module: website_customer_order_comment
+#: model_terms:ir.ui.view,arch_db:website_customer_order_comment.website_sale_customer_comment
+msgid "Write a comment..."
+msgstr "Escribe un comentario..."

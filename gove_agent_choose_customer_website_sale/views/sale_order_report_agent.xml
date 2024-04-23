@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="report_saleorder_document_inherit" inherit_id="gove_reports.report_sale_order_gove_doc">
+        <xpath expr="//t[@t-call='gove_reports.external_layout_gove']/t[1]" position="replace">
+            <t t-if="doc.agent_customer">
+                <t t-set="address">
+                    <div t-if="doc.agent_customer.ref" name="customer_code">
+                        <strong> Customer code: <span t-field="doc.agent_customer.ref"/>
+                        </strong>
+                    </div>
+                    <p/>
+                    <strong>Shipping Address:</strong>
+                    <br/>
+                    <t t-set="agent_customer_shipping_id" t-value="doc.agent_customer.address_get(['delivery']).get('delivery')" />
+                    <t t-set="partner_obj" t-if="agent_customer_shipping_id" t-value="request.env['res.partner'].browse(agent_customer_shipping_id)" />
+                    <span t-esc="partner_obj.name"/>
+                    <div t-esc="partner_obj" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-set="address">
+                    <div t-if="doc.partner_invoice_id.ref" name="customer_code">
+                        <strong> Customer code: <span t-field="doc.partner_invoice_id.ref"/>
+                        </strong>
+                    </div>
+                    <p/>
+                    <strong>Shipping Address:</strong>
+                    <br/>
+                    <span t-field="doc.partner_shipping_id.name"/>
+                    <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-set='information_block']" position="replace">
+            <t t-if="doc.agent_customer">
+                <t t-set="information_block">
+                    <strong>Invoicing Address:</strong>
+                    <br/>
+                    <t t-set="partner" t-if="not doc.partner_invoice_id.parent_id" t-value="doc.agent_customer"/>
+                    <t t-set="partner" t-if="doc.partner_invoice_id.parent_id" t-value="doc.agent_customer.parent_id"/>
+                    <span t-esc="partner.name"/>
+                    <div t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}"/>
+                    <p t-if="partner.vat">
+                        <span>VAT: </span>
+                        <span t-esc="partner.vat"/>
+                    </p>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-set="information_block">
+                    <strong>Invoicing Address:</strong>
+                    <br/>
+                    <t t-set="partner" t-if="not doc.partner_invoice_id.parent_id" t-value="doc.partner_invoice_id"/>
+                    <t t-set="partner" t-if="doc.partner_invoice_id.parent_id" t-value="doc.partner_invoice_id.parent_id"/>
+                    <span t-esc="partner.name"/>
+                    <div t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}"/>
+                    <p t-if="partner.vat">
+                        <span>VAT: </span>
+                        <span t-esc="partner.vat"/>
+                    </p>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -6,54 +6,16 @@
                 <div class="card-body">
                     <div>
                         <b>Assigned Customer:</b>
-                        <t
-                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().name" />
+                        <t t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().name" />
                     </div>
                 </div>
-                <div class="card-body">
-                    <div>
-                        <b>Modo de pago utilizado por el cliente:</b>
-                        <t
-                            t-esc="request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo().customer_payment_mode_id.sudo().name" />
-                    </div>
-                </div>
-                <t t-if="request.website.sale_get_order().order_comments">
-                    <div class="card-body">
-                        <div>
-                            <b>Comentario de la compra:</b>
-                            <t
-                                t-esc="request.website.sale_get_order().order_comments" />
-                        </div>
-                    </div>
-                </t>
             </div>
-            <t
-                t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo()">
+            <t t-if="not request.env['res.partner'].sudo().browse(request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent).sudo()">
                 <p>Please select a customer</p>
             </t>
         </t>
     </template>
 
-    <template id="customer_card">
-        <div class="card mt-3 mb-3 o_wsaac_agent_customers">
-            <div class="card-body">
-                <div>
-                    <b>Modo de pago utilizado por el cliente:</b>
-                    <t
-                        t-esc="request.env.user.partner_id.sudo().customer_payment_mode_id.sudo().name if request.env.user.partner_id and request.env.user.partner_id.customer_payment_mode_id else ''" />
-                </div>
-            </div>
-            <t t-if="request.website.sale_get_order().order_comments">
-                <div class="card-body">
-                    <div>
-                        <b>Comentario de la compra:</b>
-                        <t
-                            t-esc="request.website.sale_get_order().order_comments" />
-                    </div>
-                </div>
-            </t>
-        </div>
-    </template>
 
     <!-- Choose customer "Update Customer" Option -->
     <template id="choose_customer_from_agent">
@@ -62,15 +24,13 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
 
             <div class="row">
-                <t
-                    t-if="not request.website.sale_get_order() or request.website.sale_get_order()">
+                <t t-if="not request.website.sale_get_order() or request.website.sale_get_order()">
 
                     <div class="col-md-6 mb-3">
                         <h3 class="mb-3">Assign Customer to Order</h3>
                         <select name="agent_customer" class="form-control">
                             <option value="">Select a customer...</option>
-                            <t t-foreach="request.env.user.sudo().partner_id.agent_customers"
-                                t-as="customer">
+                            <t t-foreach="request.env.user.sudo().partner_id.agent_customers" t-as="customer">
                                 <option t-att-value="customer.id" t-field="customer.name" />
                             </t>
                         </select>
@@ -80,8 +40,7 @@
 
                 <t t-if="selected_customer and selected_customer.exists()">
                     <div class="col-md-6" t-if="selected_customer">
-                        <h1 class="text-uppercase font-weight-bold text-center"
-                            style="padding: 15px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        <h1 class="text-uppercase font-weight-bold text-center" style="padding: 15px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         animation: growShrink 4s infinite;">
                             <t t-esc="selected_customer.name" />
                         </h1>
@@ -104,13 +63,11 @@
 
                 <t t-else="">
                     <div class="col-md-6" style="margin: auto; text-align: center;">
-                        <div class="bg-light p-3"
-                            style="border: 1px solid #ccc; border-radius: 5px;">
+                        <div class="bg-light p-3" style="border: 1px solid #ccc; border-radius: 5px;">
                             <p class="text-center">No customer selected yet.</p>
                             <p class="text-center">Please choose a customer to be able to continue
                                 purchasing with an agent user</p>
-                            <t
-                                t-if="request.website.sale_get_order() and request.website.sale_get_order().cart_quantity != 0">
+                            <t t-if="request.website.sale_get_order() and request.website.sale_get_order().cart_quantity != 0">
                                 <p class="text-center text-muted">Your cart will be emptied when you
                                     change the customer</p>
                             </t>
@@ -122,66 +79,46 @@
         </form>
     </template>
 
+    <!-- Show assigned customer and its payment mode in the cart, payment and confirmation page -->
 
-    <template
-        id="cart" inherit_id="website_sale.cart">
-        <xpath expr="//div[hasclass('clearfix')]" position="after">
-            <t t-if="selected_customer">
-                <!-- Show assigned customer and its payment mode in the cart page -->
-                <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
-            </t>
-        </xpath>
-    </template>
-
-
-    <template
-        id="payment" inherit_id="website_sale.payment">
-        <xpath expr="//div[@id='payment_method']" position="before">
-            <!-- Show assigned customer and its payment mode in the payment page -->
-            <t
-                t-if="request.env['agent.partner'].sudo().search([('agent_id', '=', request.env.user.sudo().partner_id.id)], limit=1).customer_id_chosen_by_agent != 0">
-                <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
-            </t>
-            <t elif="not request.env.user.sudo().partner_id.agent">
-                <t t-call="website_sale_assign_agent_customer.customer_card" />
-            </t>
-        </xpath>
-    </template>
-
-    <template
-        id="confirmation" inherit_id="website_sale.confirmation">
+    <template id="confirmation" inherit_id="website_sale.confirmation">
         <xpath expr="//div[hasclass('oe_cart')]" position="after">
-            <t t-if="selected_customer">
-                <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
-            </t>
+            <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
+        </xpath>
+    </template>
+
+    <template id="payment" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
+        </xpath>
+    </template>
+
+    <template id="cart" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('clearfix')]" position="after">
+            <t t-call="website_sale_assign_agent_customer.agent_customer_card" />
         </xpath>
     </template>
 
     <!-- REMOVE FACTURATION FROM PAYMENT IF AGENT -->
 
     <template inherit_id="website_sale.payment" id="payment_remove_facturation_of_the_agent">
-        <xpath
-            expr="//div[hasclass('card')]" position="replace">
+        <xpath expr="//div[hasclass('card')]" position="replace">
             <t t-if="not request.env.user.sudo().partner_id.agent">
                 <div class="card">
                     <div class="card-body" id="shipping_and_billing">
-                        <a class='float-right no-decoration' href='/shop/checkout'><i
-                                class="fa fa-edit" /> Edit</a>
-                        <t t-set="same_shipping"
-                            t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
+                        <a class='float-right no-decoration' href='/shop/checkout'>
+                            <i class="fa fa-edit" />
+ Edit</a>
+                        <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                         <div>
                             <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>
-                                : </b>
-                            <span t-esc='order.partner_id'
-                                t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
-                                class="address-inline" />
+                                : 
+                            </b>
+                            <span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline" />
                         </div>
-                        <div t-if="not same_shipping and not only_services"
-                            groups="sale.group_delivery_invoice_address">
+                        <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address">
                             <b>Shipping: </b>
-                            <span t-esc='order.partner_shipping_id'
-                                t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
-                                class="address-inline" />
+                            <span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline" />
                         </div>
                     </div>
                 </div>
@@ -190,6 +127,7 @@
         </xpath>
     </template>
 
+<<<<<<< HEAD
     <!-- ADD PCT, PVP AND STOCK OR NO STOCK IN EACH PRODUCT -->
 
     <template
@@ -346,13 +284,13 @@
         </xpath>
     </template>
 
+=======
+>>>>>>> 14.0-add-website_sale_cart_quantity_shop-prueba1
 
     <!-- insert_customer_choose_option_and_selected_client_in_product_list -->
-    <template id="insert_customer_choose_option_and_selected_client_in_product_list"
-        inherit_id="website_sale_assign_agent_customer.products_inserted">
+    <template id="insert_customer_choose_option_and_selected_client_in_product_list" inherit_id="website_sale_assign_agent_customer.products_inserted">
         <xpath expr="//div[@id='oe_structure_website_sale_products_1']" position="before">
-            <t
-                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
+            <t t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
                 <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
             </t>
         </xpath>
@@ -361,13 +299,11 @@
     <template id="products" inherit_id="website_sale.products">
         <xpath expr="//t[@t-call='website.layout']" position="replace">
             <!-- If user is agent and a customer is selected show products -->
-            <t
-                t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
+            <t t-if="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent and selected_customer">
                 <t t-call="website_sale_assign_agent_customer.products_inserted" />
             </t>
             <!-- If user is agent and a customer is not selected then choose a customer -->
-            <t
-                t-elif="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent">
+            <t t-elif="not request.website.is_public_user() and request.env.user.sudo().partner_id.agent">
                 <t t-call="website.layout">
                     <t t-call="website_sale_assign_agent_customer.choose_customer_from_agent" />
                 </t>
@@ -378,4 +314,5 @@
             </t>
         </xpath>
     </template>
+
 </odoo>

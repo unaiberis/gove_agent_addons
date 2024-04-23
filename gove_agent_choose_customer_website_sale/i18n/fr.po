@@ -1,0 +1,250 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* gove_agent_choose_customer_website_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-16 08:11+0000\n"
+"PO-Revision-Date: 2024-05-16 08:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.agent_customer_card_insert
+msgid "<b>Payment mode used by the customer:</b>"
+msgstr "\t<b>Mode de paiment:</b>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" title=\"Warning\"/>\n"
+" Temporarily out of stock"
+msgstr "Temporairement en rupture de stock"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\" title=\"Warning\" role=\"img\" aria-"
+"label=\"Warning\"/>"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" title=\"Avertissement\" role=\"img\""
+" aria-label=\"Avertissement\"/>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid ""
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
+"                                        Price</span>"
+msgstr ""
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
+"                                        Prix</span>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid ""
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
+"                                        RRP</span>"
+msgstr ""
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
+"                                        PPC</span>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
+msgid "<span>VAT: </span>"
+msgstr "<span>TVA : </span>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
+msgid ""
+"<strong>Invoicing Address:</strong>\n"
+"                    <br/>"
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
+msgid ""
+"<strong>Shipping Address:</strong>\n"
+"                    <br/>"
+msgstr ""
+"<strong>Adresse de livraison :</strong>\n"
+"                    <br/>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__woo_import_already_reset
+msgid "Already Reset Once with Planned Action"
+msgstr "Déjà réinitialisé une fois avec une action planifiée"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.constraint,message:gove_agent_choose_customer_website_sale.constraint_offer_category_pricelist_unique_combination
+msgid "An entry with this combination already exists."
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.remove_pricelist_from_product_from_website_sale
+msgid "CODE:"
+msgstr "CODE :"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model,name:gove_agent_choose_customer_website_sale.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model,name:gove_agent_choose_customer_website_sale.model_coupon_program
+msgid "Coupon Program"
+msgstr "Campagne de Coupon"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
+msgid "Customer code:"
+msgstr "Code client :"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__display_name
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_partner__extra_computation_enabled
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_users__extra_computation_enabled
+msgid "Extra Coupon Computation enabler"
+msgstr "Activateur de calcul de coupon supplémentaire"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__purchase_finished
+msgid "Finished Purchase"
+msgstr "Achat terminé"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__offer_html
+msgid "HTML text"
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_coupon_program__id
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__id
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_product_template__id
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website__id
+msgid "ID"
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "In stock"
+msgstr "En stock"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist____last_update
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_product_template____last_update
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_partner____last_update
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order____last_update
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "ON OFFER"
+msgstr "EN OFFRE"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.actions.act_window,name:gove_agent_choose_customer_website_sale.action_offer_category_pricelist
+msgid "Ofertas por Categoría y Lista de Precios"
+msgstr "Offre par catégorie et liste de prix"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model,name:gove_agent_choose_customer_website_sale.model_offer_category_pricelist
+msgid "Offer per Category and Pricelist"
+msgstr "Offre par catégorie et liste de prix"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.ui.menu,name:gove_agent_choose_customer_website_sale.menuitem_offer_category_pricelist
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.view_offer_category_pricelist_tree
+msgid "Offers per Category and Price List"
+msgstr "Offres par catégorie et liste de prix"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_product_product__is_on_offer
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_product_template__is_on_offer
+msgid "On Offer"
+msgstr "En Offre"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__pricelist_id
+msgid "Pricelist"
+msgstr "Liste de prix"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__category_id
+msgid "Product Category"
+msgstr "Catégorie de produit"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model,name:gove_agent_choose_customer_website_sale.model_product_template
+msgid "Product Template"
+msgstr "Modèle d'article"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model,name:gove_agent_choose_customer_website_sale.model_sale_order
+msgid "Sale Order"
+msgstr ""
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model,name:gove_agent_choose_customer_website_sale.model_website
+msgid "Website"
+msgstr "Site web"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "You already added"
+msgstr "Vous l'avez déjà ajouté"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "all"
+msgstr "tout"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "available"
+msgstr "disponible"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "in your cart."
+msgstr "dans votre panier."

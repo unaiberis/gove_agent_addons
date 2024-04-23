@@ -29,37 +29,33 @@
                 </t>
             </t>
         </xpath>
-        <xpath expr="//t[@t-call='gove_reports.external_layout_gove']//t[2]" position="replace">
+        <xpath expr="//t[@t-set='information_block']" position="replace">
             <t t-if="doc.agent_customer">
-                <t t-if="doc.partner_invoice_id == doc.partner_shipping_id or doc.partner_shipping_id != doc.partner_invoice_id">
-                    <t t-set="information_block">
-                        <strong>Invoicing Address:</strong>
-                        <br/>
-                        <t t-set="partner" t-if="not doc.partner_invoice_id.parent_id" t-value="doc.agent_customer"/>
-                        <t t-set="partner" t-if="doc.partner_invoice_id.parent_id" t-value="doc.agent_customer.parent_id"/>
-                        <span t-esc="partner.name"/>
-                        <div t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}"/>
-                        <p t-if="partner.vat">
-                            <span>VAT: </span>
-                            <span t-esc="partner.vat"/>
-                        </p>
-                    </t>
+                <t t-set="information_block">
+                    <strong>Invoicing Address:</strong>
+                    <br/>
+                    <t t-set="partner" t-if="not doc.partner_invoice_id.parent_id" t-value="doc.agent_customer"/>
+                    <t t-set="partner" t-if="doc.partner_invoice_id.parent_id" t-value="doc.agent_customer.parent_id"/>
+                    <span t-esc="partner.name"/>
+                    <div t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}"/>
+                    <p t-if="partner.vat">
+                        <span>VAT: </span>
+                        <span t-esc="partner.vat"/>
+                    </p>
                 </t>
             </t>
             <t t-else="">
-                <t t-if="doc.partner_invoice_id == doc.partner_shipping_id or doc.partner_shipping_id != doc.partner_invoice_id">
-                    <t t-set="information_block">
-                        <strong>Invoicing Address:</strong>
-                        <br/>
-                        <t t-set="partner" t-if="not doc.partner_invoice_id.parent_id" t-value="doc.partner_invoice_id"/>
-                        <t t-set="partner" t-if="doc.partner_invoice_id.parent_id" t-value="doc.partner_invoice_id.parent_id"/>
-                        <span t-esc="partner.name"/>
-                        <div t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}"/>
-                        <p t-if="partner.vat">
-                            <span>VAT: </span>
-                            <span t-esc="partner.vat"/>
-                        </p>
-                    </t>
+                <t t-set="information_block">
+                    <strong>Invoicing Address:</strong>
+                    <br/>
+                    <t t-set="partner" t-if="not doc.partner_invoice_id.parent_id" t-value="doc.partner_invoice_id"/>
+                    <t t-set="partner" t-if="doc.partner_invoice_id.parent_id" t-value="doc.partner_invoice_id.parent_id"/>
+                    <span t-esc="partner.name"/>
+                    <div t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}"/>
+                    <p t-if="partner.vat">
+                        <span>VAT: </span>
+                        <span t-esc="partner.vat"/>
+                    </p>
                 </t>
             </t>
         </xpath>

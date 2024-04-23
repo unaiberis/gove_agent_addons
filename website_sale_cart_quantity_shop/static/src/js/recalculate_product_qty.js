@@ -34,28 +34,50 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                 this._super.apply(this, arguments);
                 var self = this;
 
+                function debounce(func, delay) {
+                    let timeoutId;
+                    return function (...args) {
+                        clearTimeout(timeoutId);
+                        timeoutId = setTimeout(() => {
+                            func.apply(this, args);
+                        }, delay);
+                    };
+                }
+
+
+                // Variables para acumular los incrementos y decrementos
+                var totalIncrement = 0;
+                var totalDecrement = 0;
+
+                // Debounce function for handleButtonClick
+                const debounceHandleButtonClick = debounce(function (inputField, increment, event) {
+                    self.modifiedInputField = inputField;
+                    self.oldValue = parseInt(inputField.val()) || 0;
+                    self.newValue = Math.max(self.oldValue + increment, 0);
+                    inputField.data('oldValue', self.newValue);
+                    self.custom_add_qty = increment;
+                    self.changeTriggeredByButton = true;
+                    self._onClickAdd(event);
+
+                    // Reset totalIncrement and totalDecrement to zero after handling the click
+                    totalIncrement = 0;
+                    totalDecrement = 0;
+                }, 500); // Debounce time set to 2000 milliseconds (2 seconds)
+
+                // Click event handler for the plus button
                 $(".fa.fa-plus").parent().click(function (event) {
                     event.preventDefault();
-                    var inputField = $(this).parent().siblings("input.form-control.quantity");
-                    self.modifiedInputField = inputField;
-                    self.oldValue = parseInt(inputField.val()) || 0;
-                    self.newValue = self.oldValue + 1;
-                    inputField.data('oldValue', self.newValue);
-                    self.custom_add_qty = 1;
-                    self.changeTriggeredByButton = true;
-                    self._onClickAdd(event);
+                    totalIncrement += 1;
+                    const inputField = $(this).parent().siblings("input.form-control.quantity");
+                    debounceHandleButtonClick(inputField, totalIncrement - totalDecrement, event);
                 });
 
+                // Click event handler for the minus button
                 $(".fa.fa-minus").parent().click(function (event) {
                     event.preventDefault();
-                    var inputField = $(this).parent().siblings("input.form-control.quantity");
-                    self.modifiedInputField = inputField;
-                    self.oldValue = parseInt(inputField.val()) || 0;
-                    self.newValue = Math.max(self.oldValue - 1, 0);
-                    inputField.data('oldValue', self.newValue);
-                    self.custom_add_qty = -1;
-                    self.changeTriggeredByButton = true;
-                    self._onClickAdd(event);
+                    totalDecrement += 1;
+                    const inputField = $(this).parent().siblings("input.form-control.quantity");
+                    debounceHandleButtonClick(inputField, totalIncrement - totalDecrement, event);
                 });
 
                 $("input.form-control.quantity").on("change", function (event) {

@@ -169,7 +169,7 @@ class Website(models.Model):
         self.ensure_one()
         partner = self.env.user.partner_id
         sale_order_id = request.session.get('sale_order_id')
-        check_fpos = False
+        check_fpos = False 
         if not sale_order_id and not self.env.user._is_public():
             last_order = partner.last_website_so_id
             if last_order:

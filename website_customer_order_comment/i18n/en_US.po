@@ -18,12 +18,12 @@ msgstr ""
 #. module: website_customer_order_comment
 #: model_terms:ir.ui.view,arch_db:website_customer_order_comment.report_saleorder_document_inherit
 msgid "Customer Comment:"
-msgstr ""
+msgstr "Customer Comment:"
 
 #. module: website_customer_order_comment
 #: model:ir.model,name:website_customer_order_comment.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuración de la aplicación"
+msgstr "Config Settings"
 
 #. module: website_customer_order_comment
 #: model:ir.model.fields,field_description:website_customer_order_comment.field_sale_order__customer_comment
@@ -31,7 +31,7 @@ msgstr "Configuración de la aplicación"
 #: model_terms:ir.ui.view,arch_db:website_customer_order_comment.view_website_config_settings_customer_comments_inherit
 #: model_terms:ir.ui.view,arch_db:website_customer_order_comment.website_sale_customer_comment
 msgid "Customer Order Comment"
-msgstr ""
+msgstr "Customer Order Comment"
 
 #. module: website_customer_order_comment
 #: model:ir.model.fields,field_description:website_customer_order_comment.field_res_config_settings__display_name
@@ -44,7 +44,7 @@ msgstr "Display Name"
 #: model:ir.model.fields,field_description:website_customer_order_comment.field_res_config_settings__is_customer_comment_features
 #: model:ir.model.fields,field_description:website_customer_order_comment.field_website__is_customer_comment_features
 msgid "Do you want to disable customer order comment feature"
-msgstr ""
+msgstr "Do you want to disable customer order comment feature"
 
 #. module: website_customer_order_comment
 #: model:ir.model.fields,field_description:website_customer_order_comment.field_res_config_settings__id

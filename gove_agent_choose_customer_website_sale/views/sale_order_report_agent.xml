@@ -11,8 +11,10 @@
                     <p/>
                     <strong>Shipping Address:</strong>
                     <br/>
-                    <span t-field="doc.agent_customer.name"/>
-                    <div t-field="doc.agent_customer" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                    <t t-set="agent_customer_shipping_id" t-value="doc.agent_customer.address_get(['delivery']).get('delivery')" />
+                    <t t-set="partner_obj" t-if="agent_customer_shipping_id" t-value="request.env['res.partner'].browse(agent_customer_shipping_id)" />
+                    <span t-esc="partner_obj.name"/>
+                    <div t-esc="partner_obj" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
                 </t>
             </t>
             <t t-else="">

@@ -26,7 +26,7 @@
         "views/website_sale.xml",
         "views/website_front_page.xml",
         "views/my_account_page_remove_links.xml",
-        "views/show_draft_finished_column.xml",
+        "views/sale_order_show_draft_finished_column.xml",
         "views/sale_order_report_agent.xml",
 #       "views/action_server_base_automation.xml",
         "security/ir.model.access.csv"

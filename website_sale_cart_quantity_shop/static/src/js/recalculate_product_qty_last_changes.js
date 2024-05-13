@@ -24,73 +24,46 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
         });
 
         publicWidget.registry.WebsiteSale.include({
-            custom_add_qty: 0, // Definir custom_add_qty como propiedad de WebsiteSale
-            changeTriggeredByButton: false, // Bandera para indicar si el cambio fue provocado por los botones
+            custom_add_qty: 0, // Define custom_add_qty as a property of WebsiteSale
+            changeTriggeredByButton: false, // Flag to indicate if the change was triggered by the buttons
             modifiedInputField: null, // Declare modifiedInputField outside the start function
             oldValue: 0,
             newValue: 0,
-
+            timeoutInProgress: false, // Variable to track if a timeout is in progress
+            totalIncrement: 0, // Variable to accumulate the increments
+            totalDecrement: 0, // Variable to accumulate the decrements
+        
             start: function () {
                 this._super.apply(this, arguments);
                 var self = this;
-
-                function debounce(func, delay) {
-                    let timeoutId;
-                    return function (...args) {
-                        clearTimeout(timeoutId);
-                        timeoutId = setTimeout(() => {
-                            func.apply(this, args);
-                        }, delay);
-                    };
-                }
-
-
-                // Variables para acumular los incrementos y decrementos
-                var totalIncrement = 0;
-                var totalDecrement = 0;
-
-                // Debounce function for handleButtonClick
-                const debounceHandleButtonClick = debounce(function (inputField, increment, event) {
-                    self.modifiedInputField = inputField;
-                    self.oldValue = parseInt(inputField.val()) || 0;
-                    self.newValue = Math.max(self.oldValue + increment, 0);
-                    inputField.data('oldValue', self.newValue);
-                    self.custom_add_qty = increment;
-                    self.changeTriggeredByButton = true;
-                    self._onClickAdd(event);
-
-                    // Reset totalIncrement and totalDecrement to zero after handling the click
-                    totalIncrement = 0;
-                    totalDecrement = 0;
-                }, 300);
-
+        
                 // Click event handler for the plus button
                 $(".fa.fa-plus").parent().click(function (event) {
                     event.preventDefault();
-                    totalIncrement += 1;
+                    self.totalIncrement += 1;
                     const inputField = $(this).parent().siblings("input.form-control.quantity");
-                    debounceHandleButtonClick(inputField, totalIncrement - totalDecrement, event);
+                    self.handleButtonClick(inputField, self.totalIncrement - self.totalDecrement, event);
                 });
-
+        
                 // Click event handler for the minus button
                 $(".fa.fa-minus").parent().click(function (event) {
                     event.preventDefault();
-                    totalDecrement += 1;
+                    self.totalDecrement += 1;
                     const inputField = $(this).parent().siblings("input.form-control.quantity");
-                    debounceHandleButtonClick(inputField, totalIncrement - totalDecrement, event);
+                    self.handleButtonClick(inputField, self.totalIncrement - self.totalDecrement, event);
                 });
-
+        
                 $("input.form-control.quantity").on("change", function (event) {
                     self.modifiedInputField = $(this);
-
+        
                     if (!self.changeTriggeredByButton) {
                         self.oldValue = $(this).data('oldValue') || 0;
                         self.newValue = parseInt($(this).val().replace(',', '.')) || 0;
-
+        
                         if (self.newValue < 0 || isNaN(self.newValue)) {
                             self.newValue = 0;
                         }
-
+        
                         $(this).val(self.newValue);
                         $(this).data('oldValue', self.newValue);
                         self.custom_add_qty = self.newValue - self.oldValue;
@@ -100,6 +73,33 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                     }
                 });
             },
+        
+            handleButtonClick: function (inputField, increment, event) {
+                if (this.timeoutInProgress) {
+                    console.log("A timeout is already in progress. Skipping this action.");
+                    return;
+                }
+        
+                this.modifiedInputField = inputField;
+                this.oldValue = parseInt(inputField.val()) || 0;
+                this.newValue = Math.max(this.oldValue + increment, 0);
+                inputField.data('oldValue', this.newValue);
+                this.custom_add_qty = increment;
+                this.changeTriggeredByButton = true;
+        
+                var self = this;
+                this.timeoutInProgress = true;
+                setTimeout(function () {
+                    self._onClickAdd(event);
+                    self.timeoutInProgress = false;
+                    self.resetTotalCounts(); 
+                }, 500);
+            },
+        
+            resetTotalCounts: function () {
+                this.totalIncrement = 0;
+                this.totalDecrement = 0;
+            },            
 
             _onClickAdd: function (ev) {
                 this.isDynamic = true;

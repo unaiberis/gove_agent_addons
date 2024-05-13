@@ -3,6 +3,9 @@ from odoo import fields, models, api
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    is_on_offer = fields.Boolean(string="On Offer", default=False, store=True)
+
+
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, **kwargs):
         
         combination_info = super(ProductTemplate, self)._get_combination_info(

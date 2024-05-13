@@ -19,14 +19,14 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
             $("input.form-control.quantity").each(function () {
                 var newValue = parseInt($(this).val().replace(',', '.')) || 0;
                 $(this).val(newValue);
-                $(this).data('oldValue', newValue); // Guardar el valor inicial como oldValue
+                $(this).data('oldValue', newValue);
             });
         });
 
         publicWidget.registry.WebsiteSale.include({
-            custom_add_qty: 0, // Definir custom_add_qty como propiedad de WebsiteSale
-            changeTriggeredByButton: false, // Bandera para indicar si el cambio fue provocado por los botones
-            modifiedInputField: null, // Declare modifiedInputField outside the start function
+            custom_add_qty: 0,
+            changeTriggeredByButton: false,
+            modifiedInputField: null,
             oldValue: 0,
             newValue: 0,
 
@@ -137,7 +137,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                     self.newValue = parseInt(data.product_cart_qty) || 0;
                     $inputField.data('oldValue', self.newValue);
                     $inputField.val(self.newValue);
-                    self.changeTriggeredByButton = true;
+                    self.changeTriggeredByButton = false;
 
                     if (data.product_cart_qty == data.product_available_qty && data.product_cart_qty != 0) {
                         $inputField.css({

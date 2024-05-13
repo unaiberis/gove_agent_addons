@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="default_code" position="after">
-                <field name="is_on_offer" optional="show" />
+                <field name="is_on_offer" optional="hide" />
             </field>
         </field>
     </record>
@@ -16,7 +16,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='website_sequence']" position="after">
-                 <field name="is_on_offer" optional="show" />
+                 <field name="is_on_offer" />
             </xpath>
         </field>
     </record>

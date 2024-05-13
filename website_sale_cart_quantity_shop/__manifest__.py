@@ -10,6 +10,7 @@
     "website": "http://www.avanzosc.es",
     "license": "AGPL-3",
     "depends": [
+        "stock",
         "website_sale",
     ],
     "data": [

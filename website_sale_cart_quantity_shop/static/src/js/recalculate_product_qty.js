@@ -143,7 +143,7 @@ odoo.define("website_sale_cart_quantity_shop.recalculate_product_qty", function 
                         $inputField.css({
                             "color": "white",
                             "background-color": "black",
-                            "font-weight": "bold"
+                            "font-weight": "bold",
                         });
                     } else {
                         $inputField.css({

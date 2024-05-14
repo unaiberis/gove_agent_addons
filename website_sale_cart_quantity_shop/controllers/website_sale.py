@@ -2,11 +2,14 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 import json
+import logging
 
 from odoo import fields
 from odoo.http import request, route
 
 from odoo.addons.website_sale.controllers.main import WebsiteSaleForm
+
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteSaleForm(WebsiteSaleForm):
@@ -23,6 +26,7 @@ class WebsiteSaleForm(WebsiteSaleForm):
     ):
 
         sale_order = request.website.sale_get_order(force_create=True)
+        _logger.info(f"\n\nCART UPDATE JSON FROM SHOP User Name: {request.env.user.sudo().partner_id.name}\n")
 
         if sale_order.state != "draft":
             request.session["sale_order_id"] = None
@@ -89,5 +93,11 @@ class WebsiteSaleForm(WebsiteSaleForm):
 
         product = request.env['product.product'].sudo().browse(product_id)
         value["product_available_qty"] = product.qty_available - product.outgoing_qty
+        _logger.info(f"\n\nCART UPDATE JSON FROM SHOP User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(f"\n\nCART UPDATE product_available_qty {value['product_available_qty']} User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(f"\n\nCART UPDATE cart_quantity {value['cart_quantity']} User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(f"\n\nCART UPDATE product_cart_qty {value['product_cart_qty']} User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(f"\n\nCART UPDATE website_sale.cart_lines {value['website_sale.cart_lines']} User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(f"\n\nCART UPDATE website_sale.short_cart_summary {value['website_sale.short_cart_summary']} User Name: {request.env.user.sudo().partner_id.name}\n")
 
         return value

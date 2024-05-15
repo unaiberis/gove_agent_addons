@@ -5,8 +5,7 @@
         <field name="name">offer.category.pricelist.tree</field>
         <field name="model">offer.category.pricelist</field>
         <field name="arch" type="xml">
-            <!-- <tree editable="top" create="1" delete="1" duplicate="1" name="offers_category_pricelist" string="Offers per Category and Price List"> -->
-            <tree>
+            <tree editable="top" create="1" delete="1" duplicate="1" name="offers_category_pricelist" string="Offers per Category and Price List">
                 <field name="category_id"/>
                 <field name="pricelist_id"/>
                 <field name="offer_html"/>

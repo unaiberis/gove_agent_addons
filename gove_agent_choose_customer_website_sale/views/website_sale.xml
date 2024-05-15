@@ -83,7 +83,7 @@
                         CODE: <t t-esc="product.default_code" />
                         </div>
                         <div t-if="product.is_on_offer" class="bg-danger text-white font-weight-bold rounded">
-                            EN OFERTA
+                            ON OFFER
                         </div>
                     </div>
 

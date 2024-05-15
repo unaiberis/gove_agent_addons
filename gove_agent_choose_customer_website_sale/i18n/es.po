@@ -209,7 +209,7 @@ msgstr "En oferta"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__pricelist_id
 msgid "Pricelist"
-msgstr "Lista de precios"
+msgstr "Tarifa"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__category_id

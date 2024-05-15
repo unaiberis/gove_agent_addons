@@ -183,5 +183,4 @@
             <attribute name="style">display: none;</attribute>
         </xpath>
     </template>
-
 </odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista árbol -->
+    <record id="view_offer_category_pricelist_tree" model="ir.ui.view">
+        <field name="name">offer.category.pricelist.tree</field>
+        <field name="model">offer.category.pricelist</field>
+        <field name="arch" type="xml">
+            <tree editable="top" create="1" delete="1" duplicate="1" name="offers_category_pricelist" string="Offers per Category and Price List">
+                <field name="category_id"/>
+                <field name="pricelist_id"/>
+                <field name="offer_html"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista formulario -->
+    <record id="view_offer_category_pricelist_form" model="ir.ui.view">
+        <field name="name">offer.category.pricelist.form</field>
+        <field name="model">offer.category.pricelist</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="category_id"/>
+                        <field name="pricelist_id"/>
+                        <field name="offer_html"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="action_offer_category_pricelist" model="ir.actions.act_window">
+        <field name="name">Ofertas por Categoría y Lista de Precios</field>
+        <field name="res_model">offer.category.pricelist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),(0, 0, {'view_id': ref('view_offer_category_pricelist_tree'), 'view_mode': 'tree'}), (0, 0, {'view_id': ref('view_offer_category_pricelist_form'), 'view_mode': 'form'})]"/>
+    </record>
+
+    <!-- MenuItem -->
+    <menuitem id="menuitem_offer_category_pricelist" name="Offers per Category and Price List" parent="website.menu_website_configuration" action="action_offer_category_pricelist"/>
+
+    <!-- Add offer in the beggining of product list depending on category and pricelist -->
+    <!-- We have custom templates in website_sale so be careful with inherit_id -->
+    <template id="custom_template_inherit_offer_category_pricelist_inserted" inherit_id="website_sale_assign_agent_customer.products_inserted" name="Offer Category Pricelist">
+        <xpath expr="//div[@id='products_grid']/*[1]" position="before">
+            <t t-set="offer_category_pricelist" t-value="request.env['offer.category.pricelist'].search([('category_id', '=', category.id), ('pricelist_id', '=', pricelist.id)])"/>
+            <t t-raw="offer_category_pricelist.offer_html" t-if="offer_category_pricelist"/>
+        </xpath>
+    </template>
+</odoo>

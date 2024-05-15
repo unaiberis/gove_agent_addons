@@ -5,4 +5,4 @@ portal_access_stock_location,Portal Stock Location Access,stock.model_stock_loca
 portal_access_stock_move,Portal Stock Move Access,stock.model_stock_move,base.group_portal,1,0,0,0
 portal_access_stock_quant,Portal Stock Quant Access,stock.model_stock_quant,base.group_portal,1,0,0,0
 portal_access_uom_uom,Portal UOM Access,uom.model_uom_uom,base.group_portal,1,0,0,0
-access_offer_category_pricelist,Access Offer Category Pricelist,model_offer_category_pricelist,,1,1,1,
+access_offer_category_pricelist,Access Offer Category Pricelist,model_offer_category_pricelist,,1,1,1,1

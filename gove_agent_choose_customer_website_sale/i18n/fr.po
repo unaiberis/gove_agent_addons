@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-15 11:45+0000\n"
-"PO-Revision-Date: 2024-05-15 11:45+0000\n"
+"POT-Creation-Date: 2024-05-16 08:11+0000\n"
+"PO-Revision-Date: 2024-05-16 08:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.agent_customer_card_insert
 msgid "<b>Payment mode used by the customer:</b>"
-msgstr "<b>Mode de paiement utilisé par le client :</b>"
+msgstr "\t<b>Mode de paiment:</b>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
@@ -127,11 +127,6 @@ msgid "Display Name"
 msgstr "Nom d'affichage"
 
 #. module: gove_agent_choose_customer_website_sale
-#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
-msgid "EN OFERTA"
-msgstr ""
-
-#. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_partner__extra_computation_enabled
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_res_users__extra_computation_enabled
 msgid "Extra Coupon Computation enabler"
@@ -171,6 +166,7 @@ msgstr "En stock"
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_website____last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
+
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__write_uid
 msgid "Last Updated by"
@@ -182,9 +178,14 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: gove_agent_choose_customer_website_sale
+#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
+msgid "ON OFFER"
+msgstr "EN OFFRE"
+
+#. module: gove_agent_choose_customer_website_sale
 #: model:ir.actions.act_window,name:gove_agent_choose_customer_website_sale.action_offer_category_pricelist
 msgid "Ofertas por Categoría y Lista de Precios"
-msgstr ""
+msgstr "Offre par catégorie et liste de prix"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_offer_category_pricelist
@@ -206,7 +207,7 @@ msgstr "En Offre"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__pricelist_id
 msgid "Pricelist"
-msgstr "Frais"
+msgstr "Liste de prix"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__category_id
@@ -221,7 +222,7 @@ msgstr "Modèle d'article"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_sale_order
 msgid "Sale Order"
-msgstr "Commande de vente"
+msgstr ""
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_website

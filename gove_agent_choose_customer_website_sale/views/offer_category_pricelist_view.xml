@@ -8,6 +8,7 @@
             <tree editable="top" create="1" delete="1" duplicate="1" name="offers_category_pricelist" string="Offers per Category and Price List">
                 <field name="category_id"/>
                 <field name="pricelist_id"/>
+                <field name="active"/>
                 <field name="offer_html"/>
             </tree>
         </field>
@@ -23,6 +24,7 @@
                     <group>
                         <field name="category_id"/>
                         <field name="pricelist_id"/>
+                        <field name="active"/>
                         <field name="offer_html"/>
                     </group>
                 </sheet>
@@ -46,7 +48,7 @@
     <template id="custom_template_inherit_offer_category_pricelist_inserted" inherit_id="website_sale_assign_agent_customer.products_inserted" name="Offer Category Pricelist">
         <xpath expr="//div[@id='products_grid']/*[1]" position="before">
             <t t-set="offer_category_pricelist" t-value="request.env['offer.category.pricelist'].search([('category_id', '=', category.id), ('pricelist_id', '=', pricelist.id)])"/>
-            <t t-raw="offer_category_pricelist.offer_html" t-if="offer_category_pricelist"/>
+            <t t-raw="offer_category_pricelist.offer_html" t-if="offer_category_pricelist and offer_category_pricelist.active"/>
         </xpath>
     </template>
 </odoo>

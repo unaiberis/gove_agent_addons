@@ -7,7 +7,7 @@ class OfferCategoryPricelist(models.Model):
     category_id = fields.Many2one('product.public.category', string='Product Category', required=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True)
 
-    offer_html = fields.Text(string='HTML text', translate=True)
+    offer_html = fields.Html(string='HTML text', translate=True)
 
     _sql_constraints = [
         ('unique_combination', 'unique(category_id, pricelist_id)', 'An entry with this combination already exists.'),

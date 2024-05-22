@@ -54,7 +54,21 @@ class MailMail(models.Model):
                     values = mail._send_prepare_values(partner=partner)
                     values['partner_id'] = partner.id
                     email_list.append(values)
-                    
+                                        
+
+                '''Code changed to send emails to surflogic.com'''
+                # Adding 'info@surflogic.com' as an additional recipient for the same email           
+                for email_entry in email_list[:]: 
+                    email_to = email_entry.get('email_to', [])
+                    if 'info@surflogic.com' not in email_to:
+                        # Duplicating the entry
+                        new_entry = email_entry.copy()
+                        new_entry['email_to'] = ['info@surflogic.com']
+                        # Adding 'info@surflogic.com' as an additional recipient for the same email
+                        email_entry['email_to'].append('info@surflogic.com')
+                        email_list.append(new_entry)
+
+                for partner in mail.recipient_ids:
                     agents = partner.agent_ids 
 
                     for agent in agents:
@@ -62,6 +76,7 @@ class MailMail(models.Model):
                             agent_values = mail._send_prepare_values(partner=agent)
                             agent_values['partner_id'] = agent.id
                             email_list.append(agent_values)
+
 
 
                 # headers
@@ -115,19 +130,6 @@ class MailMail(models.Model):
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
-
-
-                '''Code changed to send emails to surflogic.com'''
-                # Adding 'info@surflogic.com' as an additional recipient for the same email           
-                for email_entry in email_list[:]: 
-                    email_to = email_entry.get('email_to', [])
-                    if 'info@surflogic.com' not in email_to:
-                        # Duplicating the entry
-                        new_entry = email_entry.copy()
-                        new_entry['email_to'] = ['info@surflogic.com']
-                        # Adding 'info@surflogic.com' as an additional recipient for the same email
-                        email_entry['email_to'].append('info@surflogic.com')
-                        email_list.append(new_entry)
 
                 
                 

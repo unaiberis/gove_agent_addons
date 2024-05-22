@@ -11,6 +11,7 @@
     "license": "AGPL-3",
     "depends": [
         "portal",
+        "mail",
         "sale",
         "purchase",
         "sale_commission",

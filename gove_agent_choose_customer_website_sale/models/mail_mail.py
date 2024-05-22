@@ -1,4 +1,3 @@
-from odoo.addons.mail.models.mail_mail import MailMail
 
 import ast
 import base64
@@ -7,15 +6,18 @@ import psycopg2
 import smtplib
 import re
 
-from odoo import _
+from odoo import _, models
 from odoo import tools
+from odoo.addons.mail.models.mail_mail import MailMail as OriginalMailMail
+
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
 _logger = logging.getLogger(__name__)
 
-
-class MailMail(MailMail):
+class MailMail(models.Model):
+    _inherit = 'mail.mail'
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
+        _logger.warning("\n\n SEND MAIL\n \n")
         IrMailServer = self.env['ir.mail_server']
         IrAttachment = self.env['ir.attachment']
         for mail_id in self.ids:

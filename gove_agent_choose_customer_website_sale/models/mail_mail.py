@@ -42,14 +42,25 @@ class MailMail(MailMail):
                 attachments = [(a['name'], base64.b64decode(a['datas']), a['mimetype'])
                                for a in attachments.sudo().read(['name', 'datas', 'mimetype']) if a['datas'] is not False]
 
+                '''Code changed to send emails to agents'''
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if mail.email_to:
                     email_list.append(mail._send_prepare_values())
+
                 for partner in mail.recipient_ids:
                     values = mail._send_prepare_values(partner=partner)
-                    values['partner_id'] = partner
+                    values['partner_id'] = partner.id
                     email_list.append(values)
+                    
+                    agents = partner.agent_ids 
+
+                    for agent in agents:
+                        if partner.id in agent.agent_customers.ids:
+                            agent_values = mail._send_prepare_values(partner=agent)
+                            agent_values['partner_id'] = agent.id
+                            email_list.append(agent_values)
+
 
                 # headers
                 headers = {}
@@ -102,9 +113,9 @@ class MailMail(MailMail):
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
-                
-                     
-                     
+
+
+                '''Code changed to send emails to surflogic.com'''
                 # Adding 'info@surflogic.com' as an additional recipient for the same email           
                 for email_entry in email_list[:]: 
                     email_to = email_entry.get('email_to', [])

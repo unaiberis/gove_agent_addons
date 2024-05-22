@@ -14,19 +14,21 @@ class Home(PortalHome):
 
     @http.route('/')
     def index(self, **kw):
-        # Comprobar si el usuario está autenticado
+        # Comprobar si el usuario está autenticado 
         if request.env.user._is_public():
             _logger.info("\n\nIntento de acceso a la página principal por un usuario no autenticado\n\n")
             return http.local_redirect('/web/login', query=request.params, keep_hash=True)
         return super().index(**kw)
 
-    # Sobreescribir el método de redirección de inicio de sesión
+    # Sobreescribir el método de redirección de inicio de sesión para que 
+    # despues de autenticarse redireccione a "/"
     def _login_redirect(self, uid, redirect=None):
         return super()._login_redirect(uid, redirect="/")
     
 class WebsiteSale(BaseWebsiteSale):
 
     # Sobreescribir el método para manejar solicitudes a URLs que contienen /shop/
+    # y si no esta autenticado redireccione a la pantalla de inicio de sesión /web/login/
     @http.route()
     def shop(self, page=0, category=None, search="", ppg=False, **post):
         # Comprobar si el usuario está autenticado

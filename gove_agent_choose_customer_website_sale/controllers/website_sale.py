@@ -7,38 +7,45 @@ from datetime import datetime
 from odoo import fields, http
 from odoo.http import request
 
-from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import WebsiteSale
+from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import (
+    WebsiteSale,
+)
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
-from odoo.addons.website_sale_coupon_delivery.controllers.main import WebsiteSaleCouponDelivery
+from odoo.addons.website_sale_coupon_delivery.controllers.main import (
+    WebsiteSaleCouponDelivery,
+)
 
 
 _logger = logging.getLogger(__name__)
 
+
 class WebsiteSale(WebsiteSale):
-    
     @http.route()
     def payment_confirmation(self, **post):
-        
         order = request.website.sale_get_order()
 
         if order.agent_customer.id:
             order.partner_id = order.agent_customer.id
 
-        _logger.info(f"\n\nPAYMENT CONFIRMATION  User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(
+            f"\n\nPAYMENT CONFIRMATION  User Name: {request.env.user.sudo().partner_id.name}\n"
+        )
         self._check_payment_confirmation(create_mail_follower=True, **post)
 
         res = super().payment_confirmation(**post)
 
         request.env.user.partner_id.extra_computation_enabled = False
-        
+
         return res
-    
+
     @http.route()
     def payment(self):
         request.env.user.partner_id.extra_computation_enabled = True
-        _logger.info("\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True\n")
+        _logger.info(
+            "\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True\n"
+        )
         order = request.website.sale_get_order()
-        
+
         if order.agent_customer.id:
             order.partner_id = order.agent_customer.id
 
@@ -46,8 +53,9 @@ class WebsiteSale(WebsiteSale):
 
         return super().payment()
 
-
-    def _check_payment_confirmation(self, order=None, create_mail_follower=False, **post):
+    def _check_payment_confirmation(
+        self, order=None, create_mail_follower=False, **post
+    ):
         is_agent = request.env.user.partner_id.agent
         _logger.info(f"\n\n CHECK PAYMENT CONFIRMATION is_agent: {is_agent}\n")
 
@@ -114,12 +122,16 @@ class WebsiteSale(WebsiteSale):
             )
         )
 
-        if last_order and (not last_order_customer or last_order.id > last_order_customer.id):
+        if last_order and (
+            not last_order_customer or last_order.id > last_order_customer.id
+        ):
             order = self._update_order_info(order, last_order)
             order.agent_customer = int(
                 request.env["agent.partner"]
                 .sudo()
-                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .search(
+                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
+                )
                 .customer_id_chosen_by_agent
             )
             order.partner_id = request.env["res.partner"].browse(order.agent_customer)
@@ -152,7 +164,9 @@ class WebsiteSale(WebsiteSale):
 
     def _handle_mail_follower_creation(self, order):
         order.partner_id = order.agent_customer.id
-        _logger.info(f"\n\nONCHANGE before partner User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(
+            f"\n\nONCHANGE before partner User Name: {request.env.user.sudo().partner_id.name}\n"
+        )
         order.onchange_partner_id()
         order.user_id = request.env.user.id
         # Tipo = Pedido Surf

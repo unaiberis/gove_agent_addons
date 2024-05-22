@@ -9,7 +9,7 @@ class OfferCategoryPricelist(models.Model):
 
     offer_html = fields.Html(string='HTML text', translate=True)
 
-    active = fields.Boolean(string='Active', default=True)
+    is_on_web = fields.Boolean(string='Active on Web', default=True)
 
     _sql_constraints = [
         ('unique_combination', 'unique(category_id, pricelist_id)', 'An entry with this combination already exists.'),

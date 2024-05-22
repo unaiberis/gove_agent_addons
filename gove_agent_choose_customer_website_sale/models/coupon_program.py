@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 
 class CouponProgram(models.Model):
     _inherit = "coupon.program"
-
+    
     def _keep_only_most_interesting_auto_applied_global_discount_program(self, order=None):
         groups = self.env['coupon.program.group'].search([
             ('apply_always', '=', True),

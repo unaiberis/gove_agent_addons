@@ -44,50 +44,29 @@ class SaleOrder(models.Model):
         
         # If partner has a parent, then it must be a salesperson
         # We need to use parent company's address instead of contact's
-        # address and parents pricelist instead of contact's
-        if self.partner_id.parent_id:
-            addr = self.partner_id.parent_id.address_get(['delivery', 'invoice'])
-            partner_user = self.partner_id.user_id or self.partner_id.commercial_partner_id.user_id
-            values = {
-                'pricelist_id': self.partner_id.parent_id.property_product_pricelist and self.partner_id.parent_id.property_product_pricelist.id or False,
-                'payment_term_id': self.partner_id.parent_id.property_payment_term_id and self.partner_id.parent_id.property_payment_term_id.id or False,
-                'partner_invoice_id': addr['invoice'],
-                'partner_shipping_id': addr['delivery'],
-            }
-            user_id = partner_user.id
-            if not self.env.context.get('not_self_saleperson'):
-                user_id = user_id or self.env.context.get('default_user_id', self.env.uid)
-            if user_id and self.user_id.id != user_id:
-                values['user_id'] = user_id
+        # address and parents pricelist instead of contact's, therefore we
+        # assign parent client to order
+        self.partner_id = self.partner_id.parent_id if self.partner_id.parent_id else self.partner_id
 
-            if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
-                values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
-            if not self.env.context.get('not_self_saleperson') or not self.team_id:
-                values['team_id'] = self.env['crm.team'].with_context(
-                    default_team_id=self.partner_id.team_id.id
-                )._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], user_id=user_id)
-            self.update(values)
-            
         # Normal functioning 
-        else:
-            addr = self.partner_id.address_get(['delivery', 'invoice'])
-            partner_user = self.partner_id.user_id or self.partner_id.commercial_partner_id.user_id
-            values = {
-                'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
-                'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
-                'partner_invoice_id': addr['invoice'],
-                'partner_shipping_id': addr['delivery'],
-            }
-            user_id = partner_user.id
-            if not self.env.context.get('not_self_saleperson'):
-                user_id = user_id or self.env.context.get('default_user_id', self.env.uid)
-            if user_id and self.user_id.id != user_id:
-                values['user_id'] = user_id
+        addr = self.partner_id.address_get(['delivery', 'invoice'])
+        partner_user = self.partner_id.user_id or self.partner_id.commercial_partner_id.user_id
+        values = {
+            'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
+            'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+        }
+        user_id = partner_user.id
+        if not self.env.context.get('not_self_saleperson'):
+            user_id = user_id or self.env.context.get('default_user_id', self.env.uid)
+        if user_id and self.user_id.id != user_id:
+            values['user_id'] = user_id
 
-            if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
-                values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
-            if not self.env.context.get('not_self_saleperson') or not self.team_id:
-                values['team_id'] = self.env['crm.team'].with_context(
-                    default_team_id=self.partner_id.team_id.id
-                )._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], user_id=user_id)
-            self.update(values)
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
+        if not self.env.context.get('not_self_saleperson') or not self.team_id:
+            values['team_id'] = self.env['crm.team'].with_context(
+                default_team_id=self.partner_id.team_id.id
+            )._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], user_id=user_id)
+        self.update(values)

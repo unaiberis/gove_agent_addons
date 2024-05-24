@@ -465,6 +465,8 @@ class WebsiteSale(WebsiteSale):
     ):
         user_partner = request.env.user.sudo().partner_id
         agent_partner = user_partner if user_partner.agent else None
+        
+        
 
         def find_last_order(partner_id, agent_customer_id=None):
             return (
@@ -547,6 +549,12 @@ class WebsiteSale(WebsiteSale):
             elif last_order_customer:
                 last_order_customer.agent_customer = (agent_customer.customer_id_chosen_by_agent)
                 _logger.info(f"\n\nlast_order_customer {order} {agent_customer}\n")
+        
+        # If partner has a parent, then it must be a salesperson
+        # We need to use parent company's address instead of contact's
+        # address and parents pricelist instead of contact's, therefore we
+        # assign parent client to order
+        order.partner_id = order.partner_id.parent_id if order.partner_id.parent_id else order.partner_id
 
         return order
 

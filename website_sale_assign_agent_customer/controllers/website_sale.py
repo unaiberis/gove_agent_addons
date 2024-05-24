@@ -554,6 +554,7 @@ class WebsiteSale(WebsiteSale):
         # We need to use parent company's address instead of contact's
         # address and parents pricelist instead of contact's, therefore we
         # assign parent client to order
+        _logger.info(f"\n\norder.partner_id {order.partner_id} - order.partner_id.parent_id {order.partner_id.parent_id} logger_gove\n")
         order.partner_id = order.partner_id.parent_id if order.partner_id.parent_id else order.partner_id
 
         return order

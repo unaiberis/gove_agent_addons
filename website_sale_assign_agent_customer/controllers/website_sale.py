@@ -1,56 +1,51 @@
 # Copyright 2024 Unai Beristain - AvanzOSC
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-import json
 import logging
-from datetime import datetime
-from werkzeug.exceptions import Forbidden, NotFound
+from werkzeug.exceptions import  NotFound
 
-from odoo import fields, http, SUPERUSER_ID, tools, _
+from odoo import fields, http
 from odoo.http import request
-from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.exceptions import ValidationError
-from odoo.addons.portal.controllers.portal import _build_url_w_params
-from odoo.addons.website.controllers.main import Website
-from odoo.addons.website_form.controllers.main import WebsiteForm
-from odoo.osv import expression
 
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
-from odoo.addons.website_sale_coupon_delivery.controllers.main import WebsiteSaleCouponDelivery
-
+from odoo.addons.website_sale_coupon_delivery.controllers.main import (
+    WebsiteSaleCouponDelivery,
+)
 
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
 
 _logger = logging.getLogger(__name__)
 
-class WebsiteSaleDelivery(WebsiteSaleDelivery):
 
+class WebsiteSaleDelivery(WebsiteSaleDelivery):
     # If this function is not changed it raises a problem with delivery method
     # when there is a pricelist and update_pricelist is True
     @http.route()
     def update_eshop_carrier(self, **post):
-        _logger.info(f"\n\nUPDATE ESHOP CARRIER 1 User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(
+            f"\n\nUPDATE ESHOP CARRIER 1 User Name: {request.env.user.sudo().partner_id.name}\n"
+        )
 
         order = request.website.sale_get_order_without_updating_pricelist()
-        carrier_id = int(post['carrier_id'])
+        carrier_id = int(post["carrier_id"])
         if order:
             order._check_carrier_quotation(force_carrier_id=carrier_id)
         return self._update_website_sale_delivery_return(order, **post)
 
 
 class WebsiteSaleCouponDelivery(WebsiteSaleCouponDelivery):
-
     # If this function is not changed it raises a problem with delivery method
     # when there is a pricelist and update_pricelist is True
     @http.route()
     def update_eshop_carrier(self, **post):
-        _logger.info(f"\n\nUPDATE ESHOP CARRIER 2  User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(
+            f"\n\nUPDATE ESHOP CARRIER 2  User Name: {request.env.user.sudo().partner_id.name}\n"
+        )
 
-        Monetary = request.env['ir.qweb.field.monetary']
+        Monetary = request.env["ir.qweb.field.monetary"]
         result = super(WebsiteSaleCouponDelivery, self).update_eshop_carrier(**post)
         order = request.website.sale_get_order()
         free_shipping_lines = None
@@ -62,15 +57,29 @@ class WebsiteSaleCouponDelivery(WebsiteSaleCouponDelivery):
 
         if free_shipping_lines:
             currency = order.currency_id
-            amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
-            result.update({
-                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
-                'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
-                'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
-                'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
-                'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
-            })
+            amount_free_shipping = sum(free_shipping_lines.mapped("price_subtotal"))
+            result.update(
+                {
+                    "new_amount_delivery": Monetary.value_to_html(
+                        0.0, {"display_currency": currency}
+                    ),
+                    "new_amount_untaxed": Monetary.value_to_html(
+                        order.amount_untaxed, {"display_currency": currency}
+                    ),
+                    "new_amount_tax": Monetary.value_to_html(
+                        order.amount_tax, {"display_currency": currency}
+                    ),
+                    "new_amount_total": Monetary.value_to_html(
+                        order.amount_total, {"display_currency": currency}
+                    ),
+                    "new_amount_order_discounted": Monetary.value_to_html(
+                        order.reward_amount - amount_free_shipping,
+                        {"display_currency": currency},
+                    ),
+                }
+            )
         return result
+
 
 class WebsiteSale(WebsiteSale):
     @http.route()
@@ -80,7 +89,9 @@ class WebsiteSale(WebsiteSale):
         if order.agent_customer.id:
             order.partner_id = order.agent_customer.id
 
-        _logger.info(f"\n\nPAYMENT CONFIRMATION  User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(
+            f"\n\nPAYMENT CONFIRMATION  User Name: {request.env.user.sudo().partner_id.name}\n"
+        )
         self._check_payment_confirmation(create_mail_follower=True, **post)
 
         return super().payment_confirmation(**post)
@@ -100,7 +111,9 @@ class WebsiteSale(WebsiteSale):
                 # after payment in case they don't return from payment through this route.
                 last_order_id = request.session["sale_last_order_id"]
                 order = request.env["sale.order"].sudo().browse(last_order_id).exists()
-                _logger.info(f"\n\nValidate funcionamiento normal  User Name: {request.env.user.sudo().partner_id.name}\n")
+                _logger.info(
+                    f"\n\nValidate funcionamiento normal  User Name: {request.env.user.sudo().partner_id.name}\n"
+                )
             # Nik jarrite
             elif request.env.user.sudo().partner_id.agent:
                 partner_id = request.env.user.partner_id.id
@@ -119,7 +132,9 @@ class WebsiteSale(WebsiteSale):
                 )
                 if last_order:
                     order = last_order
-                    _logger.info(f"\n\nValidate Ultimo order creado {order}  User Name: {request.env.user.sudo().partner_id.name}\n")
+                    _logger.info(
+                        f"\n\nValidate Ultimo order creado {order}  User Name: {request.env.user.sudo().partner_id.name}\n"
+                    )
 
             elif not request.env.user.sudo().partner_id.agent:
                 last_order_id = request.session["sale_last_order_id"]
@@ -280,7 +295,11 @@ class WebsiteSale(WebsiteSale):
             values["main_object"] = category
 
         if pricelist:
-            _logger.info(f"\n\n PRICELIST %s, PRICELIST NAME %s  User Name: {request.env.user.sudo().partner_id.name}\n", pricelist, pricelist.name)
+            _logger.info(
+                f"\n\n PRICELIST %s, PRICELIST NAME %s  User Name: {request.env.user.sudo().partner_id.name}\n",
+                pricelist,
+                pricelist.name,
+            )
 
         # Get the selected customer object based on agent_customer_id
         selected_customer_id = (
@@ -329,10 +348,9 @@ class WebsiteSale(WebsiteSale):
             .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
             .customer_id_chosen_by_agent
         )
-        
+
         _logger.info(f"\n\n CART agent_customers: {agent_customers}\n ")
 
-        
         if agent_customer_id and agent_customer_id in agent_customers.ids:
             partner = request.env["res.partner"].browse(agent_customer_id)
             property_name = "property_product_pricelist"
@@ -409,7 +427,7 @@ class WebsiteSale(WebsiteSale):
             }
         )
         if order:
-            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
+            order.order_line.filtered(lambda l: not l.product_id.active).unlink()  # noqa: E741
             _order = order
             if not request.env.context.get("pricelist"):
                 _order = order.with_context(pricelist=pricelist)
@@ -418,8 +436,9 @@ class WebsiteSale(WebsiteSale):
                 order.agent_customer = selected_customer_id
                 order.partner_id = order.agent_customer
             order.recompute_coupon_lines()
-            _logger.info(f"\n\nCART ORDER recompute_coupon_lines {order} order.partner_id {order.partner_id}\n")
-
+            _logger.info(
+                f"\n\nCART ORDER recompute_coupon_lines {order} order.partner_id {order.partner_id}\n"
+            )
 
         if post.get("type") == "popover":
             # force no-cache so IE11 doesn't cache this XHR
@@ -454,7 +473,11 @@ class WebsiteSale(WebsiteSale):
                 .search(
                     [
                         ("partner_id", "=", partner_id),
-                        ("agent_customer", "=", agent_customer_id if agent_customer_id else False),
+                        (
+                            "agent_customer",
+                            "=",
+                            agent_customer_id if agent_customer_id else False,
+                        ),
                     ],
                     order="id desc",
                     limit=1,
@@ -481,7 +504,11 @@ class WebsiteSale(WebsiteSale):
 
             partner_id = user_partner.id
             last_order = find_last_order(partner_id)
-            last_order_customer = find_last_order(agent_customer.customer_id_chosen_by_agent) if agent_customer else None
+            last_order_customer = (
+                find_last_order(agent_customer.customer_id_chosen_by_agent)
+                if agent_customer
+                else None
+            )
 
             if last_order and (
                 not last_order_customer or last_order.id > last_order_customer.id
@@ -492,10 +519,9 @@ class WebsiteSale(WebsiteSale):
                 _logger.info(f"\n\nnRECOMPUTE COUPON LINES {order} {agent_customer} \n")
                 order.recompute_coupon_lines()
 
-                
                 if create_mail_follower:
                     order.partner_id = order.agent_customer.id
-                    _logger.info(f"\n\nONCHANGE before setting partner\n")
+                    _logger.info(f"\n\nONCHANGE before setting partner {order.partner_id}\n")
                     order.onchange_partner_id()
                     order.user_id = request.env.user.id
 
@@ -516,16 +542,18 @@ class WebsiteSale(WebsiteSale):
                             }
                         )
 
-                        _logger.info(f"\n\nNew follower created {order} {agent_customer} \n")
+                        _logger.info(f"\n\nNew follower created {order} {agent_customer} follower: {new_follower}\n")
 
             elif last_order_customer:
-                last_order_customer.agent_customer = agent_customer.customer_id_chosen_by_agent
+                last_order_customer.agent_customer = (agent_customer.customer_id_chosen_by_agent)
                 _logger.info(f"\n\nlast_order_customer {order} {agent_customer}\n")
 
         return order
 
     def _empty_cart_before_changing_customer(self):
-        _logger.info(f"\n\nEMPTY CART hecho User Name: {request.env.user.sudo().partner_id.name}\n")
+        _logger.info(
+            f"\n\nEMPTY CART hecho User Name: {request.env.user.sudo().partner_id.name}\n"
+        )
         order = request.website.sale_get_order(force_create=1)
         order_line = request.env["sale.order.line"].sudo()
         line_ids = order_line.search([("order_id", "=", order.id)])
@@ -542,7 +570,8 @@ class WebsiteSale(WebsiteSale):
 
         # Check if the agent is trying to change the customer
         if post.get("agent_customer_id") and (
-            request.website.sale_get_order() or not request.website.sale_get_order()
+            request.website.sale_get_order()
+            or not request.website.sale_get_order()
             or int(post.get("agent_customer_id")) == 0
         ):
             agent_customer_id = int(post.get("agent_customer_id"))
@@ -551,7 +580,9 @@ class WebsiteSale(WebsiteSale):
             customer_id_chosen_by_agent_record = (
                 request.env["agent.partner"]
                 .sudo()
-                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .search(
+                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
+                )
             )
 
             # Check if the chosen agent customer is valid
@@ -573,7 +604,9 @@ class WebsiteSale(WebsiteSale):
             agent_customer_id = int(
                 request.env["agent.partner"]
                 .sudo()
-                .search([("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1)
+                .search(
+                    [("agent_id", "=", request.env.user.sudo().partner_id.id)], limit=1
+                )
                 .customer_id_chosen_by_agent
             )
 
@@ -581,8 +614,7 @@ class WebsiteSale(WebsiteSale):
 
     def _update_chosen_customer_record(self, agent_customer_id, record):
         if (
-            agent_customer_id
-            != record.customer_id_chosen_by_agent
+            agent_customer_id != record.customer_id_chosen_by_agent
             and request.website.sale_get_order().cart_quantity != 0
         ):
             self._empty_cart_before_changing_customer()
@@ -605,50 +637,30 @@ class WebsiteSale(WebsiteSale):
             }
         )
 
-
     def _set_pricelist_from_current_agent_customer(
         self, agent_customer_id, agent_customers
     ):
-        # Get the partner associated with the current user
         partner = request.env.user.partner_id
-
-        # Update the 'customer_selected_by_agent' field in the partner record
-        if "customer_selected_by_agent" in partner:
-            # Assuming 'agent_customer_id' is the desired value
-            partner.write({"customer_selected_by_agent": agent_customer_id})
-
-        # Get the pricelist and partner based on the agent_customer_id
+        
         if agent_customer_id and agent_customer_id in agent_customers.ids:
-            # Retrieve the partner using the agent_customer_id
             partner = request.env["res.partner"].browse(agent_customer_id)
-
-            # Define the property name for the pricelist in partner's properties
+            partner_parent_id = partner.parent_id if partner.parent_id else False
             property_name = "property_product_pricelist"
-
-            # Search for the property related to the pricelist in the partner's properties
             ir_property = (
                 request.env["ir.property"]
                 .sudo()
                 .search(
                     [
                         ("name", "=", property_name),
-                        ("res_id", "=", f"res.partner,{partner.id}"),
+                        ("res_id", "=", f"res.partner,{partner_parent_id.id if partner_parent_id else partner.id}"),
                     ],
                     limit=1,
                 )
             )
-
-            # Check if the ir_property exists and has a value_reference
             if ir_property and ir_property.value_reference:
-                # Parse the value_reference to get the pricelist number
                 pricelist_number = int(ir_property.value_reference.split(",")[1])
-
-                # Retrieve the pricelist using the pricelist number
                 pricelist = request.env["product.pricelist"].browse(pricelist_number)
-
-                # Check if both partner and pricelist are available
                 if partner and pricelist:
-                    # Update the request context with the pricelist and partner information
                     request.context = dict(
                         request.context, pricelist=pricelist.id, partner=partner
                     )

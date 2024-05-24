@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, fields, models, _
+from odoo import models
 from odoo.http import request
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +28,12 @@ class CouponProgram(models.Model):
                     order_id = params.get('id')
                     order = self.env['sale.order'].browse(order_id)
         if order:
-            groups = groups.filtered(lambda g: any(categ.id in g.partner_category_ids.ids for categ in order.partner_id.category_id))
+            # Check if partner has parent company. If yes, use parent company's category ("parent's discounts")
+            if order.partner_id.parent_id:
+                groups = groups.filtered(lambda g: any(categ.id in g.partner_category_ids.ids for categ in order.partner_id.parent_id.category_id))
+            # Otherwise use partner's category
+            else:
+                groups = groups.filtered(lambda g: any(categ.id in g.partner_category_ids.ids for categ in order.partner_id.category_id))
             applicable_programs = no_group_programs
             for group in groups:
                 for program in group.coupon_programs.sorted(

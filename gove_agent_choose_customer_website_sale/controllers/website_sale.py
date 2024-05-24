@@ -1,19 +1,11 @@
 # Copyright 2024 Unai Beristain - AvanzOSC
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-import json
 import logging
-from datetime import datetime
 
-from odoo import fields, http
+from odoo import http
 from odoo.http import request
 
-from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import (
-    WebsiteSale,
-)
-from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
-from odoo.addons.website_sale_coupon_delivery.controllers.main import (
-    WebsiteSaleCouponDelivery,
-)
+from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import WebsiteSale
 
 
 _logger = logging.getLogger(__name__)

@@ -11,7 +11,6 @@
     "license": "AGPL-3",
     "depends": [
         "portal",
-        "mail",
         "sale",
         "purchase",
         "sale_commission",
@@ -32,7 +31,6 @@
         "views/offer_category_pricelist_view.xml",
         "views/sale_order_show_draft_finished_column.xml",
         "views/sale_order_report_agent.xml",
-        #"views/action_server_base_automation.xml",
         "security/ir.model.access.csv",
         "views/offer_category_pricelist_views.xml"
     ],

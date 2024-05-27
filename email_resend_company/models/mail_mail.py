@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 class MailMail(models.Model):
     _inherit = 'mail.mail'
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
-        _logger.warning("\n\n SEND MAIL\n \n")
+        _logger.warning("\n\n SEND MAIL\n\n")
         IrMailServer = self.env['ir.mail_server']
         IrAttachment = self.env['ir.attachment']
         for mail_id in self.ids:
@@ -44,7 +44,6 @@ class MailMail(models.Model):
                 attachments = [(a['name'], base64.b64decode(a['datas']), a['mimetype'])
                                for a in attachments.sudo().read(['name', 'datas', 'mimetype']) if a['datas'] is not False]
 
-                '''Code changed to send emails to agents'''
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if mail.email_to:
@@ -55,34 +54,38 @@ class MailMail(models.Model):
                     values['partner_id'] = partner.id
                     email_list.append(values)
                                         
+                                        
+                # Specific code for Surflogic, only resend emails that contain 'Surflogic Pedido (Ref PVS'
+                if self.env.company.resend_mail and mail.model == 'sale.order' and 'Surflogic' in mail.subject:
+                    '''Code changed to send emails to surflogic.com'''
+                    # Adding 'info@surflogic.com' as an additional recipient for the same email
+                    _logger.info(f"logger_gove - email_list: {email_list}") 
+                    for email_entry in email_list[:]: 
+                        email_to = email_entry.get('email_to', [])
+                        if 'info@surflogic.com' not in email_to:
+                            # Duplicating the entry
+                            new_entry = email_entry.copy()
+                            new_entry['email_to'] = ['info@surflogic.com']
+                            # Adding 'info@surflogic.com' as an additional recipient for the same email
+                            email_entry['email_to'].append('info@surflogic.com')
+                            email_list.append(new_entry)
+                            _logger.info(f"logger_gove - info@surflogic.com added email_list: {email_list}")
 
-                '''Code changed to send emails to surflogic.com'''
-                # Adding 'info@surflogic.com' as an additional recipient for the same email
-                _logger.info(f"logger_gove - email_list: {email_list}") 
-                for email_entry in email_list[:]: 
-                    email_to = email_entry.get('email_to', [])
-                    if 'info@surflogic.com' not in email_to:
-                        # Duplicating the entry
-                        new_entry = email_entry.copy()
-                        new_entry['email_to'] = ['info@surflogic.com']
-                        # Adding 'info@surflogic.com' as an additional recipient for the same email
-                        email_entry['email_to'].append('info@surflogic.com')
-                        email_list.append(new_entry)
-                        _logger.info(f"logger_gove - info@surflogic.com added email_list: {email_list}")
+                    '''Code changed to send emails to agents'''
+                    # Sending emails to agents
+                    for partner in mail.recipient_ids:
+                        agents = partner.agent_ids 
 
-                for partner in mail.recipient_ids:
-                    agents = partner.agent_ids 
-
-                    for agent in agents:
-                        if partner.id in agent.agent_customers.ids:
-                            agent_values = mail._send_prepare_values(partner=agent)
-                            agent_values['partner_id'] = agent.id
-                            email_list.append(agent_values)
-                            
-                            _logger.info(f"logger_gove - agent {agent} added - email_list: {email_list}")
+                        for agent in agents:
+                            if partner.id in agent.agent_customers.ids:
+                                agent_values = mail._send_prepare_values(partner=agent)
+                                agent_values['partner_id'] = agent.id
+                                email_list.append(agent_values)
+                                
+                                _logger.info(f"logger_gove - agent {agent} added - email_list: {email_list}")
 
 
-                # headers
+                    # headers
                 headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
                 bounce_alias = ICP.get_param("mail.bounce.alias")

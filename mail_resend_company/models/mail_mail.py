@@ -85,7 +85,7 @@ class MailMail(models.Model):
                                 _logger.info(f"logger_gove - agent {agent} added - email_list: {email_list}")
 
 
-                    # headers
+                # headers
                 headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
                 bounce_alias = ICP.get_param("mail.bounce.alias")

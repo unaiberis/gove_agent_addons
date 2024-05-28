@@ -14,4 +14,5 @@ class ResPartner(models.Model):
         if self.customer_from_woo:
             _logger.info(f"\n\n _logger_gove CUSTOMER FROM WOOCOMMERCE {self}\n")
             return True
-        return super()._needs_ref(vals)
+        return False 
+        # return super()._needs_ref(vals)

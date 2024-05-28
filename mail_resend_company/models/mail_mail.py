@@ -5,6 +5,8 @@ import logging
 import psycopg2
 import smtplib
 import re
+import pprint
+
 
 from odoo import _, models
 from odoo import tools
@@ -59,7 +61,7 @@ class MailMail(models.Model):
                 if self.env.company.resend_mail and mail.model == 'sale.order' and 'Surflogic' in mail.subject:
                     '''Code changed to send emails to surflogic.com'''
                     # Adding 'info@surflogic.com' as an additional recipient for the same email
-                    _logger.info(f"logger_gove - email_list: {email_list}") 
+                    _logger.info(f"logger_gove - email_list: {pprint.pformat(email_list)}") 
                     for email_entry in email_list[:]: 
                         email_to = email_entry.get('email_to', [])
                         if 'info@surflogic.com' not in email_to:
@@ -69,7 +71,8 @@ class MailMail(models.Model):
                             # Adding 'info@surflogic.com' as an additional recipient for the same email
                             email_entry['email_to'].append('info@surflogic.com')
                             email_list.append(new_entry)
-                            _logger.info(f"logger_gove - info@surflogic.com added email_list: {email_list}")
+                            
+                            _logger.info(f"logger_gove - info@surflogic.com added email_list: {pprint.pformat(email_list)}")
 
                     '''Code changed to send emails to agents'''
                     # Sending emails to agents
@@ -82,7 +85,7 @@ class MailMail(models.Model):
                                 agent_values['partner_id'] = agent.id
                                 email_list.append(agent_values)
                                 
-                                _logger.info(f"logger_gove - agent {agent} added - email_list: {email_list}")
+                                _logger.info(f"logger_gove - agent {agent} added - email_list: {pprint.pformat(email_list)}")
 
                 # headers
                 headers = {}

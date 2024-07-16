@@ -23,7 +23,7 @@
     "category": "Website",
     "version": "14.0.1.1.0",
     "author": "Trey (www.trey.es)",
-    "website": "https://www.trey.es",
+    "website": "https://github.com/avanzosc/odoo-addons",
     "license": "AGPL-3",
     "depends": [
         "sale",
@@ -35,7 +35,7 @@
     "data": [
         "views/products_xpath.xml",
         "views/website_sale.xml",
-        "security/ir.model.access.csv"
+        "security/ir.model.access.csv",
     ],
     "installable": True,
 }

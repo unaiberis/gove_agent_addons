@@ -1,9 +1,12 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
     <record id="website_homepage_custom" model="ir.ui.view">
         <field name="name">HASIERAKO LINKAK AUTOMATIKOKI ALDATZEKO</field>
         <field name="type">qweb</field>
-        <field name="inherit_id" search="[('website_id', '=', 1), ('key', '=', 'website.homepage')]" />
+        <field
+      name="inherit_id"
+      search="[('website_id', '=', 1), ('key', '=', 'website.homepage')]"
+    />
         <field name="key">website.homepage.custom</field>
         <field name="website_id" eval="1" />
         <field name="arch" type="xml">

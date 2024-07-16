@@ -5,8 +5,9 @@ import logging
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import WebsiteSale
-
+from odoo.addons.website_sale_assign_agent_customer.controllers.website_sale import (
+    WebsiteSale,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -34,7 +35,8 @@ class WebsiteSale(WebsiteSale):
     def payment(self):
         request.env.user.partner_id.extra_computation_enabled = True
         _logger.info(
-            "\n\n RECOMPUTE COUPON LINES request.env.user.partner_id.extra_computation_enabled = True\n"
+            """\n\n RECOMPUTE COUPON LINES
+            request.env.user.partner_id.extra_computation_enabled = True\n"""
         )
         order = request.website.sale_get_order()
 
@@ -138,14 +140,17 @@ class WebsiteSale(WebsiteSale):
             order.partner_id = request.env["res.partner"].browse(agent_customer)
 
             _logger.info(
-                f"\n\n last_order_customer {last_order_customer} {last_order_customer.name} User Name: {request.env.user.sudo().partner_id.name}\n"
+                f"""\n\n last_order_customer {last_order_customer} {last_order_customer.name}
+                User Name: {request.env.user.sudo().partner_id.name}\n"""
             )
 
         return order
 
     def _update_order_info(self, order, last_order):
         _logger.info(
-            f"\n\n Last order in _check_payment_confirmation {last_order} {request.env.user.partner_id} {last_order.name} User Name: {request.env.user.sudo().partner_id.name}\n"
+            f"""\n\n Last order in _check_payment_confirmation {last_order}
+            {request.env.user.partner_id} {last_order.name}
+            User Name: {request.env.user.sudo().partner_id.name}\n"""
         )
 
         if not order or (order and order.id < last_order.id):
@@ -157,7 +162,8 @@ class WebsiteSale(WebsiteSale):
     def _handle_mail_follower_creation(self, order):
         order.partner_id = order.agent_customer.id
         _logger.info(
-            f"\n\nONCHANGE before partner User Name: {request.env.user.sudo().partner_id.name}\n"
+            f"""\n\nONCHANGE before partner User Name:
+            {request.env.user.sudo().partner_id.name}\n"""
         )
         order.onchange_partner_id()
         order.user_id = request.env.user.id
@@ -182,5 +188,7 @@ class WebsiteSale(WebsiteSale):
             )
 
             _logger.info(
-                f"\n\n MAIL FOLLOWER Created, ensuring it didn't exist: {new_follower} Buyer: {order.agent_customer.name} User Name: {request.env.user.sudo().partner_id.name}\n"
+                f"""\n\n MAIL FOLLOWER Created, ensuring it didn't exist:
+                {new_follower} Buyer: {order.agent_customer.name}
+                User Name: {request.env.user.sudo().partner_id.name}\n"""
             )

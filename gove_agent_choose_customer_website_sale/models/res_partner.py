@@ -1,9 +1,9 @@
-from odoo import api, fields, models
+from odoo import fields, models
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
     extra_computation_enabled = fields.Boolean(
-        string="Extra Coupon Computation enabler",
-        store=True, default=False
+        string="Extra Coupon Computation enabler", store=True, default=False
     )

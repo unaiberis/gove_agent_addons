@@ -11,11 +11,10 @@ class ResPartner(models.Model):
         string="Agents", compute="_compute_agents_name", store=True
     )
     customers_count = fields.Integer(
-        compute="_compute_customers", string="Customers count"
+        compute="_compute_customers",
     )
     agent_customers = fields.Many2many(
         compute="_compute_agent_customers",
-        string="Agent Customers",
         comodel_name="res.partner",
         relation="agent2customers_rel",
         column1="agent_id",

@@ -1,10 +1,17 @@
 .nav-link {
-    color: black;
+  color: black;
 }
 
 a {
-    color: black;
+  color: black;
 }
-.o_cc5 a:not(.btn), .o_footer a:not(.btn), .o_cc5 .btn-link, .o_footer .btn-link, .o_colored_level .o_cc5 a:not(.btn), .o_colored_level .o_footer a:not(.btn), .o_colored_level .o_cc5 .btn-link, .o_colored_level .o_footer .btn-link {
-    color: white;
+.o_cc5 a:not(.btn),
+.o_footer a:not(.btn),
+.o_cc5 .btn-link,
+.o_footer .btn-link,
+.o_colored_level .o_cc5 a:not(.btn),
+.o_colored_level .o_footer a:not(.btn),
+.o_colored_level .o_cc5 .btn-link,
+.o_colored_level .o_footer .btn-link {
+  color: white;
 }

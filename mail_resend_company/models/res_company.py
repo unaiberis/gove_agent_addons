@@ -1,12 +1,13 @@
-from odoo import models, fields
+from odoo import fields, models
+
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = "res.company"
 
     resend_mail = fields.Boolean(
-        string='Resend Email',
+        string="Resend Email",
         default=False,
-        help="Field to resend B2B online purchase emails to agents and to info@surflogic.com."
+        help="Field to resend B2B online purchase emails to agents and to info@surflogic.com.",
     )
 
     def toggle_resend_mail(self):

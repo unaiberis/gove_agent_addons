@@ -1,144 +1,234 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- Show payment mode in cart, payment and confirmation -->
-    <template id="template_payment_mode" name="Payment Mode">
-        <t t-set="customer_id" t-value="int(
+  <!-- Show payment mode in cart, payment and confirmation -->
+  <template id="template_payment_mode" name="Payment Mode">
+    <t
+      t-set="customer_id"
+      t-value="int(
             request.env['agent.partner'].sudo().search([
                 ('agent_id', '=', request.env.user.sudo().partner_id.id)
             ], limit=1).customer_id_chosen_by_agent
-        ) if request.env.user.sudo().partner_id.agent else request.env.user.sudo().partner_id.id" />
+        ) if request.env.user.sudo().partner_id.agent else request.env.user.sudo().partner_id.id"
+    />
 
-        <t t-set="property_record" t-value="request.env['ir.property'].sudo().search([
+    <t
+      t-set="property_record"
+      t-value="request.env['ir.property'].sudo().search([
                 ('value_reference', 'ilike', 'account.payment.mode'),
                 ('res_id', '=', 'res.partner,' + str(customer_id))
-            ], limit=1)" />
+            ], limit=1)"
+    />
 
-        <t t-if="property_record">
-            <t t-set="payment_mode_id" t-value="int(property_record.value_reference.split(',')[1])" />
-            <t t-set="payment_mode" t-value="request.env['account.payment.mode'].sudo().browse(payment_mode_id)" />
+    <t t-if="property_record">
+      <t
+        t-set="payment_mode_id"
+        t-value="int(property_record.value_reference.split(',')[1])"
+      />
+      <t
+        t-set="payment_mode"
+        t-value="request.env['account.payment.mode'].sudo().browse(payment_mode_id)"
+      />
 
-            <t t-if="payment_mode.name and payment_mode.name.strip()">
-                <t t-esc="payment_mode.name" />
-            </t>
-        </t>
-    </template>
+      <t t-if="payment_mode.name and payment_mode.name.strip()">
+        <t t-esc="payment_mode.name" />
+      </t>
+    </t>
+  </template>
 
-    <template id="agent_customer_card_insert" inherit_id="website_sale_assign_agent_customer.agent_customer_card">
-        <xpath expr="//div[hasclass('o_wsaac_agent_customers')]" position="inside">
-            <div class="card-body">
+  <template
+    id="agent_customer_card_insert"
+    inherit_id="website_sale_assign_agent_customer.agent_customer_card"
+  >
+    <xpath expr="//div[hasclass('o_wsaac_agent_customers')]" position="inside">
+      <div class="card-body">
+        <div>
+          <b>Payment mode used by the customer:</b>
+          <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
+        </div>
+      </div>
+    </xpath>
+  </template>
+
+  <template
+    id="template_payment_tokens_list"
+    inherit_id="payment.payment_tokens_list"
+    name="Replace Payment Mode"
+  >
+    <xpath
+      expr="//div/label/span[hasclass('payment_option_name')]"
+      position="attributes"
+    >
+      <attribute name="t-if">False</attribute>
+    </xpath>
+
+    <xpath expr="//div/label/span[hasclass('payment_option_name')]" position="after">
+      <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
+    </xpath>
+  </template>
+
+
+  <template
+    id="template_confirmation"
+    inherit_id="website_sale.confirmation"
+    name="Replace Payment Mode"
+  >
+    <xpath expr="//table[hasclass('table')]/tbody/tr/td/t[2]" position="attributes">
+      <attribute name="t-if">False</attribute>
+    </xpath>
+
+    <xpath expr="//table[hasclass('table')]/tbody/tr/td/t[2]" position="after">
+      <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
+    </xpath>
+  </template>
+
+
+  <!-- Add PCT, PVP and STOCK or NO STOCK in each product -->
+
+  <template id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
+    <xpath expr="//div[hasclass('product_price')]" position="attributes">
+      <attribute name="t-if">False</attribute>
+    </xpath>
+
+    <xpath expr="//div[hasclass('product_price')]" position="after">
+      <div
+        class="product_price"
+        itemprop="offers"
+        itemscope="itemscope"
+        itemtype="http://schema.org/Offer"
+      >
+
+        <div class="d-flex flex-row justify-content-between align-items-center">
+          <div class="w-70 d-flex flex-column">
+            <div
+              style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
+            >
+              <t
+                t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']"
+              >
                 <div>
-                    <b>Payment mode used by the customer:</b>
-                    <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
+                  <!-- PCT -->
+                  <span
+                    style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
+                  >Price</span>
+                  <span
+                    t-esc="combination_info['price']"
+                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                  />
                 </div>
+              </t>
             </div>
-        </xpath>
-    </template>
 
-    <template id="template_payment_tokens_list" inherit_id="payment.payment_tokens_list" name="Replace Payment Mode">
-        <xpath expr="//div/label/span[hasclass('payment_option_name')]" position="replace">
-            <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
-        </xpath>
-    </template>
-
-
-    <template id="template_confirmation" inherit_id="website_sale.confirmation" name="Replace Payment Mode">
-        <xpath expr="//table[hasclass('table')]/tbody/tr/td/t[2]" position="replace">
-            <t t-call="gove_agent_choose_customer_website_sale.template_payment_mode" />
-        </xpath>
-    </template>
-
-
-    <!-- Add PCT, PVP and STOCK or NO STOCK in each product -->
-
-    <template id="products_item_add_tariff_price" inherit_id="website_sale.products_item">
-        <xpath expr="//div[hasclass('product_price')]" position="replace">
-            <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
-
-                <div class="d-flex flex-row justify-content-between align-items-center">
-                    <div class="w-70 d-flex flex-column">
-                        <div style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                            <t t-if="combination_info['price'] and combination_info['PVP'] != combination_info['price']">
-                                <div>
-                                    <!-- PCT -->
-                                    <span style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                                        Price</span>
-                                    <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                                </div>
-                            </t>
-                        </div>
-
-                        <t t-if="combination_info['PVP']">
-                            <div style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                                <div>
-                                    <!-- PVP -->
-                                    <span style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                                        RRP</span>
-                                    <span t-esc="combination_info['PVP']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                                </div>
-                            </div>
-                        </t>
-                    </div>
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px;" class="d-flex flex-column">
-                        <div>
-                        CODE: <t t-esc="product.default_code" />
-                        </div>
-                        <div t-if="product.is_on_offer" class="bg-danger text-white font-weight-bold rounded">
-                            ON OFFER
-                        </div>
-                    </div>
-
+            <t t-if="combination_info['PVP']">
+              <div
+                style="width: 100%; text-align: left; font-size: 11px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
+              >
+                <div>
+                  <!-- PVP -->
+                  <span
+                    style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
+                  >RRP</span>
+                  <span
+                    t-esc="combination_info['PVP']"
+                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                  />
                 </div>
-                <t t-set="inventory_availability" t-value="product.inventory_availability" />
+              </div>
+            </t>
+          </div>
+          <div
+            style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px;"
+            class="d-flex flex-column"
+          >
+            <div>
+                    CODE: <t t-esc="product.default_code" />
+            </div>
+            <div
+              t-if="product.is_on_offer"
+              class="bg-danger text-white font-weight-bold rounded"
+            >
+                    ON OFFER
+            </div>
+          </div>
+        </div>
+        <t t-set="inventory_availability" t-value="product.inventory_availability" />
 
-                <div id="stock_widget" style="width: 100%; display: flex; justify-content: space-between; font-size: smaller; text-align: left;">
-                    <!-- <t t-set="is_available" t-value="request.env['product.template'].sudo().search([('id', '=', product.id)]).virtual_available > 0" />
+        <div
+          id="stock_widget"
+          style="width: 100%; display: flex; justify-content: space-between; font-size: smaller; text-align: left;"
+        >
+          <t t-set="int_virtual_available" t-value="int(product.virtual_available)" />
 
-                    <span t-if="is_available" style="color: green;">
-                        <span>Stock</span>
-                    </span>
-
-                    <span t-else="" style="color: red;">
-                        <span>No stock</span>
-                    </span> -->
-                    <t t-set="int_virtual_available" t-value="int(product.virtual_available)" />
-
-                    <t t-if="product.inventory_availability in ['always', 'threshold']">
-                        <t t-if="product.virtual_available &gt; 0">
-                            <div t-if="product.inventory_availability == 'always'" t-attf-class="availability_message_#{product_template} text-success" style="margin-bottom: 5px;">
-                                <t t-esc="virtual_available_formatted" />
-                                <t t-esc="uom_name" />
+          <t t-if="product.inventory_availability in ['always', 'threshold']">
+            <t t-if="product.virtual_available &gt; 0">
+              <div
+                t-if="product.inventory_availability == 'always'"
+                t-attf-class="availability_message_#{product_template} text-success"
+                style="margin-bottom: 5px;"
+              >
+                <t t-esc="virtual_available_formatted" />
+                <t t-esc="uom_name" />
  available
-                            </div>
-                            <t t-if="product.inventory_availability == 'threshold'">
-                                <div t-if="product.virtual_available &lt;= product.available_threshold" t-attf-class="availability_message_#{product_template} text-warning" style="margin-bottom: 5px;">
-                                    <i class="fa fa-exclamation-triangle" title="Warning" role="img" aria-label="Warning"/>
-                                    <t t-esc="int_virtual_available" />
-                                    <t t-esc="product.uom_name" />
+              </div>
+              <t t-if="product.inventory_availability == 'threshold'">
+                <div
+                  t-if="product.virtual_available &lt;= product.available_threshold"
+                  t-attf-class="availability_message_#{product_template} text-warning"
+                  style="margin-bottom: 5px;"
+                >
+                  <i
+                    class="fa fa-exclamation-triangle"
+                    title="Warning"
+                    role="img"
+                    aria-label="Warning"
+                  />
+                  <t t-esc="int_virtual_available" />
+                  <t t-esc="product.uom_name" />
  available
-                                </div>
-                                <div t-if="product.virtual_available &gt; product.available_threshold" t-attf-class="availability_message_#{product_template} text-success ">In stock</div>
-                            </t>
-                        </t>
-                        <div t-if="order_line" t-attf-class="availability_message_#{product_template} text-warning mt8" style="margin-bottom: 5px;">
-                You already added <t t-if="not product.virtual_available">all</t>
-                            <t t-esc="int(order_line[0].product_uom_qty) if order_line and order_line[0].product_uom_qty else 0" />
-                            <t t-esc="product.uom_name" />
+                </div>
+                <div
+                  t-if="product.virtual_available &gt; product.available_threshold"
+                  t-attf-class="availability_message_#{product_template} text-success"
+                >In stock</div>
+              </t>
+            </t>
+            <div
+              t-if="order_line"
+              t-attf-class="availability_message_#{product_template} text-warning mt8"
+              style="margin-bottom: 5px;"
+            >
+                    You already added <t t-if="not product.virtual_available">all</t>
+              <t
+                t-esc="int(order_line[0].product_uom_qty) if order_line and order_line[0].product_uom_qty else 0"
+              />
+              <t t-esc="product.uom_name" />
  in your cart.
-                        </div>
-                        <div t-if="product.virtual_available &lt;= 0" t-attf-class="availability_message_#{product_template} text-danger" style="margin-bottom: 5px;">
-                            <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/>
- Temporarily out of stock</div>
-
-                    </t>
-                </div>
             </div>
-        </xpath>
+            <div
+              t-if="product.virtual_available &lt;= 0"
+              t-attf-class="availability_message_#{product_template} text-danger"
+              style="margin-bottom: 5px;"
+            >
+              <i
+                class="fa fa-exclamation-triangle"
+                role="img"
+                aria-label="Warning"
+                title="Warning"
+              />
+                    Temporarily out of stock
+            </div>
+          </t>
+        </div>
+      </div>
+    </xpath>
 
 
-        <!-- Change style of every product to show image bigger and make box height bigger -->
+    <!-- Change style of every product to show image bigger and make box height bigger -->
 
-        <xpath expr="//form[hasclass('oe_product_cart')]//div[hasclass('o_wsale_product_information')]" position="before">
-            <style>
+    <xpath
+      expr="//form[hasclass('oe_product_cart')]//div[hasclass('o_wsale_product_information')]"
+      position="before"
+    >
+      <style>
                 form.card.oe_product_cart{
                 height: 280px;
                 }
@@ -148,31 +238,45 @@
                 .oe_product.oe_image_full .o_wsale_product_information{
                 position: relative;
                 }
-            </style>
-        </xpath>
-    </template>
+      </style>
+    </xpath>
+  </template>
 
 
-    <template id="remove_pricelist_from_product_from_website_sale" inherit_id="website_sale.product" name="Remove Pricelist from Product Form in Website sale">
+  <template
+    id="remove_pricelist_from_product_from_website_sale"
+    inherit_id="website_sale.product"
+    name="Remove Pricelist from Product Form in Website sale"
+  >
 
-        <!-- Remove pricelist from product from website sale -->
+    <!-- Remove pricelist from product from website sale -->
 
-        <xpath expr="//div[@class='col-md-8']/div[@class='form-inline justify-content-end']/t[@t-call='website_sale.pricelist_list']" position="replace">
-        </xpath>
+    <xpath
+      expr="//div[@class='col-md-8']/div[@class='form-inline justify-content-end']/t[@t-call='website_sale.pricelist_list']"
+      position="attributes"
+    >
+      <attribute name="t-if">False</attribute>
+  </xpath>
 
-        <xpath expr="//div[@id='product_attributes_simple']" position="after">
+    <xpath expr="//div[@id='product_attributes_simple']" position="after">
 
-            <div style="font-family: Roboto; font-size: 14px;"> CODE: <t t-esc="product.default_code" />
-            </div>
-        </xpath>
+      <div style="font-family: Roboto; font-size: 14px;"> CODE: <t
+          t-esc="product.default_code"
+        />
+      </div>
+    </xpath>
 
-    </template>
+  </template>
 
-    <!-- Remove cart button from product from website sale -->
+  <!-- Remove cart button from product from website sale -->
 
-    <template id="template_products_item" inherit_id="website_sale.products_item" name="Template Name">
-        <xpath expr="//div[contains(@class, 'o_wsale_product_btn')]" position="attributes">
-            <attribute name="style">display: none;</attribute>
-        </xpath>
-    </template>
+  <template
+    id="template_products_item"
+    inherit_id="website_sale.products_item"
+    name="Template Name"
+  >
+    <xpath expr="//div[contains(@class, 'o_wsale_product_btn')]" position="attributes">
+      <attribute name="style">display: none;</attribute>
+    </xpath>
+  </template>
 </odoo>

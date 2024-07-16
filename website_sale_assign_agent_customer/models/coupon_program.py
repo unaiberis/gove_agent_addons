@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import models
 from odoo.http import request
 
 
@@ -61,6 +61,6 @@ class CouponProgram(models.Model):
                         applicable_programs = applicable_programs + program
                         break
             return applicable_programs
-        return super(
-            CouponProgram, self
-        )._keep_only_most_interesting_auto_applied_global_discount_program()
+        return (
+            super()._keep_only_most_interesting_auto_applied_global_discount_program()
+        )

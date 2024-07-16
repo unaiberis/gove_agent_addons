@@ -8,5 +8,5 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     agent_customer = fields.Many2one(
-        comodel_name="res.partner", string="Agent Customer"
+        comodel_name="res.partner",
     )

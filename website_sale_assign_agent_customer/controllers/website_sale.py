@@ -1,21 +1,20 @@
 # Copyright 2024 Unai Beristain - AvanzOSC
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 import logging
-from werkzeug.exceptions import  NotFound
+
+from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
 from odoo.http import request
+
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
-
-from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
+from odoo.addons.website_sale.controllers.main import TableCompute, WebsiteSale
 from odoo.addons.website_sale_coupon_delivery.controllers.main import (
     WebsiteSaleCouponDelivery,
 )
-
-
-from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
+from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +24,7 @@ class WebsiteSaleDelivery(WebsiteSaleDelivery):
     # when there is a pricelist and update_pricelist is True
     @http.route()
     def update_eshop_carrier(self, **post):
+        super().update_eshop_carrier(**post)
         _logger.info(
             f"\n\nUPDATE ESHOP CARRIER 1 User Name: {request.env.user.sudo().partner_id.name}\n"
         )
@@ -46,7 +46,7 @@ class WebsiteSaleCouponDelivery(WebsiteSaleCouponDelivery):
         )
 
         Monetary = request.env["ir.qweb.field.monetary"]
-        result = super(WebsiteSaleCouponDelivery, self).update_eshop_carrier(**post)
+        result = super().update_eshop_carrier(**post)
         order = request.website.sale_get_order()
         free_shipping_lines = None
 
@@ -103,6 +103,9 @@ class WebsiteSale(WebsiteSale):
 
          - UDPATE ME
         """
+
+        super().payment_validate(transaction_id, sale_order_id, **post)
+
         if sale_order_id is None:
             order = request.website.sale_get_order()
             if not order and "sale_last_order_id" in request.session:
@@ -172,6 +175,9 @@ class WebsiteSale(WebsiteSale):
 
     @http.route()
     def shop(self, page=0, category=None, search="", ppg=False, **post):
+
+        super().shop(page, category, search, ppg, **post)
+
         add_qty = int(post.get("add_qty", 1))
         Category = request.env["product.public.category"]
         if category:
@@ -337,6 +343,8 @@ class WebsiteSale(WebsiteSale):
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
 
+        super().cart(access_token=access_token, revive=revive, **post)
+
         # GET CUSTOMER PRICELIST
         agent_customers = request.env.user.sudo().partner_id.agent_customers
         pricelist = False
@@ -427,7 +435,9 @@ class WebsiteSale(WebsiteSale):
             }
         )
         if order:
-            order.order_line.filtered(lambda l: not l.product_id.active).unlink()  # noqa: E741
+            order.order_line.filtered(
+                lambda l: not l.product_id.active
+            ).unlink()  # noqa: E741
             _order = order
             if not request.env.context.get("pricelist"):
                 _order = order.with_context(pricelist=pricelist)
@@ -465,8 +475,6 @@ class WebsiteSale(WebsiteSale):
     ):
         user_partner = request.env.user.sudo().partner_id
         agent_partner = user_partner if user_partner.agent else None
-        
-        
 
         def find_last_order(partner_id, agent_customer_id=None):
             return (
@@ -523,7 +531,9 @@ class WebsiteSale(WebsiteSale):
 
                 if create_mail_follower:
                     order.partner_id = order.agent_customer.id
-                    _logger.info(f"\n\nONCHANGE before setting partner {order.partner_id}\n")
+                    _logger.info(
+                        f"\n\nONCHANGE before setting partner {order.partner_id}\n"
+                    )
                     order.onchange_partner_id()
                     order.user_id = request.env.user.id
 
@@ -544,18 +554,28 @@ class WebsiteSale(WebsiteSale):
                             }
                         )
 
-                        _logger.info(f"\n\nNew follower created {order} {agent_customer} follower: {new_follower}\n")
+                        _logger.info(
+                            f"\n\nNew follower created {order} {agent_customer} follower: {new_follower}\n"
+                        )
 
             elif last_order_customer:
-                last_order_customer.agent_customer = (agent_customer.customer_id_chosen_by_agent)
+                last_order_customer.agent_customer = (
+                    agent_customer.customer_id_chosen_by_agent
+                )
                 _logger.info(f"\n\nlast_order_customer {order} {agent_customer}\n")
-        
+
         # If partner has a parent, then it must be a salesperson
         # We need to use parent company's address instead of contact's
         # address and parents pricelist instead of contact's, therefore we
         # assign parent client to order
-        _logger.info(f"\n\norder.partner_id {order.partner_id} - order.partner_id.parent_id {order.partner_id.parent_id} logger_gove\n")
-        order.partner_id = order.partner_id.parent_id if order.partner_id.parent_id else order.partner_id
+        _logger.info(
+            f"\n\norder.partner_id {order.partner_id} - order.partner_id.parent_id {order.partner_id.parent_id} logger_gove\n"
+        )
+        order.partner_id = (
+            order.partner_id.parent_id
+            if order.partner_id.parent_id
+            else order.partner_id
+        )
 
         return order
 
@@ -650,7 +670,7 @@ class WebsiteSale(WebsiteSale):
         self, agent_customer_id, agent_customers
     ):
         partner = request.env.user.partner_id
-        
+
         if agent_customer_id and agent_customer_id in agent_customers.ids:
             partner = request.env["res.partner"].browse(agent_customer_id)
             partner_parent_id = partner.parent_id if partner.parent_id else False
@@ -661,7 +681,11 @@ class WebsiteSale(WebsiteSale):
                 .search(
                     [
                         ("name", "=", property_name),
-                        ("res_id", "=", f"res.partner,{partner_parent_id.id if partner_parent_id else partner.id}"),
+                        (
+                            "res_id",
+                            "=",
+                            f"res.partner,{partner_parent_id.id if partner_parent_id else partner.id}",
+                        ),
                     ],
                     limit=1,
                 )

@@ -12,6 +12,4 @@ class AgentPartner(models.Model):
         string="Agent Customer",
         default=0,
     )
-    agent_id  = fields.Integer(
-        string="Agent Id",
-    )
+    agent_id = fields.Integer()

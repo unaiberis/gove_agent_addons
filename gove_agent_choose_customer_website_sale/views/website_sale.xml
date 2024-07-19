@@ -229,16 +229,31 @@
       position="before"
     >
       <style>
-                form.card.oe_product_cart{
-                height: 280px;
-                }
-                .table-borderless tr {
-                height: 300px;
-                }
-                .oe_product.oe_image_full .o_wsale_product_information{
-                position: relative;
-                }
-      </style>
+          <!--
+            form.card.oe_product_cart{
+              height: 280px;
+            }
+            .table-borderless tr {
+              height: 300px;
+            }
+            .oe_product.oe_image_full .o_wsale_product_information{
+              position: relative;
+            }
+          -->
+
+
+          .o_wsale_product_grid_wrapper {
+            height: 350px !important;
+          }
+
+          td div.o_wsale_product_grid_wrapper form span.align-items-center{
+            align-items: start !important;
+          }
+
+          .oe_product_cart .oe_product_image img{
+            height: auto;
+          }
+        </style>
     </xpath>
   </template>
 
@@ -256,7 +271,7 @@
       position="attributes"
     >
       <attribute name="t-if">False</attribute>
-  </xpath>
+    </xpath>
 
     <xpath expr="//div[@id='product_attributes_simple']" position="after">
 

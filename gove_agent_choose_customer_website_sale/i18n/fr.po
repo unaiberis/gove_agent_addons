@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-16 08:11+0000\n"
-"PO-Revision-Date: 2024-05-16 08:11+0000\n"
+"POT-Creation-Date: 2024-10-10 11:41+0000\n"
+"PO-Revision-Date: 2024-10-10 11:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "\t<b>Mode de paiment:</b>"
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" title=\"Warning\"/>\n"
-" Temporarily out of stock"
+"                    Temporarily out of stock"
 msgstr "Temporairement en rupture de stock"
 
 #. module: gove_agent_choose_customer_website_sale
@@ -39,20 +39,20 @@ msgstr ""
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid ""
-"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
-"                                        Price</span>"
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-"
+"serif;\">Price</span>"
 msgstr ""
-"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
-"                                        Prix</span>"
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-"
+"serif;\">Prix</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
 msgid ""
-"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
-"                                        RRP</span>"
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-"
+"serif;\">RRP</span>"
 msgstr ""
-"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\">\n"
-"                                        PPC</span>"
+"<span style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-"
+"serif;\">PPC</span>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
@@ -63,17 +63,24 @@ msgstr "<span>TVA : </span>"
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
 msgid ""
 "<strong>Invoicing Address:</strong>\n"
-"                    <br/>"
+"          <br/>"
 msgstr ""
+"<strong>Adresse de livraison :</strong>\n"
+"                    <br/>"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
 msgid ""
 "<strong>Shipping Address:</strong>\n"
-"                    <br/>"
+"          <br/>"
 msgstr ""
 "<strong>Adresse de livraison :</strong>\n"
 "                    <br/>"
+
+#. module: gove_agent_choose_customer_website_sale
+#: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__is_on_web
+msgid "Active on Web"
+msgstr "Actif sur Web"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_sale_order__woo_import_already_reset
@@ -83,7 +90,7 @@ msgstr "Déjà réinitialisé une fois avec une action planifiée"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.constraint,message:gove_agent_choose_customer_website_sale.constraint_offer_category_pricelist_unique_combination
 msgid "An entry with this combination already exists."
-msgstr ""
+msgstr "Une entrée avec cette combinaison existe déjà"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.products_item_add_tariff_price
@@ -94,7 +101,7 @@ msgstr "CODE :"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_coupon_program
@@ -104,12 +111,12 @@ msgstr "Campagne de Coupon"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creé par"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creé le"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.report_saleorder_document_inherit
@@ -140,7 +147,7 @@ msgstr "Achat terminé"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_offer_category_pricelist__offer_html
 msgid "HTML text"
-msgstr ""
+msgstr "Texte HTML"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model.fields,field_description:gove_agent_choose_customer_website_sale.field_coupon_program__id
@@ -194,7 +201,6 @@ msgstr "Offre par catégorie et liste de prix"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.ui.menu,name:gove_agent_choose_customer_website_sale.menuitem_offer_category_pricelist
-#: model_terms:ir.ui.view,arch_db:gove_agent_choose_customer_website_sale.view_offer_category_pricelist_tree
 msgid "Offers per Category and Price List"
 msgstr "Offres par catégorie et liste de prix"
 
@@ -222,7 +228,7 @@ msgstr "Modèle d'article"
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_sale_order
 msgid "Sale Order"
-msgstr ""
+msgstr "Commande de vente"
 
 #. module: gove_agent_choose_customer_website_sale
 #: model:ir.model,name:gove_agent_choose_customer_website_sale.model_website
